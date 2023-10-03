@@ -55,7 +55,7 @@ export function useSessionApi() {
       });
   };
 
-  // You can add more functions for other API endpoints as needed
+  // add more functions for other API endpoints as needed
 
   // Use useEffect to automatically fetch data when the component using this hook mounts
   useEffect(() => {
