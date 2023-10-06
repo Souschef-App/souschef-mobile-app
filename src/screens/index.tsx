@@ -7,6 +7,7 @@ import CalendarScreen from './tabs/CalendarScreen';
 import ProfileScreen from './tabs/ProfileScreen';
 import RecipeScreen from './RecipeScreen';
 import TaskScreen from './TaskScreen';
+import OccasionScreen from './OccasionScreen';
 
 export {
   WelcomeScreen,
@@ -18,4 +19,5 @@ export {
   ProfileScreen,
   RecipeScreen,
   TaskScreen,
+  OccasionScreen,
 };
