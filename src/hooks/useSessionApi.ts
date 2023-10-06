@@ -1,5 +1,5 @@
 import {SetStateAction, useEffect, useState} from 'react';
-import {sessionapi} from '../api/sessionapi'; // Import your session API functions
+import {sessionapi} from '../api/sessionapi';
 
 export function useSessionApi() {
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
