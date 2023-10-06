@@ -20,43 +20,72 @@ interface Booking {
   mealPlanName: string;
 }
 
-const CalendarScreen: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [mealNameInput, setMealNameInput] = useState<string>('');
-  const [confirmedBookings, setConfirmedBookings] = useState<Booking[]>([]);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [isTimePickerVisible, setTimePickerVisible] = useState<boolean>(false);
+interface CalendarScreenProps {}
+
+interface CalendarScreenState {
+  selectedDate: string | null;
+  selectedTime: string | null;
+  mealNameInput: string;
+  confirmedBookings: Booking[];
+  modalVisible: boolean;
+  selectedBooking: Booking | null;
+  isTimePickerVisible: boolean;
+}
+
+const CalendarScreen: React.FC<CalendarScreenProps> = () => {
+  const [state, setState] = useState<CalendarScreenState>({
+    selectedDate: null,
+    selectedTime: null,
+    mealNameInput: '',
+    confirmedBookings: [],
+    modalVisible: false,
+    selectedBooking: null,
+    isTimePickerVisible: false,
+  });
 
   const handleDateSelect = (date: string) => {
-    setSelectedDate(date);
+    setState(prevState => ({
+      ...prevState,
+      selectedDate: date,
+    }));
   };
 
   const handleTimeSelect = (time: Date) => {
     const formattedTime = `${time.getHours()}:${time.getMinutes()}`;
-    setSelectedTime(formattedTime);
-    setTimePickerVisible(false);
+    setState(prevState => ({
+      ...prevState,
+      selectedTime: formattedTime,
+      isTimePickerVisible: false,
+    }));
   };
 
   const handleMealNameChange = (text: string) => {
-    setMealNameInput(text);
+    setState(prevState => ({
+      ...prevState,
+      mealNameInput: text,
+    }));
   };
 
   const handleBookingConfirmation = () => {
+    const {selectedDate, selectedTime, mealNameInput, confirmedBookings} =
+      state;
+
     if (selectedDate && selectedTime && mealNameInput) {
-      setConfirmedBookings([
-        ...confirmedBookings,
-        {
-          id: Date.now(),
-          date: selectedDate,
-          time: selectedTime,
-          mealPlanName: mealNameInput,
-        },
-      ]);
-      setSelectedDate(null);
-      setSelectedTime(null);
-      setMealNameInput('');
+      setState(prevState => ({
+        ...prevState,
+        confirmedBookings: [
+          ...confirmedBookings,
+          {
+            id: Date.now(),
+            date: selectedDate,
+            time: selectedTime,
+            mealPlanName: mealNameInput,
+          },
+        ],
+        selectedDate: null,
+        selectedTime: null,
+        mealNameInput: '',
+      }));
     } else {
       Alert.alert('Please enter a meal plan name and select a time');
     }
@@ -72,8 +101,11 @@ const CalendarScreen: React.FC = () => {
   };
 
   const handleSessionPress = (booking: Booking) => {
-    setSelectedBooking(booking);
-    setModalVisible(true);
+    setState(prevState => ({
+      ...prevState,
+      selectedBooking: booking,
+      modalVisible: true,
+    }));
   };
 
   return (
@@ -81,24 +113,34 @@ const CalendarScreen: React.FC = () => {
       <Calendar
         onDayPress={day => handleDateSelect(day.dateString)}
         markedDates={{
-          [selectedDate || '']: {selected: true, selectedColor: '#4CAF50'},
+          [state.selectedDate || '']: {
+            selected: true,
+            selectedColor: '#4CAF50',
+          },
         }}
       />
-      {selectedDate && (
+      {state.selectedDate && (
         <View style={styles.confirmationContainer}>
           <Text style={styles.confirmationText}>Selected Date:</Text>
-          <Text style={styles.selectedDate}>{selectedDate}</Text>
+          <Text style={styles.selectedDate}>{state.selectedDate}</Text>
           <TouchableOpacity
-            onPress={() => setTimePickerVisible(true)}
+            onPress={() =>
+              setState(prevState => ({
+                ...prevState,
+                isTimePickerVisible: true,
+              }))
+            }
             style={styles.confirmationButton}>
             <Text style={styles.buttonText}>
-              {selectedTime ? `Selected Time: ${selectedTime}` : 'Select Time'}
+              {state.selectedTime
+                ? `Selected Time: ${state.selectedTime}`
+                : 'Select Time'}
             </Text>
           </TouchableOpacity>
           <TextInput
             placeholder="Enter Meal Name"
             style={styles.mealNameInput}
-            value={mealNameInput}
+            value={state.mealNameInput}
             onChangeText={handleMealNameChange}
           />
           <TouchableOpacity
@@ -110,16 +152,21 @@ const CalendarScreen: React.FC = () => {
       )}
 
       <DateTimePickerModal
-        isVisible={isTimePickerVisible}
+        isVisible={state.isTimePickerVisible}
         mode="time"
-        onConfirm={handleTimeSelect}
-        onCancel={() => setTimePickerVisible(false)}
+        onConfirm={time => handleTimeSelect(time)}
+        onCancel={() =>
+          setState(prevState => ({
+            ...prevState,
+            isTimePickerVisible: false,
+          }))
+        }
       />
 
       <View style={styles.listContainer}>
         <Text style={styles.listTitle}>Booked Cooking Sessions</Text>
         <FlatList
-          data={confirmedBookings}
+          data={state.confirmedBookings}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
             <TouchableOpacity onPress={() => handleSessionPress(item)}>
@@ -153,20 +200,25 @@ const CalendarScreen: React.FC = () => {
           )}
         />
       </View>
-      {selectedBooking && (
+      {state.selectedBooking && (
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-          }}>
+          visible={state.modalVisible}
+          onRequestClose={() =>
+            setState(prevState => ({
+              ...prevState,
+              modalVisible: false,
+            }))
+          }>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>Date: {selectedBooking.date}</Text>
+            <Text style={styles.modalText}>
+              Date: {state.selectedBooking.date}
+            </Text>
             <Text style={styles.modalText}>
               Meal Plan:{' '}
               <Text style={styles.colorfulText}>
-                {selectedBooking.mealPlanName}
+                {state.selectedBooking.mealPlanName}
               </Text>
             </Text>
             <View style={styles.daysLeftContainer}>
@@ -177,11 +229,16 @@ const CalendarScreen: React.FC = () => {
                 style={styles.clockIcon}
               />
               <Text style={styles.modalText}>
-                {getDaysLeft(selectedBooking.date)} days left
+                {getDaysLeft(state.selectedBooking.date)} days left
               </Text>
             </View>
             <TouchableOpacity
-              onPress={() => setModalVisible(false)}
+              onPress={() =>
+                setState(prevState => ({
+                  ...prevState,
+                  modalVisible: false,
+                }))
+              }
               style={styles.closeButton}>
               <Text style={styles.buttonText}>Close</Text>
             </TouchableOpacity>
