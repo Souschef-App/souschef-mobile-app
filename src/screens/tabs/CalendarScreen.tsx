@@ -118,9 +118,7 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
               }))
             }
             style={[styles.confirmationButton, styles.selectTimeButtonBlue]}>
-            {/* Add a new style for blue button */}
             <Text style={[styles.buttonText, styles.selectTimeButtonTextBlue]}>
-              {/* Add a new style for blue button text */}
               {state.selectedTime
                 ? `Selected Time: ${state.selectedTime}`
                 : 'Select Time'}
