@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  Modal,
   TextInput,
   Alert,
+  ScrollView,
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -27,8 +27,6 @@ interface CalendarScreenState {
   selectedTime: string | null;
   mealNameInput: string;
   confirmedBookings: Booking[];
-  modalVisible: boolean;
-  selectedBooking: Booking | null;
   isTimePickerVisible: boolean;
 }
 
@@ -38,8 +36,6 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
     selectedTime: null,
     mealNameInput: '',
     confirmedBookings: [],
-    modalVisible: false,
-    selectedBooking: null,
     isTimePickerVisible: false,
   });
 
@@ -71,17 +67,16 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
       state;
 
     if (selectedDate && selectedTime && mealNameInput) {
+      const newBooking: Booking = {
+        id: Date.now(),
+        date: selectedDate,
+        time: selectedTime,
+        mealPlanName: mealNameInput,
+      };
+
       setState(prevState => ({
         ...prevState,
-        confirmedBookings: [
-          ...confirmedBookings,
-          {
-            id: Date.now(),
-            date: selectedDate,
-            time: selectedTime,
-            mealPlanName: mealNameInput,
-          },
-        ],
+        confirmedBookings: [...confirmedBookings, newBooking],
         selectedDate: null,
         selectedTime: null,
         mealNameInput: '',
@@ -100,16 +95,8 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
     return daysLeft;
   };
 
-  const handleSessionPress = (booking: Booking) => {
-    setState(prevState => ({
-      ...prevState,
-      selectedBooking: booking,
-      modalVisible: true,
-    }));
-  };
-
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Calendar
         onDayPress={day => handleDateSelect(day.dateString)}
         markedDates={{
@@ -130,8 +117,10 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
                 isTimePickerVisible: true,
               }))
             }
-            style={styles.confirmationButton}>
-            <Text style={styles.buttonText}>
+            style={[styles.confirmationButton, styles.selectTimeButtonBlue]}>
+            {/* Add a new style for blue button */}
+            <Text style={[styles.buttonText, styles.selectTimeButtonTextBlue]}>
+              {/* Add a new style for blue button text */}
               {state.selectedTime
                 ? `Selected Time: ${state.selectedTime}`
                 : 'Select Time'}
@@ -169,83 +158,37 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
           data={state.confirmedBookings}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={() => handleSessionPress(item)}>
-              <View style={styles.sessionItem}>
-                <Icon
-                  name="check"
-                  size={24}
-                  color="#4CAF50"
-                  style={styles.checkIcon}
-                />
-                <View style={styles.sessionInfo}>
-                  <Text style={styles.bookingDate}>Date: {item.date}</Text>
-                  <Text style={styles.mealPlan}>
-                    Meal Plan:{' '}
-                    <Text style={styles.colorfulText}>{item.mealPlanName}</Text>
+            <View style={styles.sessionItem}>
+              <Icon
+                name="check"
+                size={24}
+                color="#4CAF50"
+                style={styles.checkIcon}
+              />
+              <View style={styles.sessionInfo}>
+                <Text style={styles.bookingDate}>Date: {item.date}</Text>
+                <Text style={styles.mealPlan}>
+                  Meal Plan:{' '}
+                  <Text style={styles.colorfulText}>{item.mealPlanName}</Text>
+                </Text>
+                <Text style={styles.bookingTime}>Time: {item.time}</Text>
+                <View style={styles.daysLeftContainer}>
+                  <Icon
+                    name="clock-o"
+                    size={16}
+                    color="#4CAF50"
+                    style={styles.clockIcon}
+                  />
+                  <Text style={styles.daysLeft}>
+                    {getDaysLeft(item.date)} days left
                   </Text>
-                  <View style={styles.daysLeftContainer}>
-                    <Icon
-                      name="clock-o"
-                      size={16}
-                      color="#4CAF50"
-                      style={styles.clockIcon}
-                    />
-                    <Text style={styles.daysLeft}>
-                      {getDaysLeft(item.date)} days left
-                    </Text>
-                  </View>
                 </View>
               </View>
-            </TouchableOpacity>
+            </View>
           )}
         />
       </View>
-      {state.selectedBooking && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={state.modalVisible}
-          onRequestClose={() =>
-            setState(prevState => ({
-              ...prevState,
-              modalVisible: false,
-            }))
-          }>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>
-              Date: {state.selectedBooking.date}
-            </Text>
-            <Text style={styles.modalText}>
-              Meal Plan:{' '}
-              <Text style={styles.colorfulText}>
-                {state.selectedBooking.mealPlanName}
-              </Text>
-            </Text>
-            <View style={styles.daysLeftContainer}>
-              <Icon
-                name="clock-o"
-                size={16}
-                color="#4CAF50"
-                style={styles.clockIcon}
-              />
-              <Text style={styles.modalText}>
-                {getDaysLeft(state.selectedBooking.date)} days left
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={() =>
-                setState(prevState => ({
-                  ...prevState,
-                  modalVisible: false,
-                }))
-              }
-              style={styles.closeButton}>
-              <Text style={styles.buttonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      )}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -339,22 +282,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#4CAF50',
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  bookingTime: {
+    fontSize: 16,
   },
-  modalText: {
-    fontSize: 20,
-    marginBottom: 10,
+
+  selectTimeButtonBlue: {
+    backgroundColor: '#2E9DFB',
+  },
+  selectTimeButtonTextBlue: {
     color: 'white',
-  },
-  closeButton: {
-    backgroundColor: '#4CAF50',
-    padding: 12,
-    borderRadius: 5,
-    marginTop: 20,
   },
 });
 
