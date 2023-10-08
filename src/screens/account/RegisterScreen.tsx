@@ -1,28 +1,22 @@
-import React, {useContext, useRef} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Button, Card, Column, Input, Row, SafeArea} from '../../components';
 import {OpacityPressable, SpringPressable} from '../../components/pressable';
-import {AuthContext, ThemeContext} from '../../contexts/AppContext';
+import {ThemeContext} from '../../contexts/AppContext';
 import {
   RegisterScreenNavigationProp,
-  RegisterScreenRouteProp,
+  defaultHomeStackNavigatorParamList,
 } from '../../navigation/types';
 import {Theme} from '../../styles/type';
+import useStore from '../../data/store';
 
 const RegisterScreen = ({
   navigation,
-  route,
 }: {
   navigation: RegisterScreenNavigationProp;
-  route: RegisterScreenRouteProp;
 }) => {
-  // User
-  const {register, registerSuccess, registerLoading, registerError} =
-    useContext(AuthContext);
-  const isMounted = useRef(false);
-
   // Theme
   const theme = useContext(ThemeContext);
   const stylesWithTheme = styles(theme);
@@ -32,33 +26,29 @@ const RegisterScreen = ({
   const [email, setEmail] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = React.useState<string>('');
-  const [error, setError] = React.useState<string>('');
+  const [errorMsg, setErrorMsg] = React.useState<string>('');
+
+  // Store
+  const user = useStore(state => state.user);
+  const isLoading = useStore(state => state.loading);
+  const error = useStore(state => state.error);
+  const clearError = useStore(state => state.clearError);
+  const register = useStore(state => state.register);
 
   React.useEffect(() => {
-    // Only when registering
-    if (isMounted.current) {
-      if (registerSuccess) {
-        navigation.replace('Login', {animationID: 1});
-      } else if (registerError) {
-        setError(`${registerError}`);
-      }
-    } else {
-      isMounted.current = true;
+    setErrorMsg(error || '');
+  }, [error]);
 
-      // Clear fields
-      setName('');
-      setEmail('');
-      setPassword('');
-      setPasswordConfirm('');
-      setError('');
-
-      if (route.params.animationID === 1)
-        navigation.setOptions({animation: 'slide_from_right'});
+  React.useEffect(() => {
+    if (user) {
+      navigation.replace('HomeStack', defaultHomeStackNavigatorParamList);
     }
-  }, [registerSuccess, registerError]);
+    return () => clearError();
+  }, [user]);
 
-  const attemptRegister = () => {
-    setError('');
+  const tryRegister = () => {
+    setErrorMsg('');
+
     // Empty fields
     if (
       name.length === 0 ||
@@ -66,26 +56,19 @@ const RegisterScreen = ({
       password.length === 0 ||
       passwordConfirm.length === 0
     ) {
-      setError('Please make sure all fields are filled.');
+      setErrorMsg('Please make sure all fields are filled.');
+      return;
     }
     // Passwords do not match
-    else if (password !== passwordConfirm) {
-      setError('Please make sure your passwords match!');
+    if (password !== passwordConfirm) {
+      setErrorMsg('Please make sure your passwords match!');
+      return;
     }
-    // Successfully registered
-    else {
-      register({
-        json: {
-          userName: name,
-          email: email,
-          password: password,
-          passwordConfirm: passwordConfirm,
-        },
-      });
-    }
+
+    register({username: name, email, password, passwordConfirm});
   };
 
-  const gotoLogin = () => navigation.replace('Login', {animationID: 1});
+  const gotoLogin = () => navigation.replace('Login');
 
   return (
     <SafeArea>
@@ -101,14 +84,14 @@ const RegisterScreen = ({
             <Text style={stylesWithTheme.h2}>You're almost there!</Text>
           </Column>
           <Column horizontalResizing="fill" spacing={theme.spacing.m}>
-            {error.length > 0 && (
+            {errorMsg.length > 0 && (
               <Card style={stylesWithTheme.error}>
                 <Column horizontalResizing="fill" spacing={theme.spacing.s}>
                   <MaterialCommunityIcon
                     name="cancel"
                     style={stylesWithTheme.errorIcon}
                   />
-                  <Text style={stylesWithTheme.errorText}>{error}</Text>
+                  <Text style={stylesWithTheme.errorText}>{errorMsg}</Text>
                 </Column>
               </Card>
             )}
@@ -148,12 +131,10 @@ const RegisterScreen = ({
             />
           </Column>
           <Column horizontalResizing="fill" spacing={theme.spacing.m}>
-            <SpringPressable
-              onPress={attemptRegister}
-              horizontalResizing="fill">
+            <SpringPressable onPress={tryRegister} horizontalResizing="fill">
               <Button
                 bgColor={theme.colors.primary}
-                loading={registerLoading}
+                loading={isLoading}
                 horizontalResizing="fill"
                 verticalResizing="fixed"
                 height={64}

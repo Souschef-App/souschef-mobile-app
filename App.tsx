@@ -11,21 +11,6 @@ import {darkTheme, theme} from './src/styles/theme';
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
 
-  // API Calls
-  const {
-    post: login,
-    data: user,
-    success: loginSuccess,
-    loading: loginLoading,
-    error: loginError,
-  } = usePost<User>(ApiUrls.login);
-  const {
-    post: register,
-    error: registerError,
-    success: registerSuccess,
-    loading: registerLoading,
-  } = usePost(ApiUrls.register);
-
   let dark = useColorScheme() === 'dark';
 
   useEffect(() => {
@@ -37,22 +22,9 @@ const App = () => {
   }, [dark]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        loginSuccess,
-        loginLoading,
-        loginError,
-        register,
-        registerSuccess,
-        registerLoading,
-        registerError,
-      }}>
-      <ThemeContext.Provider value={darkMode ? darkTheme : theme}>
-        <RootNavigator />
-      </ThemeContext.Provider>
-    </AuthContext.Provider>
+    <ThemeContext.Provider value={darkMode ? darkTheme : theme}>
+      <RootNavigator />
+    </ThemeContext.Provider>
   );
 };
 

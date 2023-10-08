@@ -17,8 +17,8 @@ const WelcomeScreen = ({
   const stylesWithTheme = styles(theme);
 
   // Methods
-  const login = () => navigation.replace('Login', {animationID: 0});
-  const register = () => navigation.replace('Register', {animationID: 0});
+  const login = () => navigation.replace('Login');
+  const register = () => navigation.replace('Register');
   return (
     <SafeArea>
       <Column

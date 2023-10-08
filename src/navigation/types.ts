@@ -23,13 +23,10 @@ export type BottomTabNavigatorParamList = {
 
 export type WelcomeStackNavigatorParamList = {
   Welcome: undefined;
-  Login: {
-    animationID: number;
-  };
-  Register: {
-    animationID: number;
-  };
+  Login: undefined;
+  Register: undefined;
   HomeStack: HomeStackNavigatorParamList;
+  WebSocket: undefined;
 };
 
 export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
@@ -52,8 +49,7 @@ export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
 
 export type WelcomeScreenNavigationProp = NativeStackNavigationProp<
   WelcomeStackNavigatorParamList,
-  'Register',
-  'Login'
+  'Login' | 'Register'
 >;
 
 export type LoginScreenNavigationProp = NativeStackNavigationProp<
@@ -62,20 +58,10 @@ export type LoginScreenNavigationProp = NativeStackNavigationProp<
   'BottomTabs'
 >;
 
-export type LoginScreenRouteProp = RouteProp<
-  WelcomeStackNavigatorParamList,
-  'Login'
->;
-
 export type RegisterScreenNavigationProp = NativeStackNavigationProp<
   WelcomeStackNavigatorParamList,
   'Login',
   'BottomTabs'
->;
-
-export type RegisterScreenRouteProp = RouteProp<
-  WelcomeStackNavigatorParamList,
-  'Register'
 >;
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -88,11 +74,6 @@ export type RecipeScreenNavigationProp = BottomTabNavigationProp<
   'BottomTabs'
 >;
 
-export type RecipeScreenRouteProp = RouteProp<
-  HomeStackNavigatorParamList,
-  'Recipe'
->;
-
 export type CookScreenNavigationProp = NativeStackNavigationProp<
   HomeStackNavigatorParamList,
   'Task'
@@ -101,6 +82,23 @@ export type CookScreenNavigationProp = NativeStackNavigationProp<
 export type TaskScreenNavigationProp = BottomTabNavigationProp<
   HomeStackNavigatorParamList,
   'BottomTabs'
+>;
+
+// Type definition for route prop to a specific screen
+// E.g: Describe the type of "route" when accessing it in LoginScreen
+export type LoginScreenRouteProp = RouteProp<
+  WelcomeStackNavigatorParamList,
+  'Login'
+>;
+
+export type RegisterScreenRouteProp = RouteProp<
+  WelcomeStackNavigatorParamList,
+  'Register'
+>;
+
+export type RecipeScreenRouteProp = RouteProp<
+  HomeStackNavigatorParamList,
+  'Recipe'
 >;
 
 export type TaskScreenRouteProp = RouteProp<
