@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {SafeArea} from '../components';
+import {ThemeContext} from '../contexts/AppContext';
 import {
   RecipeScreenNavigationProp,
   RecipeScreenRouteProp,
@@ -14,13 +15,27 @@ const RecipeScreen = ({
   navigation: RecipeScreenNavigationProp;
   route: RecipeScreenRouteProp;
 }) => {
+  // Theme
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
   return (
     <SafeArea>
-      <Text>Recipe Screen</Text>
+      <View style={styles.container}>
+        <Text>Recipe Screen</Text>
+      </View>
     </SafeArea>
   );
 };
 
-const styles = (theme: Theme) => StyleSheet.create({});
+const makeStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      display: 'flex',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });
 
 export default RecipeScreen;

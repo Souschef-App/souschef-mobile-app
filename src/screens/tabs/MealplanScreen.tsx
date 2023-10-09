@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {SafeArea} from '../../components';
 import {ThemeContext} from '../../contexts/AppContext';
@@ -11,7 +11,7 @@ const MealplanScreen = ({
   navigation: HomeScreenNavigationProp;
 }) => {
   // Theme
-  const theme = useContext(ThemeContext);
+  const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   return (

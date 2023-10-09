@@ -14,6 +14,7 @@ const SafeArea: React.FC<PropsWithChildren<SafeAreaProps>> = (
     <SafeAreaView
       style={{
         flex: 1,
+        backgroundColor: '#fff',
       }}>
       {props.children}
     </SafeAreaView>
