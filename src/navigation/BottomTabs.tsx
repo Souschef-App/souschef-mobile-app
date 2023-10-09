@@ -1,15 +1,14 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as React from 'react';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   CalendarScreen,
-  FavoriteScreen,
   HomeScreen,
-  ProfileScreen,
+  MealplanScreen,
+  QRScanScreen,
 } from '../screens';
-import CookScreen from '../screens/tabs/CookScreen';
 import {BottomTabNavigatorParamList} from './types';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const BottomTab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -21,10 +20,9 @@ const BottomTabs = () => {
           let iconName: string;
 
           if (route.name == 'Home') iconName = 'home-variant';
-          else if (route.name == 'Favorite') iconName = 'heart';
-          else if (route.name == 'Cook') iconName = 'silverware-variant';
+          else if (route.name == 'QRScan') iconName = 'heart';
+          else if (route.name == 'Mealplan') iconName = 'silverware-variant';
           else if (route.name == 'Calendar') iconName = 'calendar-blank';
-          else if (route.name == 'Profile') iconName = 'account';
           else iconName = 'checkbox-blank-outline';
 
           return (
@@ -53,23 +51,18 @@ const BottomTabs = () => {
         options={{headerShown: false}}
       />
       <BottomTab.Screen
-        name="Favorite"
-        component={FavoriteScreen}
+        name="Mealplan"
+        component={MealplanScreen}
         options={{headerShown: false}}
       />
       <BottomTab.Screen
-        name="Cook"
-        component={CookScreen}
+        name="QRScan"
+        component={QRScanScreen}
         options={{headerShown: false}}
       />
       <BottomTab.Screen
         name="Calendar"
         component={CalendarScreen}
-        options={{headerShown: false}}
-      />
-      <BottomTab.Screen
-        name="Profile"
-        component={ProfileScreen}
         options={{headerShown: false}}
       />
     </BottomTab.Navigator>

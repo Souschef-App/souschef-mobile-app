@@ -15,10 +15,9 @@ export type HomeStackNavigatorParamList = {
 
 export type BottomTabNavigatorParamList = {
   Home: undefined;
-  Favorite: undefined;
-  Cook: undefined;
+  Mealplan: undefined;
+  QRScan: undefined;
   Calendar: undefined;
-  Profile: undefined;
 };
 
 export type WelcomeStackNavigatorParamList = {
@@ -31,10 +30,9 @@ export type WelcomeStackNavigatorParamList = {
 
 export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
   Home: undefined,
-  Favorite: undefined,
-  Cook: undefined,
+  Mealplan: undefined,
+  QRScan: undefined,
   Calendar: undefined,
-  Profile: undefined,
 };
 
 export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
@@ -47,42 +45,26 @@ export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
   },
 };
 
-export type WelcomeScreenNavigationProp = NativeStackNavigationProp<
-  WelcomeStackNavigatorParamList,
-  'Login' | 'Register'
->;
+export type WelcomeScreenNavigationProp =
+  NativeStackNavigationProp<WelcomeStackNavigatorParamList>;
 
-export type LoginScreenNavigationProp = NativeStackNavigationProp<
-  WelcomeStackNavigatorParamList,
-  'Register',
-  'BottomTabs'
->;
+export type LoginScreenNavigationProp =
+  NativeStackNavigationProp<WelcomeStackNavigatorParamList>;
 
-export type RegisterScreenNavigationProp = NativeStackNavigationProp<
-  WelcomeStackNavigatorParamList,
-  'Login',
-  'BottomTabs'
->;
+export type RegisterScreenNavigationProp =
+  NativeStackNavigationProp<WelcomeStackNavigatorParamList>;
 
-export type HomeScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  'Recipe'
->;
+export type HomeScreenNavigationProp =
+  NativeStackNavigationProp<HomeStackNavigatorParamList>;
 
-export type RecipeScreenNavigationProp = BottomTabNavigationProp<
-  HomeStackNavigatorParamList,
-  'BottomTabs'
->;
+export type RecipeScreenNavigationProp =
+  BottomTabNavigationProp<HomeStackNavigatorParamList>;
 
-export type CookScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  'Task'
->;
+export type CookScreenNavigationProp =
+  NativeStackNavigationProp<HomeStackNavigatorParamList>;
 
-export type TaskScreenNavigationProp = BottomTabNavigationProp<
-  HomeStackNavigatorParamList,
-  'BottomTabs'
->;
+export type TaskScreenNavigationProp =
+  BottomTabNavigationProp<HomeStackNavigatorParamList>;
 
 // Type definition for route prop to a specific screen
 // E.g: Describe the type of "route" when accessing it in LoginScreen

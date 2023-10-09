@@ -5,11 +5,7 @@ import {ThemeContext} from '../../contexts/AppContext';
 import {HomeScreenNavigationProp} from '../../navigation/types';
 import {Theme} from '../../styles/type';
 
-const CalendarScreen = ({
-  navigation,
-}: {
-  navigation: HomeScreenNavigationProp;
-}) => {
+const QRScanScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
   // Theme
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -17,7 +13,7 @@ const CalendarScreen = ({
   return (
     <SafeArea>
       <View style={styles.container}>
-        <Text>Calendar Screen</Text>
+        <Text>QR Scan Screen</Text>
       </View>
     </SafeArea>
   );
@@ -33,4 +29,4 @@ const makeStyles = (theme: Theme) =>
     },
   });
 
-export default CalendarScreen;
+export default QRScanScreen;

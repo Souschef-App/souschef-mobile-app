@@ -5,7 +5,7 @@ import {ThemeContext} from '../../contexts/AppContext';
 import {HomeScreenNavigationProp} from '../../navigation/types';
 import {Theme} from '../../styles/type';
 
-const CalendarScreen = ({
+const ProfileScreen = ({
   navigation,
 }: {
   navigation: HomeScreenNavigationProp;
@@ -17,7 +17,7 @@ const CalendarScreen = ({
   return (
     <SafeArea>
       <View style={styles.container}>
-        <Text>Calendar Screen</Text>
+        <Text>Profile Screen</Text>
       </View>
     </SafeArea>
   );
@@ -33,4 +33,4 @@ const makeStyles = (theme: Theme) =>
     },
   });
 
-export default CalendarScreen;
+export default ProfileScreen;
