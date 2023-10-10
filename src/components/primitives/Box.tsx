@@ -3,11 +3,27 @@ import { View, type FlexAlignType } from "react-native"
 
 
 
-export interface SpacingAll {
+export interface ISpacingAll {
     b : number,
     t : number,
     l : number,
     r : number,
+}
+
+export class SpacingAll implements ISpacingAll
+{
+    b: number;
+    t: number;
+    l: number;
+    r: number;
+
+    constructor( b: number, t: number, l: number, r: number )
+    {
+        this.b = b
+        this.t = t
+        this.l = l
+        this.r = r
+    }
 }
 
 export interface BoxProps {
@@ -22,8 +38,8 @@ export interface BoxProps {
                         | undefined;
     "m" : number,
     "p"  : number,
-    "mall" : SpacingAll,
-    "pall" : SpacingAll,
+    "mall" : ISpacingAll,
+    "pall" : ISpacingAll,
     "flexDirection" : "row" | "column" | "row-reverse" | "column-reverse" | undefined
 }
 
@@ -44,6 +60,7 @@ export const Box = ({m, p, mall, pall, align, justifyContent, flexDirection, sty
             paddingLeft: pall.r,
             paddingRight: pall.l,
             flexDirection: flexDirection,
+            flex: 1,
             ...style,
         }}>
             {children}
