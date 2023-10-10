@@ -1,4 +1,4 @@
-import SafeArea from './SafeArea';
-import Icon from './primitives/Icon';
+import SafeArea from "./primitives/SafeArea";
+import Icon from "./primitives/Icon";
 
-export {Icon, SafeArea};
+export { SafeArea, Icon };

@@ -1,9 +1,9 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {SafeArea} from '../../components';
-import {ThemeContext} from '../../contexts/AppContext';
-import {HomeScreenNavigationProp} from '../../navigation/types';
-import {Theme} from '../../styles/type';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeArea } from "../../components";
+import { ThemeContext } from "../../contexts/AppContext";
+import { HomeScreenNavigationProp } from "../../navigation/types";
+import { Theme } from "../../styles/types";
 
 const CalendarScreen = ({
   navigation,
@@ -26,10 +26,10 @@ const CalendarScreen = ({
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
 

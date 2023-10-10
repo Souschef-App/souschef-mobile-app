@@ -1,14 +1,14 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import * as React from 'react';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import * as React from "react";
 
-import {Icon} from '../components';
+import { Icon } from "../components";
 import {
   CalendarScreen,
   HomeScreen,
   MealplanScreen,
   QRScanScreen,
-} from '../screens';
-import {BottomTabNavigatorParamList} from './types';
+} from "../screens";
+import { BottomTabNavigatorParamList } from "./types";
 
 const BottomTab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -16,10 +16,11 @@ const BottomTabs = () => {
   return (
     <BottomTab.Navigator
       screenOptions={() => ({
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: '#2e9dfb',
-        tabBarInactiveTintColor: '#b3bac0',
+        tabBarActiveTintColor: "#2e9dfb",
+        tabBarInactiveTintColor: "#b3bac0",
         tabBarStyle: {
           // Seamless transition (color)
           borderTopWidth: 0,
@@ -31,37 +32,34 @@ const BottomTabs = () => {
             height: 0,
           },
         },
-      })}>
+      })}
+    >
       <BottomTab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          headerShown: false,
-          tabBarIcon: makeTabBarIcon('home'),
+          tabBarIcon: makeTabBarIcon("home"),
         }}
       />
       <BottomTab.Screen
         name="Mealplan"
         component={MealplanScreen}
         options={{
-          headerShown: false,
-          tabBarIcon: makeTabBarIcon('meal'),
+          tabBarIcon: makeTabBarIcon("meal"),
         }}
       />
       <BottomTab.Screen
         name="QRScan"
         component={QRScanScreen}
         options={{
-          headerShown: false,
-          tabBarIcon: makeTabBarIcon('qr'),
+          tabBarIcon: makeTabBarIcon("qr"),
         }}
       />
       <BottomTab.Screen
         name="Calendar"
         component={CalendarScreen}
         options={{
-          headerShown: false,
-          tabBarIcon: makeTabBarIcon('calendar'),
+          tabBarIcon: makeTabBarIcon("calendar"),
         }}
       />
     </BottomTab.Navigator>

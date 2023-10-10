@@ -1,16 +1,11 @@
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import type {RouteProp} from '@react-navigation/native';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {defaultRecipe, Recipe} from '../api/responses';
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { RouteProp } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type HomeStackNavigatorParamList = {
   BottomTabs: BottomTabNavigatorParamList;
-  Recipe: {
-    recipe: Recipe;
-  };
-  Task: {
-    sessionId: string;
-  };
+  Recipe: undefined;
+  Task: undefined;
 };
 
 export type BottomTabNavigatorParamList = {
@@ -37,12 +32,8 @@ export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
 
 export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
   BottomTabs: defaultBottomTabNavigatorParamList,
-  Recipe: {
-    recipe: defaultRecipe,
-  },
-  Task: {
-    sessionId: '',
-  },
+  Recipe: undefined,
+  Task: undefined,
 };
 
 export type WelcomeScreenNavigationProp =
@@ -70,20 +61,20 @@ export type TaskScreenNavigationProp =
 // E.g: Describe the type of "route" when accessing it in LoginScreen
 export type LoginScreenRouteProp = RouteProp<
   WelcomeStackNavigatorParamList,
-  'Login'
+  "Login"
 >;
 
 export type RegisterScreenRouteProp = RouteProp<
   WelcomeStackNavigatorParamList,
-  'Register'
+  "Register"
 >;
 
 export type RecipeScreenRouteProp = RouteProp<
   HomeStackNavigatorParamList,
-  'Recipe'
+  "Recipe"
 >;
 
 export type TaskScreenRouteProp = RouteProp<
   HomeStackNavigatorParamList,
-  'Task'
+  "Task"
 >;

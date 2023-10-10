@@ -1,5 +1,5 @@
-import React, {type PropsWithChildren} from 'react';
-import {SafeAreaView} from 'react-native';
+import React, { type PropsWithChildren } from "react";
+import { SafeAreaView } from "react-native";
 
 export interface ISafeAreaProps {
   children?: React.ReactNode;
@@ -8,18 +8,18 @@ export interface ISafeAreaProps {
 export type SafeAreaProps = ISafeAreaProps;
 
 const SafeArea: React.FC<PropsWithChildren<SafeAreaProps>> = (
-  props: ISafeAreaProps,
+  props: ISafeAreaProps
 ) => {
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: '#fff',
-      }}>
+        backgroundColor: "#fff",
+      }}
+    >
       {props.children}
     </SafeAreaView>
   );
 };
 
 export default SafeArea;
-
