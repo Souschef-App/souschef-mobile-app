@@ -1,194 +1,79 @@
-import React, {useContext, useRef} from 'react';
-import {StyleSheet, Text} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button, Card, Column, Input, Row, SafeArea} from '../../components';
-import {OpacityPressable, SpringPressable} from '../../components/pressable';
-import {AuthContext, ThemeContext} from '../../contexts/AppContext';
+import React, {useContext} from 'react';
+import {StyleSheet, Text, View, Button} from 'react-native';
+import {SafeArea} from '../../components';
+import {ThemeContext} from '../../contexts/AppContext';
+import useStore from '../../data/store';
 import {
-  defaultHomeStackNavigatorParamList,
   LoginScreenNavigationProp,
-  LoginScreenRouteProp,
+  defaultHomeStackNavigatorParamList,
 } from '../../navigation/types';
 import {Theme} from '../../styles/type';
 
-const LoginScreen = ({
-  navigation,
-  route,
-}: {
-  navigation: LoginScreenNavigationProp;
-  route: LoginScreenRouteProp;
-}) => {
-  // User
-  const {user, login, loginSuccess, loginLoading, loginError} =
-    useContext(AuthContext);
-  const isMounted = useRef(false);
-
+const LoginScreen = ({navigation}: {navigation: LoginScreenNavigationProp}) => {
   // Theme
   const theme = useContext(ThemeContext);
-  const stylesWithTheme = styles(theme);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  // Fields
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [error, setError] = React.useState('');
+  // State
+  const [email, setEmail] = React.useState<string>('');
+  const [password, setPassword] = React.useState<string>('');
+  const [errorMsg, setErrorMsg] = React.useState<string>('');
+
+  // Store
+  const user = useStore(state => state.user);
+  const isLoading = useStore(state => state.loading);
+  const error = useStore(state => state.error);
+  const clearError = useStore(state => state.clearError);
+  const login = useStore(state => state.login);
 
   React.useEffect(() => {
-    // Only when user and/or loginError updates
-    if (isMounted.current) {
-      if (user) {
-        navigation.replace('HomeStack', defaultHomeStackNavigatorParamList);
-      } else if (loginError) {
-        setError(`${loginError}`);
-      }
-    }
-    // First time mount
-    else {
-      isMounted.current = true;
+    setErrorMsg(error || '');
+  }, [error]);
 
-      // Clear fields
-      setEmail('');
-      setPassword('');
-      setError('');
-
-      if (route.params.animationID === 1) {
-        navigation.setOptions({animation: 'slide_from_left'});
-      }
+  React.useEffect(() => {
+    if (user) {
+      navigation.replace('HomeStack', defaultHomeStackNavigatorParamList);
     }
-  }, [user, loginError]);
+    return () => clearError();
+  }, [user]);
 
   // Methods
-  const attemptLogin = () => {
-    setError('');
+  const tryLogin = () => {
+    setErrorMsg('');
+
     // Empty fields
     if (email.length === 0 || password.length === 0) {
-      setError('Please make sure all fields are filled.');
+      setErrorMsg('Please make sure all fields are filled.');
+      return;
     }
-    // Successfully log'd in
-    else {
-      login({
-        json: {
-          email: email,
-          password: password,
-        },
-      });
-    }
+
+    login({email, password});
   };
 
-  const gotoRegister = () => navigation.replace('Register', {animationID: 1});
+  const gotoRegister = () => navigation.replace('Register');
+
+  // TEMPORARY BYPASS
+  const gotoHome = () =>
+    navigation.replace('HomeStack', defaultHomeStackNavigatorParamList);
 
   return (
     <SafeArea>
-      <KeyboardAwareScrollView
-        keyboardShouldPersistTaps={'handled'}
-        contentContainerStyle={{flexGrow: 1}}>
-        <Column
-          horizontalResizing="fill"
-          verticalResizing="fill"
-          paddingHorizontal={theme.spacing.m}
-          paddingVertical={theme.spacing.xl}
-          spacing={theme.spacing.xl}>
-          <Column horizontalResizing="fill" spacing={theme.spacing.s}>
-            <Text style={stylesWithTheme.h1}>Hello Again!</Text>
-            <Text style={stylesWithTheme.h2}>
-              Welcome back, you've been missed!
-            </Text>
-          </Column>
-          <Column horizontalResizing="fill" spacing={theme.spacing.m}>
-            {error.length > 0 && (
-              <Card style={stylesWithTheme.error}>
-                <Column horizontalResizing="fill" spacing={theme.spacing.s}>
-                  <MaterialCommunityIcon
-                    name="cancel"
-                    style={stylesWithTheme.errorIcon}
-                  />
-                  <Text style={stylesWithTheme.errorText}>{error}</Text>
-                </Column>
-              </Card>
-            )}
-            <Input
-              bgColor={theme.colors.foreground}
-              placeholder="Email"
-              horizontalResizing="fill"
-              onChangeText={value => {
-                setEmail(value);
-              }}
-            />
-            <Input
-              bgColor={theme.colors.foreground}
-              placeholder="Password"
-              secure={true}
-              horizontalResizing="fill"
-              onChangeText={value => {
-                setPassword(value);
-              }}
-            />
-          </Column>
-          <Column horizontalResizing="fill" spacing={theme.spacing.m}>
-            <SpringPressable onPress={attemptLogin} horizontalResizing="fill">
-              <Button
-                bgColor={theme.colors.danger}
-                loading={loginLoading}
-                horizontalResizing="fill"
-                verticalResizing="fixed"
-                height={64}
-                text="Login"
-                textStyle={stylesWithTheme.buttonText}
-              />
-            </SpringPressable>
-            <Row spacing={theme.spacing.s}>
-              <Text style={stylesWithTheme.registerText}>Not a member?</Text>
-              <OpacityPressable onPress={gotoRegister}>
-                <Text
-                  style={[
-                    stylesWithTheme.registerText,
-                    stylesWithTheme.clickableText,
-                  ]}>
-                  Register
-                </Text>
-              </OpacityPressable>
-            </Row>
-          </Column>
-        </Column>
-      </KeyboardAwareScrollView>
+      <View style={styles.container}>
+        <Text>Login Screen</Text>
+        <Button title="Register" onPress={gotoRegister} />
+        <Button title="Bypass" onPress={gotoHome} />
+      </View>
     </SafeArea>
   );
 };
 
-const styles = (theme: Theme) =>
+const makeStyles = (theme: Theme) =>
   StyleSheet.create({
-    h1: {
-      color: theme.colors.text,
-      fontSize: 28,
-      fontWeight: 'bold',
-      alignSelf: 'stretch',
-      textAlign: 'center',
-    },
-    h2: {
-      color: theme.colors.text,
-      fontSize: 18,
-      alignSelf: 'stretch',
-      textAlign: 'center',
-    },
-    error: {
-      backgroundColor: theme.colors.primary,
-      elevation: 0,
-    },
-    errorText: {
-      color: '#fff',
-      fontSize: 16,
-    },
-    errorIcon: {color: '#fff', fontSize: 36},
-    buttonText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
-    registerText: {
-      color: theme.colors.text,
-      fontSize: 16,
-    },
-    clickableText: {
-      color: '#2A60A6',
+    container: {
+      display: 'flex',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 
