@@ -1,12 +1,11 @@
 import React from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { SafeArea } from "../../components";
+import { SafeArea, TextButton } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 import {
-  HomeScreenNavigationProp,
   MealPlanNavigationProp,
 } from "../../navigation/types";
-import { Theme } from "../../styles";
+import { ButtonStyle, Theme } from "../../styles";
 
 const MealplanScreen = ({
   navigation,
@@ -25,7 +24,7 @@ const MealplanScreen = ({
     <SafeArea>
       <View style={styles.container}>
         <Text>Mealplan Screen</Text>
-        <Button title="Home" onPress={goToEnterRecipe} />
+        <TextButton title="Enter Recipe Description" onPress={goToEnterRecipe} />
       </View>
     </SafeArea>
   );
@@ -38,7 +37,11 @@ const makeStyles = (theme: Theme) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: "#ff0000"
     },
+    button:{
+      ...ButtonStyle.primary
+    }
   });
 
 export default MealplanScreen;

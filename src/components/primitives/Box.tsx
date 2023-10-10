@@ -36,8 +36,8 @@ export interface IBoxProps {
                         | undefined;
     "m"? : number,
     "p"?  : number,
-    "mall"? : ISpacingAll,
-    "pall"? : ISpacingAll,
+    "mAll"? : ISpacingAll,
+    "pAll"? : ISpacingAll,
     "flexDirection"? : "row" | "column" | "row-reverse" | "column-reverse" | undefined
 }
 
@@ -47,6 +47,8 @@ const boxDefaultProps: IBoxProps = {
     justifyContent: 'center',
     m: 0,
     p: 0,
+    mAll: {b : 0, t : 0, l : 0, r : 0},
+    pAll:{b : 0, t : 0, l : 0, r : 0},
 };
   
 export const Box = (propsIn :  PropsWithChildren<IBoxProps>) =>{
@@ -58,14 +60,14 @@ export const Box = (propsIn :  PropsWithChildren<IBoxProps>) =>{
             justifyContent: props.justifyContent,
             margin: props.m, 
             padding : props.p, 
-            marginBottom : props.mall!.b, 
-            marginTop : props.mall!.t,
-            marginLeft: props.mall!.l,
-            marginRight: props.mall!.r,
-            paddingBottom : props.pall!.t,
-            paddingTop : props.pall!.b, 
-            paddingLeft: props.pall!.r,
-            paddingRight: props.pall!.l,
+            marginBottom : props.mAll!.b, 
+            marginTop : props.mAll!.t,
+            marginLeft: props.mAll!.l,
+            marginRight: props.mAll!.r,
+            paddingBottom : props.pAll!.t,
+            paddingTop : props.pAll!.b, 
+            paddingLeft: props.pAll!.r,
+            paddingRight: props.pAll!.l,
             flexDirection: props.flexDirection,
             flex: 1,
             ...props.style,
