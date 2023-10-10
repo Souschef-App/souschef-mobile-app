@@ -1,3 +1,4 @@
-import * as ButtonStyle from './ButtonStyle';
+import * as ButtonStyle from "./ButtonStyle";
+import { Color, Theme } from "./types";
 
-export {ButtonStyle};
+export { ButtonStyle, Color, Theme };

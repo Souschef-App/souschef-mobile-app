@@ -6,26 +6,43 @@ export type Color = RGB | RGBA | HEX;
 
 export type Theme = {
   colors: {
-    background: Color;
-    foreground: Color;
     primary: Color;
+    secondary: Color;
+    background: Color;
+    background2: Color;
     success: Color;
     danger: Color;
+    highlight: Color;
+    highlight2: Color;
     text: Color;
-    pastel: { [key: string]: Color };
+    textDisabled: Color;
   };
   spacing: {
+    xs: number;
     s: number;
     m: number;
+    b: number;
     l: number;
     xl: number;
     xxl: number;
   };
-  textVariants: {
+  textStyles: {
     header: {
       fontFamily: string;
       fontSize: number;
-      fontWeight: string;
+      fontWeight:
+        | "normal"
+        | "bold"
+        | "100"
+        | "200"
+        | "300"
+        | "400"
+        | "500"
+        | "600"
+        | "700"
+        | "800"
+        | "900"
+        | undefined;
     };
     body: {
       fontFamily: string;
