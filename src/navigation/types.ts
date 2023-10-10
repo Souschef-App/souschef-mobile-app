@@ -15,7 +15,7 @@ export type HomeStackNavigatorParamList = {
 
 export type BottomTabNavigatorParamList = {
   Home: undefined;
-  Mealplan: undefined;
+  Mealplan: MealPlanNavigatorParamList;
   QRScan: undefined;
   Calendar: undefined;
 };
@@ -28,9 +28,20 @@ export type WelcomeStackNavigatorParamList = {
   WebSocket: undefined;
 };
 
+export type MealPlanNavigatorParamList = {
+  MealPlan: undefined;
+  EnterDescriptionScreen: undefined;
+  TaskBreakDownResultScreen: undefined;
+};
+
+export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
+  MealPlan: undefined,
+  EnterDescriptionScreen: undefined,
+  TaskBreakDownResultScreen: undefined,
+};
 export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
   Home: undefined,
-  Mealplan: undefined,
+  Mealplan: defaultMealPlanNavigatorParamList,
   QRScan: undefined,
   Calendar: undefined,
 };
@@ -65,6 +76,9 @@ export type CookScreenNavigationProp =
 
 export type TaskScreenNavigationProp =
   BottomTabNavigationProp<HomeStackNavigatorParamList>;
+
+export type MealPlanNavigationProp =
+  NativeStackNavigationProp<MealPlanNavigatorParamList>;
 
 // Type definition for route prop to a specific screen
 // E.g: Describe the type of "route" when accessing it in LoginScreen

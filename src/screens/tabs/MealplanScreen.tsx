@@ -1,23 +1,28 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import {SafeArea} from '../../components';
 import {ThemeContext} from '../../contexts/AppContext';
-import {HomeScreenNavigationProp} from '../../navigation/types';
+import {HomeScreenNavigationProp, MealPlanNavigationProp} from '../../navigation/types';
 import {Theme} from '../../styles/type';
 
 const MealplanScreen = ({
   navigation,
 }: {
-  navigation: HomeScreenNavigationProp;
+  navigation: MealPlanNavigationProp;
 }) => {
   // Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
+  const goToEnterRecipe = () =>{
+    navigation.navigate("EnterDescriptionScreen")
+  }
+
   return (
     <SafeArea>
       <View style={styles.container}>
         <Text>Mealplan Screen</Text>
+        <Button title="Home" onPress={goToEnterRecipe} />
       </View>
     </SafeArea>
   );

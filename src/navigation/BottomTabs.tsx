@@ -5,10 +5,10 @@ import {Icon} from '../components';
 import {
   CalendarScreen,
   HomeScreen,
-  MealplanScreen,
   QRScanScreen,
 } from '../screens';
 import {BottomTabNavigatorParamList} from './types';
+import MealPlanNavigator from './MealPlanStack';
 
 const BottomTab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -42,7 +42,7 @@ const BottomTabs = () => {
       />
       <BottomTab.Screen
         name="Mealplan"
-        component={MealplanScreen}
+        component={MealPlanNavigator}
         options={{
           headerShown: false,
           tabBarIcon: makeTabBarIcon('meal'),

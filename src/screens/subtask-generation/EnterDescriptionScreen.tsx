@@ -1,5 +1,5 @@
 import React from "react"
-import { SafeArea, Column } from "../../components"
+import { SafeArea } from "../../components"
 import { Text } from "react-native"
 
 
@@ -11,9 +11,9 @@ export const EnterDescriptionScreen = () => {
 
     return(
         <SafeArea>
-            <Column>
+            {/* <Column> */}
                 <Text>EnterDescriptionScreen</Text>
-            </Column>
+            {/* </Column> */}
         </SafeArea>
     )
 }
