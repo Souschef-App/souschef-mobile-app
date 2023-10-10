@@ -1,5 +1,5 @@
-import { create, StateCreator } from "zustand";
-import { UserSlice, createUserSlice } from "./slices/userSlice";
+import {create, StateCreator} from 'zustand';
+import {UserSlice, createUserSlice} from './slices/userSlice';
 
 export type StoreState = UserSlice;
 

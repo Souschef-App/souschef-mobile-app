@@ -35,19 +35,19 @@ export enum COOKING_UNIT {
 }
 
 export const COOKING_UNIT_TO_STR = [
-  "",
-  "ounce",
-  "pound",
-  "gram",
-  "kilogram",
-  "teapsoon",
-  "tablespoon",
-  "cup",
-  "pint",
-  "quart",
-  "gallon",
-  "mililiter",
-  "liter",
+  '',
+  'ounce',
+  'pound',
+  'gram',
+  'kilogram',
+  'teapsoon',
+  'tablespoon',
+  'cup',
+  'pint',
+  'quart',
+  'gallon',
+  'mililiter',
+  'liter',
 ];
 
 export type WEIGHT_UNITS =
@@ -99,9 +99,9 @@ export interface Task {
 }
 
 export const defaultTask: Task = {
-  id: "",
-  title: "Default Task",
-  description: "Something went wrong",
+  id: '',
+  title: 'Default Task',
+  description: 'Something went wrong',
   ingredients: [], // Change to list of ingredients
   kitchenware: [], // Change to list of kitchenware
   duration: 0,
@@ -110,7 +110,7 @@ export const defaultTask: Task = {
   dependencies: [],
   points: 0,
   finished: false,
-  assignee: "", // Change to User
+  assignee: '', // Change to User
 };
 
 export interface Recipe {
@@ -128,8 +128,8 @@ export interface Recipe {
 }
 
 export const defaultRecipe: Recipe = {
-  id: "",
-  name: "Default Recipe",
+  id: '',
+  name: 'Default Recipe',
   date: 0,
   duration: 0,
   difficulty: DIFFICULTY.Easy,

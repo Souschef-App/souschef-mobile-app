@@ -22,4 +22,3 @@ const SafeArea: React.FC<PropsWithChildren<SafeAreaProps>> = (
 };
 
 export default SafeArea;
-

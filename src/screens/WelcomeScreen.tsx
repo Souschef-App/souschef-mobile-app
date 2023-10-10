@@ -1,9 +1,9 @@
-import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { ThemeContext } from "../contexts/AppContext";
-import { WelcomeScreenNavigationProp } from "../navigation/types";
-import { Theme } from "../styles/types";
-import { SafeArea } from "../components";
+import React from 'react';
+import {Button, StyleSheet, Text, View} from 'react-native';
+import {SafeArea} from '../components';
+import {ThemeContext} from '../contexts/AppContext';
+import {WelcomeScreenNavigationProp} from '../navigation/types';
+import {Theme} from '../styles/type';
 
 const WelcomeScreen = ({
   navigation,
@@ -15,8 +15,8 @@ const WelcomeScreen = ({
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   // Methods
-  const login = () => navigation.replace("Login");
-  const register = () => navigation.replace("Register");
+  const login = () => navigation.replace('Login');
+  const register = () => navigation.replace('Register');
 
   return (
     <SafeArea>
@@ -32,10 +32,10 @@ const WelcomeScreen = ({
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      display: "flex",
+      display: 'flex',
       flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 

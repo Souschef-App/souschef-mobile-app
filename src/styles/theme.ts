@@ -1,20 +1,20 @@
-import { Color, Theme } from "./types";
+import {Color, Theme} from './type';
 
-const palette: { [key: string]: Color } = {
-  white: "#ffffff",
-  lightgrey: "#f5f7fb",
-  blue: "#2E9DFB",
-  green: "#3ddc84",
-  red: "#fb6a69",
-  grey: "#2F394A",
+const palette: {[key: string]: Color} = {
+  white: '#ffffff',
+  lightgrey: '#f5f7fb',
+  blue: '#2E9DFB',
+  green: '#3ddc84',
+  red: '#fb6a69',
+  grey: '#2F394A',
 };
 
-const pastel: { [key: string]: Color } = {
-  bluegray: "#809bce",
-  iceblue: "#95b8d1",
-  aqua: "#b8e0d2",
-  lightorange: "#f0d5ba",
-  pink: "#eac4d5",
+const pastel: {[key: string]: Color} = {
+  bluegray: '#809bce',
+  iceblue: '#95b8d1',
+  aqua: '#b8e0d2',
+  lightorange: '#f0d5ba',
+  pink: '#eac4d5',
 };
 
 export const theme: Theme = {
@@ -36,12 +36,12 @@ export const theme: Theme = {
   },
   textVariants: {
     header: {
-      fontFamily: "Raleway",
+      fontFamily: 'Raleway',
       fontSize: 36,
-      fontWeight: "bold",
+      fontWeight: 'bold',
     },
     body: {
-      fontFamily: "Merriweather",
+      fontFamily: 'Merriweather',
       fontSize: 16,
     },
   },
