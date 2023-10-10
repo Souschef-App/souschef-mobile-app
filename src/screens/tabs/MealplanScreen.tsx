@@ -1,9 +1,12 @@
-import React from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
-import {SafeArea} from '../../components';
-import {ThemeContext} from '../../contexts/AppContext';
-import {HomeScreenNavigationProp, MealPlanNavigationProp} from '../../navigation/types';
-import {Theme} from '../../styles/type';
+import React from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { SafeArea } from "../../components";
+import { ThemeContext } from "../../contexts/AppContext";
+import {
+  HomeScreenNavigationProp,
+  MealPlanNavigationProp,
+} from "../../navigation/types";
+import { Theme } from "../../styles";
 
 const MealplanScreen = ({
   navigation,
@@ -14,9 +17,9 @@ const MealplanScreen = ({
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  const goToEnterRecipe = () =>{
-    navigation.navigate("EnterDescriptionScreen")
-  }
+  const goToEnterRecipe = () => {
+    navigation.navigate("EnterDescriptionScreen");
+  };
 
   return (
     <SafeArea>
@@ -31,10 +34,10 @@ const MealplanScreen = ({
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
 

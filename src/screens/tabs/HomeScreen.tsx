@@ -1,11 +1,15 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {SafeArea} from '../../components';
-import {ThemeContext} from '../../contexts/AppContext';
-import {HomeScreenNavigationProp} from '../../navigation/types';
-import {Theme} from '../../styles/type';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeArea } from "../../components";
+import { ThemeContext } from "../../contexts/AppContext";
+import { HomeScreenNavigationProp } from "../../navigation/types";
+import { Theme } from "../../styles";
 
-const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
+const HomeScreen = ({
+  navigation,
+}: {
+  navigation: HomeScreenNavigationProp;
+}) => {
   // Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -22,10 +26,10 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
 

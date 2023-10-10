@@ -1,12 +1,12 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {SafeArea} from '../components';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeArea } from "../components";
 import {
   TaskScreenNavigationProp,
   TaskScreenRouteProp,
-} from '../navigation/types';
-import {Theme} from '../styles/type';
-import {ThemeContext} from '../contexts/AppContext';
+} from "../navigation/types";
+import { Theme } from "../styles";
+import { ThemeContext } from "../contexts/AppContext";
 
 const TaskScreen = ({
   navigation,
@@ -31,10 +31,10 @@ const TaskScreen = ({
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
   });
 
