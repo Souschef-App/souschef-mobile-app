@@ -1,8 +1,6 @@
 import React, { type PropsWithChildren } from "react"
 import { View, type FlexAlignType } from "react-native"
 
-
-
 export interface ISpacingAll {
     b : number,
     t : number,
