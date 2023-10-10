@@ -1,38 +1,25 @@
 import React, { PropsWithChildren } from "react";
 import { type FlexAlignType } from "react-native";
-import { Box, type BoxProps, type SpacingAll } from "./Box";
+import { Box, type IBoxProps, type SpacingAll } from "./Box";
 
-interface StackProps extends BoxProps {
-  style: any;
-  align: FlexAlignType;
-  justifyContent:
-    | "flex-start"
-    | "flex-end"
-    | "center"
-    | "space-between"
-    | "space-around"
-    | "space-evenly"
-    | undefined;
-  m: number;
-  p: number;
-  mall: SpacingAll;
-  pall: SpacingAll;
-  flexDirection:
-    | "row"
-    | "column"
-    | "row-reverse"
-    | "column-reverse"
-    | undefined;
+
+type StackProps = Omit<IBoxProps, "flexDirection">;
+
+export const defaultStackProps : StackProps  = {
+  align:"center",
+  justifyContent:"center",
+  m: 0,
+  p: 0
 }
 
-type VStackProps = Omit<StackProps, "flexDirection">;
-
-export const VStack = (props: PropsWithChildren<VStackProps>) => {
+export const VStack = (propsIn: PropsWithChildren<StackProps>) => {
+  const props = {...defaultStackProps, ...propsIn}
   return <Box {...props} flexDirection="column" />;
 };
 
-type HStackProps = Omit<StackProps, "flexDirection">;
 
-export const HStack = (props: PropsWithChildren<HStackProps>) => {
+export const HStack = (propsIn: PropsWithChildren<StackProps>) => {
+  const props = {...defaultStackProps, ...propsIn}
   return <Box {...props} flexDirection="row" />;
 };
+

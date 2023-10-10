@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
-import { SafeArea, VStack } from "../../components";
+import { SafeArea, TextButton, VStack } from "../../components";
 import { StyleSheet, Text, TextInput } from "react-native";
-import { SpacingAll } from "../../components/primitives/Box";
-import { Button } from "../../components";
 import { ButtonStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
 import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
@@ -23,20 +21,10 @@ export const EnterDescriptionScreen = ({
 
   return (
     <SafeArea>
-      <VStack
-        style={styles.container}
-        p={0}
-        align={"center"}
-        justifyContent={"center"}
-        m={0}
-        mall={new SpacingAll(0, 0, 0, 0)}
-        pall={new SpacingAll(0, 0, 0, 0)}
-      >
+      <VStack style={styles.container}>
         <Text style={styles.title}>EnterDescriptionScreen</Text>
         <TextInput style={styles.input} onChangeText={setText} value={text} />
-        <Button style={styles.button} onPress={getSuggestions}>
-          <Text>Get Suggestions</Text>
-        </Button>
+        <TextButton style={styles.button} textStyle={styles.title} onPress={getSuggestions} title="Get Suggestions" />
       </VStack>
     </SafeArea>
   );

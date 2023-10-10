@@ -5,7 +5,6 @@ import { ThemeContext } from "../../contexts/AppContext";
 
 import { ButtonStyle, TextStyle } from "../../styles";
 import { Theme } from "../../styles";
-import { SpacingAll } from "../../components/primitives/Box";
 
 const DummyReturnedList: any = ["Hello", "Hey", "Hi"];
 
@@ -14,11 +13,6 @@ const StepComponent = ({ style: styles }: any) => {
     <VStack
       justifyContent={"flex-start"}
       style={styles.stepComponentWrapper}
-      align={"center"}
-      m={0}
-      p={0}
-      mall={new SpacingAll(0, 0, 0, 0)}
-      pall={new SpacingAll(0, 0, 0, 0)}
     >
       <Text style={styles.title}>Step Title</Text>
       <Text>Step Title</Text>
@@ -34,15 +28,7 @@ export const TaskBreakDownResultScreen = () => {
 
   return (
     <SafeArea>
-      <VStack
-        justifyContent={undefined}
-        p={0}
-        style={undefined}
-        align={"center"}
-        m={0}
-        mall={new SpacingAll(0, 0, 0, 0)}
-        pall={new SpacingAll(0, 0, 0, 0)}
-      >
+      <VStack>
         <Text style={styles.title}>Original Task</Text>
         <Text>Original Info here</Text>
         <Text style={styles.title}>Steps</Text>

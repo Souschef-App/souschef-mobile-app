@@ -24,43 +24,52 @@ export class SpacingAll implements ISpacingAll
     }
 }
 
-export interface BoxProps {
-    style : any,
-    "align" : FlexAlignType ,
-    "justifyContent" : 'flex-start'
+export interface IBoxProps {
+    style? : any,
+    "align"? : FlexAlignType ,
+    "justifyContent"? : 'flex-start'
                         | 'flex-end'
                         | 'center'
                         | 'space-between'
                         | 'space-around'
                         | 'space-evenly'
                         | undefined;
-    "m" : number,
-    "p"  : number,
-    "mall" : ISpacingAll,
-    "pall" : ISpacingAll,
-    "flexDirection" : "row" | "column" | "row-reverse" | "column-reverse" | undefined
+    "m"? : number,
+    "p"?  : number,
+    "mall"? : ISpacingAll,
+    "pall"? : ISpacingAll,
+    "flexDirection"? : "row" | "column" | "row-reverse" | "column-reverse" | undefined
 }
 
 
-export const Box = ({m, p, mall, pall, align, justifyContent, flexDirection, style, children} :  PropsWithChildren<BoxProps>) =>{
+const boxDefaultProps: IBoxProps = {
+    align: 'center',
+    justifyContent: 'center',
+    m: 0,
+    p: 0,
+};
+  
+export const Box = (propsIn :  PropsWithChildren<IBoxProps>) =>{
     
+    const props = {...boxDefaultProps, ...(propsIn as PropsWithChildren<IBoxProps>)};
+
     return <View style={{
-            alignItems: align,
-            justifyContent: justifyContent,
-            margin: m, 
-            padding : p, 
-            marginBottom : mall.b, 
-            marginTop : mall.t,
-            marginLeft: mall.l,
-            marginRight: mall.r,
-            paddingBottom : pall.t,
-            paddingTop : pall.b, 
-            paddingLeft: pall.r,
-            paddingRight: pall.l,
-            flexDirection: flexDirection,
+            alignItems: props.align,
+            justifyContent: props.justifyContent,
+            margin: props.m, 
+            padding : props.p, 
+            marginBottom : props.mall!.b, 
+            marginTop : props.mall!.t,
+            marginLeft: props.mall!.l,
+            marginRight: props.mall!.r,
+            paddingBottom : props.pall!.t,
+            paddingTop : props.pall!.b, 
+            paddingLeft: props.pall!.r,
+            paddingRight: props.pall!.l,
+            flexDirection: props.flexDirection,
             flex: 1,
-            ...style,
+            ...props.style,
         }}>
-            {children}
+            {props.children}
         </View>
 }
