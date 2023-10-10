@@ -9,7 +9,7 @@ export const TaskBreakDownResultScreen = () => {
     return(
         <SafeArea>
 
-                <Text>TaskBreakDownResultScreen</Text>
+                <Text>Original Task</Text>
 
         </SafeArea>
     )

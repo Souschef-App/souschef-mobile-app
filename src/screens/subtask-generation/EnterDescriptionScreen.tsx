@@ -6,15 +6,20 @@ import { Button } from "../../components/primitives/Button"
 import { ButtonStyle } from "../../styles"
 import { Theme } from "../../styles/type"
 import { ThemeContext } from "../../contexts/AppContext"
+import { EnterDescriptionScreenNavigationProp } from "../../navigation/types"
 
-export const EnterDescriptionScreen = () => {
+export const EnterDescriptionScreen = ({
+    navigation,
+  }: {
+    navigation: EnterDescriptionScreenNavigationProp;
+  }) => {
     const theme = useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
     const [text, setText] = useState("")
     
     const getSuggestions = () => {
-
+        navigation.navigate("TaskBreakDownResultScreen")
     }
 
     return(

@@ -80,6 +80,9 @@ export type TaskScreenNavigationProp =
 export type MealPlanNavigationProp =
   NativeStackNavigationProp<MealPlanNavigatorParamList>;
 
+export type EnterDescriptionScreenNavigationProp =
+  NativeStackNavigationProp<MealPlanNavigatorParamList>;
+
 // Type definition for route prop to a specific screen
 // E.g: Describe the type of "route" when accessing it in LoginScreen
 export type LoginScreenRouteProp = RouteProp<
