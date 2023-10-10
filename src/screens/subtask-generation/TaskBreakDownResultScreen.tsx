@@ -3,7 +3,7 @@ import { StyleSheet, Text } from "react-native";
 import { SafeArea, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 
-import { ButtonStyle } from "../../styles";
+import { ButtonStyle, TextStyle } from "../../styles";
 import { Theme } from "../../styles";
 import { SpacingAll } from "../../components/primitives/Box";
 
@@ -65,7 +65,7 @@ const makeStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
     },
     title: {
-      ...theme.textStyles.header,
+      ...TextStyle.header,
     },
     stepComponentWrapper: {
       backgroundColor: theme.colors.danger,

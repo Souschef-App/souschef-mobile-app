@@ -1,7 +1,8 @@
-import { Button } from 'react-native';
-import SafeArea from './SafeArea';
-import { Box } from './primitives/Box';
-import Icon from './primitives/Icon';
-import { VStack, HStack } from './primitives/Stack';
+import SafeArea from "./SafeArea";
+import { Box } from "./primitives/Box";
+import Button from "./primitives/Button";
+import Icon from "./primitives/Icon";
+import { HStack, VStack } from "./primitives/Stack";
+import TextButton from "./TextButton";
 
-export {Icon, SafeArea, Box, Button, VStack, HStack};
+export { Box, Button, HStack, Icon, SafeArea, VStack, TextButton };

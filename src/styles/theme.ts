@@ -34,17 +34,6 @@ export const theme: Theme = {
     xl: 56,
     xxl: 64,
   },
-  textStyles: {
-    header: {
-      fontFamily: "Raleway",
-      fontSize: 36,
-      fontWeight: "bold",
-    },
-    body: {
-      fontFamily: "Merriweather",
-      fontSize: 16,
-    },
-  },
 };
 
 export const darkTheme: Theme = {

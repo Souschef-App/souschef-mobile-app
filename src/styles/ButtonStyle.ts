@@ -1,15 +1,17 @@
-import {StyleSheet} from 'react-native';
+import { ViewStyle } from "react-native";
 
-const buttonCore = StyleSheet.create({
+const buttonCore: { [key: string]: ViewStyle } = {
   center: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-
+  curved: {
+    borderRadius: 8,
+  },
   rounded: {
-    borderRadius: 20,
+    borderRadius: 1000,
   },
-});
+};
 
 const padding = (v: number, h: number) => {
   return {
@@ -18,9 +20,16 @@ const padding = (v: number, h: number) => {
   };
 };
 
-export const primary = {
+export const primary: ViewStyle = {
   ...buttonCore.center,
-  ...padding(12, 32),
   ...buttonCore.rounded,
+  ...padding(12, 32),
   elevation: 4,
+};
+
+export const account: ViewStyle = {
+  ...buttonCore.center,
+  ...padding(0, 16),
+  ...buttonCore.curved,
+  height: 56,
 };

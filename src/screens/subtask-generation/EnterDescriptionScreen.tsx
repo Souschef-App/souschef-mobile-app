@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import { SafeArea, VStack } from "../../components";
 import { StyleSheet, Text, TextInput } from "react-native";
 import { SpacingAll } from "../../components/primitives/Box";
-import { Button } from "../../components/primitives/Button";
-import { ButtonStyle, Theme } from "../../styles";
+import { Button } from "../../components";
+import { ButtonStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
 import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
 
@@ -61,6 +61,6 @@ const makeStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
     },
     title: {
-      ...theme.textStyles.header,
+      ...TextStyle.header,
     },
   });
