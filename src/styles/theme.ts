@@ -30,9 +30,10 @@ export const theme: Theme = {
     s: 8,
     m: 16,
     b: 24,
-    l: 48,
-    xl: 56,
-    xxl: 64,
+    l: 32,
+    xl: 48,
+    xxl: 56,
+    xxxl: 64,
   },
 };
 

@@ -1,6 +1,6 @@
-import React, {FC} from 'react';
-import {Text} from 'react-native';
-import Icons from '../../res/icon';
+import React, { FC } from "react";
+import { Text } from "react-native";
+import Icons from "../../assets/icons";
 
 type IconProps = {
   name: string;
@@ -8,7 +8,7 @@ type IconProps = {
   size?: number;
 };
 
-const Icon: FC<IconProps> = ({name, color = 'black', size = 24}) => {
+const Icon: FC<IconProps> = ({ name, color = "black", size = 24 }) => {
   const SvgComponent = Icons[name];
 
   if (!SvgComponent) {

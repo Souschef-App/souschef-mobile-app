@@ -6,7 +6,7 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native";
-import { Button } from "../components";
+import Button from "./primitives/Button";
 
 export type TextButtonProps = {
   title: string;

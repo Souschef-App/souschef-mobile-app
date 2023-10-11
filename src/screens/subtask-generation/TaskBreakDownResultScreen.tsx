@@ -10,10 +10,7 @@ const DummyReturnedList: any = ["Hello", "Hey", "Hi"];
 
 const StepComponent = ({ style: styles }: any) => {
   return (
-    <VStack
-      justifyContent={"flex-start"}
-      style={styles.stepComponentWrapper}
-    >
+    <VStack justifyContent={"flex-start"} style={styles.stepComponentWrapper}>
       <Text style={styles.title}>Step Title</Text>
       <Text>Step Title</Text>
       <Text>Step Title</Text>
@@ -51,7 +48,7 @@ const makeStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
     },
     title: {
-      ...TextStyle.header,
+      ...TextStyle.h1,
     },
     stepComponentWrapper: {
       backgroundColor: theme.colors.danger,

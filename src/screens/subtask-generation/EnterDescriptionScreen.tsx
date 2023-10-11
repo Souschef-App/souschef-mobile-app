@@ -24,7 +24,12 @@ export const EnterDescriptionScreen = ({
       <VStack style={styles.container}>
         <Text style={styles.title}>EnterDescriptionScreen</Text>
         <TextInput style={styles.input} onChangeText={setText} value={text} />
-        <TextButton style={styles.button} textStyle={styles.title} onPress={getSuggestions} title="Get Suggestions" />
+        <TextButton
+          style={styles.button}
+          textStyle={styles.title}
+          onPress={getSuggestions}
+          title="Get Suggestions"
+        />
       </VStack>
     </SafeArea>
   );
@@ -49,6 +54,6 @@ const makeStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
     },
     title: {
-      ...TextStyle.header,
+      ...TextStyle.h1,
     },
   });

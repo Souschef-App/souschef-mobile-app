@@ -1,9 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { SafeArea, TextButton, VStack } from "../components";
+import { StyleSheet, Text } from "react-native";
+import { Icon, SafeArea, TextButton, VStack } from "../components";
 import { ThemeContext } from "../contexts/AppContext";
 import { WelcomeScreenNavigationProp } from "../navigation/types";
-import { Theme, ButtonStyle } from "../styles";
+import { ButtonStyle, Theme, TextStyle } from "../styles";
 
 const WelcomeScreen = ({
   navigation,
@@ -20,21 +20,37 @@ const WelcomeScreen = ({
 
   return (
     <SafeArea>
-      <View style={styles.container}>
-        <Text>Welcome Screen</Text>
-        <TextButton
-          title="Login"
-          onPress={login}
-          style={styles.login}
-          textStyle={styles.buttonText}
-        />
-        <TextButton
-          title="Register"
-          onPress={register}
-          style={styles.register}
-          textStyle={styles.buttonText}
-        />
-      </View>
+      <VStack
+        pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
+        style={{ backgroundColor: theme.colors.primary }}
+      >
+        <VStack style={{ elevation: 10, shadowColor: "#000" }}>
+          <Icon name="logo" size={256} />
+        </VStack>
+        <VStack flexMain={false} rowGap={theme.spacing.l}>
+          <VStack align="flex-start" rowGap={theme.spacing.s}>
+            <Text style={styles.appName}>Sous Chef</Text>
+            <VStack align="flex-start">
+              <Text style={styles.message}>The ultimate group cooking</Text>
+              <Text style={styles.message}>experience</Text>
+            </VStack>
+          </VStack>
+          <VStack rowGap={theme.spacing.m}>
+            <TextButton
+              title="Login"
+              onPress={login}
+              style={styles.login}
+              textStyle={styles.buttonText}
+            />
+            <TextButton
+              title="Register"
+              onPress={register}
+              style={styles.register}
+              textStyle={styles.buttonText}
+            />
+          </VStack>
+        </VStack>
+      </VStack>
     </SafeArea>
   );
 };
@@ -47,6 +63,10 @@ const makeStyles = (theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
     },
+    appName: {
+      ...TextStyle.h1,
+    },
+    message: { ...TextStyle.h3 },
     buttonText: {
       color: "#fff",
       fontSize: 20,

@@ -25,5 +25,6 @@ export type Theme = {
     l: number;
     xl: number;
     xxl: number;
+    xxxl: number;
   };
 };
