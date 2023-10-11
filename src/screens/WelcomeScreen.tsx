@@ -5,6 +5,8 @@ import { ThemeContext } from "../contexts/AppContext";
 import { WelcomeScreenNavigationProp } from "../navigation/types";
 import { ButtonStyle, Theme, TextStyle } from "../styles";
 
+// TODO:
+// 1. Floating QR Scan Button
 const WelcomeScreen = ({
   navigation,
 }: {
@@ -15,16 +17,16 @@ const WelcomeScreen = ({
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   // Methods
-  const login = () => navigation.replace("Login");
-  const register = () => navigation.replace("Register");
+  const login = () => navigation.navigate("Login");
+  const register = () => navigation.navigate("Register");
 
   return (
     <SafeArea>
       <VStack
         pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
-        style={{ backgroundColor: theme.colors.primary }}
+        style={styles.root}
       >
-        <VStack style={{ elevation: 10, shadowColor: "#000" }}>
+        <VStack>
           <Icon name="logo" size={256} />
         </VStack>
         <VStack flexMain={false} rowGap={theme.spacing.l}>
@@ -57,11 +59,8 @@ const WelcomeScreen = ({
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
-    container: {
-      display: "flex",
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
+    root: {
+      backgroundColor: theme.colors.primary,
     },
     appName: {
       ...TextStyle.h1,
