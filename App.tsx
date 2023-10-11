@@ -6,6 +6,8 @@ import { theme } from "./src/styles/theme";
 const App = () => {
   const [darkMode, setDarkMode] = React.useState(false);
 
+  // TODO: Validate token/userID to avoid logging in
+
   return (
     <ThemeContext.Provider value={theme}>
       <RootNavigator />

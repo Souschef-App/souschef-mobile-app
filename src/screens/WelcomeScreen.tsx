@@ -5,6 +5,8 @@ import { ThemeContext } from "../contexts/AppContext";
 import { WelcomeScreenNavigationProp } from "../navigation/types";
 import { ButtonStyle, Theme, TextStyle } from "../styles";
 
+// TODO:
+// 1. Floating QR Scan Button
 const WelcomeScreen = ({
   navigation,
 }: {

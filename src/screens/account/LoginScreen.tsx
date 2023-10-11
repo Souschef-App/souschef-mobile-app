@@ -14,13 +14,14 @@ import {
   LoginScreenNavigationProp,
   defaultHomeStackNavigatorParamList,
 } from "../../navigation/types";
-import { ButtonStyle, TextStyle, Theme, InputStyle } from "../../styles";
-
-const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
+import { emailRegex } from "../../utils/regex";
 
 // TODO:
-// 1. Implement "forgot password" functionality
-// 2. (Optional) Diagonal line UI
+// 1. Find solution for keyboard pushing UI
+// 2. Implement "forgot password" functionality
+// 3. Dynamically change screen animation between Login & Register
+// 4. (Optional) Diagonal line UI
 const LoginScreen = ({
   navigation,
 }: {
@@ -90,7 +91,15 @@ const LoginScreen = ({
       return;
     }
 
-    login({ email, password });
+    // TEMPORARY
+    navigation.reset({
+      index: 0,
+      routes: [
+        { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
+      ],
+    });
+
+    // login({ email, password });
   };
 
   React.useEffect(() => {
@@ -98,9 +107,12 @@ const LoginScreen = ({
     if (user) {
       navigation.replace("HomeStack", defaultHomeStackNavigatorParamList);
     }
-    // Clear zustand error when leaving/re-rendering
-    return () => clearError();
   }, [loginError, user]);
+
+  React.useEffect(() => {
+    // Clear zustand error when onMount
+    clearError();
+  }, []);
 
   const isFocusedColor = (id: string) =>
     id === focusedInput ? theme.colors.text : theme.colors.textDisabled;
