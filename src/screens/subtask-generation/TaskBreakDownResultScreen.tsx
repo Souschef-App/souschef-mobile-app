@@ -8,21 +8,25 @@ import { Theme } from "../../styles";
 
 const DummyReturnedList: any = [
   {
+    "title" : "Step1",
     "kitchenware" : ["spoons"],
     "ingredients" : ["eggs"],
     "description" : "Scramble the egg with the spoon"
   },   
   {
+    "title" : "Step2",
     "kitchenware" : ["spoons"],
     "ingredients" : ["eggs"],
     "description" : "Scramble the egg with the spoon"
   },
   {
+    "title" : "Step3",
     "kitchenware" : ["spoons"],
     "ingredients" : ["eggs"],
     "description" : "Scramble the egg with the spoon"
   },
   {
+    "title" : "Step4",
     "kitchenware" : ["spoons"],
     "ingredients" : ["eggs"],
     "description" : "Scramble the egg with the spoon"
@@ -35,10 +39,27 @@ const StepComponent = ({ style: styles, data }: any) => {
       style={styles.stepComponentWrapper}
       p={5}
     >
-      <Text style={styles.title}>Step Title</Text>
-      <Text style={styles.item} >Kitchenware: {data.kitchenware}</Text>
-      <Text>Ingredients: {data.ingredients}</Text>
-      <Text>Description: {data.description}</Text>
+      <Text style={styles.title}>Step {data.title}</Text>
+      <HStack justifyContent="flex-start">
+         <Text style={styles.itemHeader} >Kitchenware:</Text>
+        {
+            data.kitchenware.map((item : string)  => {
+                return <Text>{item}</Text>
+            })
+        }
+      </HStack>
+      <HStack justifyContent="flex-start">
+         <Text style={styles.itemHeader} >Ingredients:</Text>
+        {
+            data.ingredients.map((item : string)  => {
+                return <Text>{item}</Text>
+            })
+        }
+      </HStack>
+      <HStack justifyContent="flex-start">
+        <Text style={styles.itemHeader}>Description:</Text>
+        <Text>{data.description}</Text>
+      </HStack>
     </VStack>
   );
 };
@@ -49,7 +70,7 @@ export const TaskBreakDownResultScreen = () => {
 
   return (
     <SafeArea>
-      <VStack gap={15}>
+      <VStack gap={10}>
         <Text style={styles.title}>Original Task</Text>
         <Text>Original Info here</Text>
         <Text style={styles.title}>Steps</Text>
@@ -72,17 +93,18 @@ const makeStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
     },
     title: {
-      ...TextStyle.h1,
+      ...TextStyle.h2,
     },
     stepComponentWrapper: {
-      backgroundColor: theme.colors.danger,
+      backgroundColor: theme.colors.background2,
       height: 120,
       flexGrow: 0
     },
-    item: {
+    itemHeader: {
       margin: 0,
       padding: 0,
-      backgroundColor: "#ff0000",
-      flexGrow: 0
-    }
+      flexGrow: 0,
+      ...TextStyle.body,
+      fontWeight: "bold"
+    },
   });
