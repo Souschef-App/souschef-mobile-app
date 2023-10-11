@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,16 @@ import {
   TextInput,
   Alert,
   ScrollView,
+  Platform, 
 } from 'react-native';
-import {Calendar} from 'react-native-calendars';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Calendar } from 'react-native-calendars';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Icon } from '../../components';
+import {Theme} from '../../styles/types';
+import {primary} from '../../styles/ButtonStyle';
+import {account} from '../../styles/ButtonStyle';
+import { TextStyle as textStyle} from '../../styles/TextStyle';
+import { TextStyle } from '../../styles';
 
 interface Booking {
   id: number;
@@ -39,32 +45,42 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
     isTimePickerVisible: false,
   });
 
+  const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
+
+  const [dateTime, setDateTime] = useState(new Date());
+
   const handleDateSelect = (date: string) => {
-    setState(prevState => ({
+    setState((prevState) => ({
       ...prevState,
       selectedDate: date,
     }));
   };
 
-  const handleTimeSelect = (time: Date) => {
-    const formattedTime = `${time.getHours()}:${time.getMinutes()}`;
-    setState(prevState => ({
-      ...prevState,
-      selectedTime: formattedTime,
-      isTimePickerVisible: false,
-    }));
+  const handleTimeSelect = () => {
+    setIsDateTimePickerVisible(true);
+  };
+
+  const handleDateTimeChange = (event: any, date?: Date | undefined) => {
+    setIsDateTimePickerVisible(false);
+
+    if (date) {
+      const formattedTime = `${date.getHours()}:${date.getMinutes()}`;
+      setState((prevState) => ({
+        ...prevState,
+        selectedTime: formattedTime,
+      }));
+    }
   };
 
   const handleMealNameChange = (text: string) => {
-    setState(prevState => ({
+    setState((prevState) => ({
       ...prevState,
       mealNameInput: text,
     }));
   };
 
   const handleBookingConfirmation = () => {
-    const {selectedDate, selectedTime, mealNameInput, confirmedBookings} =
-      state;
+    const { selectedDate, selectedTime, mealNameInput, confirmedBookings } = state;
 
     if (selectedDate && selectedTime && mealNameInput) {
       const newBooking: Booking = {
@@ -74,7 +90,7 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
         mealPlanName: mealNameInput,
       };
 
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         confirmedBookings: [...confirmedBookings, newBooking],
         selectedDate: null,
@@ -95,33 +111,47 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
     return daysLeft;
   };
 
+const isPastDate = (date: string) => {
+  const selectedDate = new Date(date);
+  const currentDate = new Date();
+  return selectedDate < currentDate;
+};
+
   return (
     <ScrollView style={styles.container}>
-      <Calendar
-        onDayPress={day => handleDateSelect(day.dateString)}
-        markedDates={{
-          [state.selectedDate || '']: {
-            selected: true,
-            selectedColor: '#4CAF50',
-          },
-        }}
-      />
+  <Text style={TextStyle.header}>Create a Cook Session!</Text>      
+  <Calendar
+  onDayPress={(day) => {
+    if (!isPastDate(day.dateString)) {
+      handleDateSelect(day.dateString);
+    } else {
+      Alert.alert('Please select a future date.');
+    }
+  }}
+  markedDates={{
+    [state.selectedDate || '']: {
+      selected: true,
+      selectedColor: '#4CAF50',
+    },
+    ...state.confirmedBookings.reduce((marked, booking) => {
+      if (isPastDate(booking.date)) {
+        marked[booking.date] = {
+          disabled: true,
+          disableTouchEvent: true,
+          customStyles: { container: { backgroundColor: '#E0E0E0' } },
+        };
+      }
+      return marked;
+    }, {} as { [date: string]: object }), 
+  }}
+/>
       {state.selectedDate && (
         <View style={styles.confirmationContainer}>
-          <Text style={styles.confirmationText}>Selected Date:</Text>
+          <Text style={TextStyle.body}>Selected Date:</Text>
           <Text style={styles.selectedDate}>{state.selectedDate}</Text>
-          <TouchableOpacity
-            onPress={() =>
-              setState(prevState => ({
-                ...prevState,
-                isTimePickerVisible: true,
-              }))
-            }
-            style={[styles.confirmationButton, styles.selectTimeButtonBlue]}>
+          <TouchableOpacity onPress={handleTimeSelect} style={[primary, styles.selectTimeButtonBlue]}>
             <Text style={[styles.buttonText, styles.selectTimeButtonTextBlue]}>
-              {state.selectedTime
-                ? `Selected Time: ${state.selectedTime}`
-                : 'Select Time'}
+              {state.selectedTime ? `Selected Time: ${state.selectedTime}` : 'Select Time'}
             </Text>
           </TouchableOpacity>
           <TextInput
@@ -130,62 +160,49 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
             value={state.mealNameInput}
             onChangeText={handleMealNameChange}
           />
-          <TouchableOpacity
-            onPress={handleBookingConfirmation}
-            style={styles.confirmationButton}>
+          <TouchableOpacity onPress={handleBookingConfirmation} style={[primary, styles.confirmationButton]}>
             <Text style={styles.buttonText}>Confirm Booking</Text>
           </TouchableOpacity>
         </View>
       )}
 
-      <DateTimePickerModal
-        isVisible={state.isTimePickerVisible}
-        mode="time"
-        onConfirm={time => handleTimeSelect(time)}
-        onCancel={() =>
-          setState(prevState => ({
-            ...prevState,
-            isTimePickerVisible: false,
-          }))
-        }
-      />
-
-      <View style={styles.listContainer}>
-        <Text style={styles.listTitle}>Booked Cooking Sessions</Text>
-        <FlatList
-          data={state.confirmedBookings}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => (
-            <View style={styles.sessionItem}>
-              <Icon
-                name="check"
-                size={24}
-                color="#4CAF50"
-                style={styles.checkIcon}
-              />
-              <View style={styles.sessionInfo}>
-                <Text style={styles.bookingDate}>Date: {item.date}</Text>
-                <Text style={styles.mealPlan}>
-                  Meal Plan:{' '}
-                  <Text style={styles.colorfulText}>{item.mealPlanName}</Text>
-                </Text>
-                <Text style={styles.bookingTime}>Time: {item.time}</Text>
-                <View style={styles.daysLeftContainer}>
-                  <Icon
-                    name="clock-o"
-                    size={16}
-                    color="#4CAF50"
-                    style={styles.clockIcon}
-                  />
-                  <Text style={styles.daysLeft}>
-                    {getDaysLeft(item.date)} days left
+<View style={styles.listContainer}>
+        <Text style={styles.listTitle}>Active Cooking Sessions</Text>
+        <ScrollView> 
+          <FlatList
+            data={state.confirmedBookings}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.sessionItem}>
+                <View style={styles.checkIcon}>
+                  <Icon name="check" color="green" />
+                </View>
+                <View style={styles.sessionInfo}>
+                  <Text style={styles.bookingDate}>Date: {item.date}</Text>
+                  <Text style={styles.mealPlan}>
+                    Meal Plan: <Text style={TextStyle.body}>{item.mealPlanName}</Text>
+                    <Text style={TextStyle.body}> - {item.time}</Text> 
                   </Text>
+                  <View style={styles.daysLeftContainer}>
+                    <Icon name="timer" />
+                    <Text style={styles.daysLeft}>{getDaysLeft(item.date)} days left</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        />
+            )}
+          />
+        </ScrollView>
       </View>
+
+      {isDateTimePickerVisible && (
+        <DateTimePicker
+          value={dateTime}
+          mode="time"
+          is24Hour={true}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          onChange={handleDateTimeChange}
+        />
+      )}
     </ScrollView>
   );
 };
@@ -195,17 +212,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5F5F5',
     paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingTop: 40,
   },
   confirmationContainer: {
     backgroundColor: 'white',
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
-  },
-  confirmationText: {
-    fontSize: 18,
-    color: '#4CAF50',
   },
   selectedDate: {
     fontSize: 20,
@@ -274,16 +287,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   clockIcon: {
-    marginRight: 4,
+    marginRight: 10,
   },
   daysLeft: {
     fontSize: 14,
     color: '#4CAF50',
+    margin: 10,
   },
-  bookingTime: {
-    fontSize: 16,
-  },
-
   selectTimeButtonBlue: {
     backgroundColor: '#2E9DFB',
   },
@@ -291,5 +301,6 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
 
 export default CalendarScreen;
