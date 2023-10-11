@@ -3,7 +3,7 @@ import { theme } from "./theme";
 
 const textCore: { [key: string]: TextStyle } = {
   defaultFont: {
-    fontFamily: "Inter",
+    // fontFamily: "Inter",
     color: theme.colors.text,
   },
 };
