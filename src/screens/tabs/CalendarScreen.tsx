@@ -16,7 +16,6 @@ import { Icon } from '../../components';
 import {Theme} from '../../styles/types';
 import {primary} from '../../styles/ButtonStyle';
 import {account} from '../../styles/ButtonStyle';
-import { TextStyle as textStyle} from '../../styles/TextStyle';
 import { TextStyle } from '../../styles';
 
 interface Booking {
