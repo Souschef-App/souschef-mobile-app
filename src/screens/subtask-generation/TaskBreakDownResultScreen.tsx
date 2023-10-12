@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text } from "react-native";
-import { HStack, SafeArea, VStack } from "../../components";
+import { Button, HStack, Icon, SafeArea, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 
 import { ButtonStyle, TextStyle } from "../../styles";
@@ -39,7 +39,13 @@ const StepComponent = ({ style: styles, data }: any) => {
       style={styles.stepComponentWrapper}
       p={5}
     >
-      <Text style={styles.title}>Step {data.title}</Text>
+      <HStack justifyContent="flex-start">
+        <Text style={styles.title}>{data.title}</Text>
+        <Button onPress={() => {}}>
+         <Icon name={"pencil"} />
+
+        </Button>
+      </HStack>
       <HStack justifyContent="flex-start">
          <Text style={styles.itemHeader} >Kitchenware:</Text>
         {
@@ -60,7 +66,7 @@ const StepComponent = ({ style: styles, data }: any) => {
         <Text style={styles.itemHeader}>Description:</Text>
         <Text>{data.description}</Text>
       </HStack>
-    </VStack>
+    </VStack> 
   );
 };
 
@@ -70,7 +76,7 @@ export const TaskBreakDownResultScreen = () => {
 
   return (
     <SafeArea>
-      <VStack gap={10}>
+      <VStack gap={10} pVH={{v: 0, h : 20}}>
         <Text style={styles.title}>Original Task</Text>
         <Text>Original Info here</Text>
         <Text style={styles.title}>Steps</Text>
@@ -80,7 +86,7 @@ export const TaskBreakDownResultScreen = () => {
       </VStack>
     </SafeArea>
   );
-};
+};  
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
@@ -94,6 +100,7 @@ const makeStyles = (theme: Theme) =>
     },
     title: {
       ...TextStyle.h2,
+      width: 330
     },
     stepComponentWrapper: {
       backgroundColor: theme.colors.background2,
