@@ -7,6 +7,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const App = () => {
   const [darkMode, setDarkMode] = React.useState(false);
 
+  // TODO: Validate token/userID to avoid logging in
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeContext.Provider value={theme}>

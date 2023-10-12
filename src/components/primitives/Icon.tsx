@@ -1,10 +1,10 @@
 import React, { FC } from "react";
-import { Text } from "react-native";
+import { ColorValue, Text } from "react-native";
 import Icons from "../../assets/icons";
 
 type IconProps = {
   name: string;
-  color?: string;
+  color?: ColorValue;
   size?: number;
 };
 
