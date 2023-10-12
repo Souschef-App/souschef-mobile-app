@@ -25,6 +25,10 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   timer: require("./timer.svg").default,
   logo: require("./logo.svg").default,
   x: require("./x.svg").default,
+  edit: require("./edit.svg").default,
+  cake: require("./cake.svg").default,
+  brochette: require("./brochette.svg").default,
+  plus: require("./plus.svg").default,
   // Add more mappings for other SVGs
 };
 
