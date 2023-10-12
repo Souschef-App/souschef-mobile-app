@@ -80,6 +80,16 @@ const LoginScreen = ({
 
   // Methods
   const tryLogin = () => {
+    // TEMPORARY
+    navigation.reset({
+      index: 0,
+      routes: [
+        { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
+      ],
+    });
+
+    return;
+
     if (email.length === 0 || password.length === 0) {
       setErrorMsg("Please make sure all fields are filled.");
       return;
@@ -91,15 +101,7 @@ const LoginScreen = ({
       return;
     }
 
-    // TEMPORARY
-    navigation.reset({
-      index: 0,
-      routes: [
-        { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
-      ],
-    });
-
-    // login({ email, password });
+    login({ email, password });
   };
 
   React.useEffect(() => {

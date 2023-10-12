@@ -22,6 +22,7 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   search: require("./search.svg").default,
   show: require("./show.svg").default,
   star: require("./star.svg").default,
+  "star-outline": require("./star-outline.svg").default,
   timer: require("./timer.svg").default,
   logo: require("./logo.svg").default,
   x: require("./x.svg").default,
