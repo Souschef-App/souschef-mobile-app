@@ -62,15 +62,10 @@ const RegisterScreen = ({
       setErrorMsg("");
     }
 
+    // Show status ONLY if valid
     const isValid = emailRegex.test(email);
+    setIsEmailStatusVisible(isValid);
     setIsEmailValid(isValid);
-
-    // Show valid email status; invalid email shown onBlur
-    if (isValid && !isEmailStatusVisible) {
-      setIsEmailStatusVisible(true);
-    } else if (isEmailStatusVisible) {
-      setIsEmailStatusVisible(false);
-    }
   }, [email]);
 
   React.useEffect(() => {

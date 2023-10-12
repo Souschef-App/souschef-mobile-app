@@ -47,29 +47,15 @@ const LoginScreen = ({
   const clearError = useStore((state) => state.clearError);
   const login = useStore((state) => state.login);
 
-  const handleEmailFocus = () => {
-    setFocusedInput("email");
-  };
-
-  const handleEmailBlur = () => {
-    // Show email status IF non-empty
-    setIsEmailStatusVisible(email.length > 0);
-  };
-
   React.useEffect(() => {
     if (!loginError && errorMsg !== "") {
       setErrorMsg("");
     }
 
+    // Show status ONLY if valid
     const isValid = emailRegex.test(email);
+    setIsEmailStatusVisible(isValid);
     setIsEmailValid(isValid);
-
-    // Show valid email status; invalid email shown onBlur
-    if (isValid && !isEmailStatusVisible) {
-      setIsEmailStatusVisible(true);
-    } else if (isEmailStatusVisible) {
-      setIsEmailStatusVisible(false);
-    }
   }, [email]);
 
   React.useEffect(() => {
@@ -142,8 +128,8 @@ const LoginScreen = ({
             <ValidationInput
               value={email}
               onChange={setEmail}
-              onFocus={handleEmailFocus}
-              onBlur={handleEmailBlur}
+              onFocus={() => setFocusedInput("email")}
+              onBlur={() => setIsEmailStatusVisible(email.length > 0)}
               placeholder="Email"
               keyboardType="email-address"
               isValid={isEmailValid}
