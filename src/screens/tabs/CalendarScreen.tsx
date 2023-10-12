@@ -13,10 +13,8 @@ import {
 import { Calendar } from 'react-native-calendars';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Icon } from '../../components';
-import {Theme} from '../../styles/types';
 import {primary} from '../../styles/ButtonStyle';
-import {account} from '../../styles/ButtonStyle';
-import { TextStyle } from '../../styles';
+import { TextStyle } from '../../styles/';
 
 interface Booking {
   id: number;
@@ -118,7 +116,7 @@ const isPastDate = (date: string) => {
 
   return (
     <ScrollView style={styles.container}>
-  <Text style={TextStyle.header}>Create a Cook Session!</Text>      
+  <Text style={TextStyle.h2}>Create a Cook Session!</Text>      
   <Calendar
   onDayPress={(day) => {
     if (!isPastDate(day.dateString)) {
@@ -166,7 +164,7 @@ const isPastDate = (date: string) => {
       )}
 
 <View style={styles.listContainer}>
-        <Text style={styles.listTitle}>Active Cooking Sessions</Text>
+<Text style={[TextStyle.h3, { color: 'green', textAlign: 'center' }]}>Active Cooking Sessions</Text>
         <ScrollView> 
           <FlatList
             data={state.confirmedBookings}
