@@ -37,7 +37,6 @@ const makeStyles = (theme: Theme) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#ff0000"
     },
     button:{
       ...ButtonStyle.primary
