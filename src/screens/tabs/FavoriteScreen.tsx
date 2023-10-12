@@ -8,7 +8,9 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Icon } from '../../components';
+import {primary} from '../../styles/ButtonStyle';
+import { TextStyle as textStyle } from '../../styles/';
 
 interface Recipe {
   id: number;
@@ -124,11 +126,11 @@ const FavoriteRecipesScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <Icon name="search" size={20} style={styles.searchIcon} />
+      <View style={[primary, styles.searchContainer]}>
+      <Icon name="search" size={15}/>
         <TextInput
-          style={styles.searchInput}
-          placeholder="Search for recipes"
+          style={textStyle.body}
+          placeholder="Search Favorites"
           value={searchText}
           onChangeText={handleSearch}
         />
@@ -136,11 +138,11 @@ const FavoriteRecipesScreen: React.FC = () => {
 
       {/* Favorite Recipes Section */}
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Favorite Recipes</Text>
+        <Text style={textStyle.h2}>Favorite Recipes</Text>
         <TouchableOpacity
-          style={styles.seeAllButton}
+          style={[styles.seeAllButton]}
           onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
-          <Text style={styles.seeAllText}>See All</Text>
+          <Text style={textStyle.body}>See All</Text>
         </TouchableOpacity>
       </View>
 
@@ -148,13 +150,13 @@ const FavoriteRecipesScreen: React.FC = () => {
         data={displayedFavoriteRecipes}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <TouchableOpacity style={styles.recipeItem}>
+          <TouchableOpacity style={[primary, styles.recipeItem]}>
             <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
-              <Text style={styles.recipeName}>{item.name}</Text>
+              <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
-                <Text style={styles.duration}>
-                  <Icon name="clock-o" size={16} color="#888" /> {item.duration}{' '}
+                <Text style={textStyle.body}>
+                  <Icon name="timer" size={16} /> {item.duration}{' '}
                   min
                 </Text>
                 <Text style={styles.rating}>
@@ -170,11 +172,11 @@ const FavoriteRecipesScreen: React.FC = () => {
 
       {/* Your Recipes Section */}
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Your Recipes</Text>
+        <Text style={textStyle.h2}>Your Recipes</Text>
         <TouchableOpacity
-          style={styles.seeAllButton}
+          style={[styles.seeAllButton]}
           onPress={() => setShowAllYourRecipes(!showAllYourRecipes)}>
-          <Text style={styles.seeAllText}>See All</Text>
+          <Text style={textStyle.body}>See All</Text>
         </TouchableOpacity>
       </View>
 
@@ -182,13 +184,13 @@ const FavoriteRecipesScreen: React.FC = () => {
         data={displayedYourRecipes}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <TouchableOpacity style={styles.recipeItem}>
+          <TouchableOpacity style={[primary, styles.recipeItem]}>
             <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
-              <Text style={styles.recipeName}>{item.name}</Text>
+              <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
-                <Text style={styles.duration}>
-                  <Icon name="clock-o" size={16} color="#888" /> {item.duration}{' '}
+                <Text style={textStyle.body}>
+                  <Icon name="timer" size={16} /> {item.duration}{' '}
                   min
                 </Text>
                 <Text style={styles.rating}>
@@ -208,28 +210,18 @@ const FavoriteRecipesScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
-    padding: 16,
+    backgroundColor: '#F5F7FB',
+    padding: 10,
   },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    marginBottom: 10,
   },
   seeAllButton: {
     borderBottomWidth: 1,
     borderBottomColor: '#4CAF50',
-  },
-  seeAllText: {
-    fontSize: 16,
-    color: '#D0BEBE',
-    textDecorationLine: 'underline',
   },
   recipeItem: {
     flexDirection: 'row',
@@ -256,18 +248,8 @@ const styles = StyleSheet.create({
   recipeInfo: {
     flex: 1,
   },
-  recipeName: {
-    fontSize: 20,
-    color: '#333',
-  },
   additionalInfo: {
     marginTop: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  duration: {
-    fontSize: 14,
-    color: '#888',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -280,23 +262,17 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 25,
+    marginTop: 30,
     borderWidth: 1,
-    borderColor: '#E5E5E5',
-    borderRadius: 12,
+    borderColor: '#F5F7FB',
+    borderRadius: 10,
     backgroundColor: 'white',
+    alignItems: 'center',
+    paddingRight: 200, 
+    width: 390, 
   },
-  searchIcon: {
-    paddingLeft: 16,
-    paddingRight: 8,
-    color: '#888',
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    fontSize: 16,
-  },
+
 });
 
 export default FavoriteRecipesScreen;
