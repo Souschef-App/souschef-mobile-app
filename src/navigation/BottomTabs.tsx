@@ -1,22 +1,25 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as React from "react";
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import * as React from 'react';
 
-import { Icon } from "../components";
-import { CalendarScreen, HomeScreen, JoinScreen } from "../screens";
-import HomeStackNavigator from "./HomeStack";
-import MealPlanNavigator from "./MealPlanStack";
-import { BottomTabNavigatorParamList } from "./types";
+import {Icon} from '../components';
+import {
+  CalendarScreen,
+  HomeScreen,
+  QRScanScreen,
+} from '../screens';
+import {BottomTabNavigatorParamList} from './types';
+import MealPlanNavigator from './MealPlanStack';
 
-const BottomTabs = createBottomTabNavigator<BottomTabNavigatorParamList>();
+const BottomTab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
-const BottomTabsNavigator = () => {
+const BottomTabs = () => {
   return (
-    <BottomTabs.Navigator
+    <BottomTab.Navigator
       screenOptions={() => ({
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: "#2e9dfb",
-        tabBarInactiveTintColor: "#b3bac0",
+        tabBarActiveTintColor: '#2e9dfb',
+        tabBarInactiveTintColor: '#b3bac0',
         tabBarStyle: {
           // Seamless transition (color)
           borderTopWidth: 0,
@@ -28,41 +31,40 @@ const BottomTabsNavigator = () => {
             height: 0,
           },
         },
-      })}
-    >
-      <BottomTabs.Screen
+      })}>
+      <BottomTab.Screen
         name="Home"
         component={HomeScreen}
         options={{
           headerShown: false,
-          tabBarIcon: makeTabBarIcon("home"),
+          tabBarIcon: makeTabBarIcon('home'),
         }}
       />
-      <BottomTabs.Screen
+      <BottomTab.Screen
         name="Mealplan"
         component={MealPlanNavigator}
         options={{
           headerShown: false,
-          tabBarIcon: makeTabBarIcon("meal"),
+          tabBarIcon: makeTabBarIcon('meal'),
         }}
       />
-      <BottomTabs.Screen
-        name="Join"
-        component={JoinScreen}
+      <BottomTab.Screen
+        name="QRScan"
+        component={QRScanScreen}
         options={{
           headerShown: false,
-          tabBarIcon: makeTabBarIcon("qr"),
+          tabBarIcon: makeTabBarIcon('qr'),
         }}
       />
-      <BottomTabs.Screen
+      <BottomTab.Screen
         name="Calendar"
         component={CalendarScreen}
         options={{
           headerShown: false,
-          tabBarIcon: makeTabBarIcon("calendar"),
+          tabBarIcon: makeTabBarIcon('calendar'),
         }}
       />
-    </BottomTabs.Navigator>
+    </BottomTab.Navigator>
   );
 };
 
@@ -78,4 +80,4 @@ const makeTabBarIcon = (iconName: string) => {
   }) => <Icon name={iconName} color={color} size={size} />;
 };
 
-export default BottomTabsNavigator;
+export default BottomTabs;
