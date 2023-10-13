@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
-import { ApiUrls } from "../../api/constants/ApiConstants";
-import { User } from "../../api/responses";
+import { ApiUrls } from "../../api/constants";
+import { User } from "../types";
 import { usePost } from "../../api/usePost";
 import { StoreState } from "../store";
 
