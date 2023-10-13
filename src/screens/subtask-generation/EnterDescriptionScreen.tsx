@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { SafeArea, TextButton, VStack } from "../../components";
+import { Input, SafeArea, TextButton, VStack } from "../../components";
 import { StyleSheet, Text, TextInput } from "react-native";
-import { ButtonStyle, TextStyle, Theme } from "../../styles";
+import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
 import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
 
@@ -20,13 +20,13 @@ export const EnterDescriptionScreen = ({
   };
 
   return (
-    <SafeArea>
-      <VStack style={styles.container}>
-        <Text style={styles.title}>EnterDescriptionScreen</Text>
-        <TextInput style={styles.input} onChangeText={setText} value={text} />
+    <SafeArea >
+      <VStack style={styles.container} gap={20}>
+        <Text style={styles.title}>Enter a Task</Text>
+        <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
         <TextButton
           style={styles.button}
-          textStyle={styles.title}
+          textStyle={styles.buttonText}
           onPress={getSuggestions}
           title="Get Suggestions"
         />
@@ -40,20 +40,23 @@ const makeStyles = (theme: Theme) =>
     button: {
       ...ButtonStyle.primary,
       backgroundColor: theme.colors.primary,
+      margin: 5
+    },
+    buttonText:{
+      ...TextStyle.h3,
       color: theme.colors.background,
     },
     input: {
-      height: 40,
-      margin: 12,
-      borderWidth: 1,
-      padding: 10,
-      width: 300,
-      backgroundColor: "#77777755",
+      ...InputStyle.multiline,
+      maxWidth: 300,
+      textAlignVertical: "top",
+      minHeight: 200,
+
     },
     container: {
       backgroundColor: theme.colors.background,
     },
     title: {
-      ...TextStyle.h1,
+      ...TextStyle.h3,
     },
   });
