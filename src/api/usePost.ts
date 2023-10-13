@@ -1,18 +1,18 @@
 export const usePost = async <T>(
   url: string,
-  params?: {json?: {}; query?: {}},
+  params?: { json?: {}; query?: {} }
 ): Promise<[result: T | null, error: string | null]> => {
   try {
     const response = await fetch(
-      url + '?' + new URLSearchParams(params?.query),
+      url + "?" + new URLSearchParams(params?.query),
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(params?.json),
-      },
+      }
     );
 
     // Request is successful
@@ -22,19 +22,14 @@ export const usePost = async <T>(
     }
 
     // Request is unsuccessful
-    try {
-      // 1. Attempt to extract server message
-      const json = await response.json();
-      if (json.error) {
-        return [null, json.error];
-      }
-    } catch (error) {
-      // 2. Failed to extract, using generic message
-      throw Error(`Network error: ${response.status}`);
+    // 1. Attempt to extract server message
+    const json = await response.json();
+    if (json.error) {
+      return [null, json.error];
     }
   } catch (error) {
     console.log(error instanceof Error ? error.message : error);
   }
 
-  return [null, 'Something went wrong...'];
+  return [null, "Something went wrong..."];
 };
