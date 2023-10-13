@@ -25,6 +25,7 @@ export type InputProps = {
   placeholder?: string;
   placeholderColor?: ColorValue;
   keyboardType?: KeyboardTypeOptions;
+  multiline?: boolean,
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   style?: ViewStyle;
   textStyle?: TextStyle;
@@ -54,6 +55,7 @@ const Input = forwardRef<TextInput, PropsWithChildren<InputProps>>(
           placeholderTextColor={props.placeholderColor}
           keyboardType={props.keyboardType}
           autoCapitalize={props.autoCapitalize}
+          multiline={props.multiline}
           style={{ flexGrow: 1, flexShrink: 1, ...props.textStyle }}
         />
         {props.children}
