@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Toast from 'react-native-toast-message';
+import {primary} from '../styles/ButtonStyle'
+import { TextStyle } from '../styles';
 
 interface CalendarScreenState {
   selectedDate: string | null;
@@ -77,9 +79,9 @@ const CalendarScreen: React.FC = () => {
         {state.selectedDate && (
           <TouchableOpacity
             onPress={handleBookingConfirmation}
-            style={styles.confirmationButton}
+            style={[primary,styles.confirmationButton]}
           >
-            <Text style={styles.buttonText}>Confirm Date</Text>
+            <Text style={[TextStyle.h3,styles.buttonText]}>Confirm Date</Text>
           </TouchableOpacity>
         )}
       </View>
