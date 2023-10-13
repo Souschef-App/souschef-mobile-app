@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Toast from 'react-native-toast-message';
-import {primary} from '../styles/ButtonStyle'
+import { primary } from '../styles/ButtonStyle';
 import { TextStyle } from '../styles';
 
 interface CalendarScreenState {
   selectedDate: string | null;
 }
 
-const CalendarScreen: React.FC = () => {
+const DateScreen: React.FC = () => {
   const [state, setState] = useState<CalendarScreenState>({
     selectedDate: null,
   });
@@ -50,7 +50,7 @@ const CalendarScreen: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.selectDateTitle}>Select Date</Text>
+        <Text style={[TextStyle.h1, styles.selectDateTitle]}>Select Date</Text>
       </View>
       <View style={styles.calendarContainer}>
         <Calendar
@@ -75,16 +75,14 @@ const CalendarScreen: React.FC = () => {
           }}
         />
       </View>
-      <View style={styles.confirmationContainer}>
-        {state.selectedDate && (
-          <TouchableOpacity
-            onPress={handleBookingConfirmation}
-            style={[primary,styles.confirmationButton]}
-          >
-            <Text style={[TextStyle.h3,styles.buttonText]}>Confirm Date</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {state.selectedDate && (
+        <TouchableOpacity
+          onPress={handleBookingConfirmation}
+          style={[primary, styles.confirmationButton]}
+        >
+          <Text style={[TextStyle.h3, styles.buttonText]}>Confirm Date</Text>
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 };
@@ -124,18 +122,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignSelf: 'center',
   },
-  confirmationContainer: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 8,
-    marginTop: 40,
-  },
   confirmationButton: {
-    marginTop: 10,
-    padding: 10,
+    marginTop: 50, // Adjusted the margin to make it shorter
     backgroundColor: '#4CAF50',
     alignItems: 'center',
-    borderRadius: 10,
+    width: 320,
+    marginLeft: 30
   },
   buttonText: {
     color: 'white',
@@ -144,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalendarScreen;
+export default DateScreen;
