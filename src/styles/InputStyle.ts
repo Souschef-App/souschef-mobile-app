@@ -8,3 +8,8 @@ export const underline: ViewStyle = {
   borderBottomColor: theme.colors.text,
   borderBottomWidth: 2,
 };
+
+export const multiline: ViewStyle = {
+  backgroundColor: theme.colors.background2,
+  flex: 1,
+};
