@@ -1,10 +1,10 @@
-import React, {PropsWithChildren} from 'react';
-import {User} from '../api/responses';
-import {theme} from '../styles/theme';
+import React, { PropsWithChildren } from "react";
+import { User } from "../data/types";
+import { theme } from "../styles/theme";
 
 export type Auth = {
   user: User | undefined;
-  login: ({}: {json: {email: string; password: string}}) => void;
+  login: ({}: { json: { email: string; password: string } }) => void;
   loginSuccess: boolean;
   loginLoading: boolean;
   loginError: unknown;
