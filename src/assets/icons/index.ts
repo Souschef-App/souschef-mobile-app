@@ -26,6 +26,10 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   timer: require("./timer.svg").default,
   logo: require("./logo.svg").default,
   x: require("./x.svg").default,
+  "arrow-up": require("./arrow-up.svg").default,
+  "arrow-down": require("./arrow-down.svg").default,
+  "arrow-left": require("./arrow-left.svg").default,
+  "arrow-right": require("./arrow-right.svg").default,
   // Add more mappings for other SVGs
 };
 

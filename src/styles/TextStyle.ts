@@ -25,6 +25,11 @@ export const h3: TextStyle = {
   fontSize: 20,
 };
 
+export const h4: TextStyle = {
+  ...textCore.defaultFont,
+  fontSize: 18,
+};
+
 export const body: TextStyle = {
   ...textCore.defaultFont,
   fontSize: 16,

@@ -1,4 +1,5 @@
 import { ViewStyle } from "react-native";
+import { theme } from "./theme";
 
 const buttonCore: { [key: string]: ViewStyle } = {
   center: {
@@ -23,8 +24,15 @@ const padding = (v: number, h: number) => {
 export const primary: ViewStyle = {
   ...buttonCore.center,
   ...buttonCore.rounded,
-  ...padding(12, 32),
-  elevation: 4,
+  ...padding(8, 16),
+  height: theme.spacing.xxl,
+  // Android shadow
+  elevation: 1,
+  // iOS shadow
+  shadowOffset: {
+    width: 0,
+    height: -1,
+  },
 };
 
 export const account: ViewStyle = {
