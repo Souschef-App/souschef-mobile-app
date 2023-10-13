@@ -48,7 +48,10 @@ const makeStyles = (theme: Theme) =>
     },
     input: {
       ...InputStyle.multiline,
-      maxWidth: 300
+      maxWidth: 300,
+      textAlignVertical: "top",
+      minHeight: 200,
+
     },
     container: {
       backgroundColor: theme.colors.background,

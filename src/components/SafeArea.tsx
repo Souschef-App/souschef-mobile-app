@@ -1,4 +1,4 @@
-import React, {type PropsWithChildren} from 'react';
+import React, {useContext, type PropsWithChildren} from 'react';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -17,7 +17,7 @@ const SafeArea: React.FC<PropsWithChildren<SafeAreaProps>> = (
   props: ISafeAreaProps,
 ) => {
 
-  const theme = React.useContext(ThemeContext);
+  const theme = useContext(ThemeContext);
 
   return (
     <SafeAreaView
@@ -32,7 +32,4 @@ const SafeArea: React.FC<PropsWithChildren<SafeAreaProps>> = (
 };
 
 export default SafeArea;
-function useContext(ThemeContext: any) {
-  throw new Error('Function not implemented.');
-}
 

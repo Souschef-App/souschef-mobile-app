@@ -11,5 +11,6 @@ export const underline: ViewStyle = {
 
 export const multiline: ViewStyle = {
   backgroundColor: theme.colors.background2,
+  padding: 15,
   flex: 1,
 };
