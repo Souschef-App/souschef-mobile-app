@@ -43,9 +43,9 @@ const RegisterScreen = ({
 
   // Store
   const user = useStore((state) => state.user);
-  const loading = useStore((state) => state.loading);
-  const registerError = useStore((state) => state.error);
-  const clearError = useStore((state) => state.clearError);
+  const loading = useStore((state) => state.socketLoading);
+  const registerError = useStore((state) => state.userError);
+  const clearError = useStore((state) => state.clearUserError);
   const register = useStore((state) => state.register);
 
   const handleEmailFocus = () => {

@@ -19,7 +19,8 @@ import useStore from "../../data/store";
 // TODO:
 // 1. Prevent dropdowns from moving other components
 // 2. Live feed floating button
-// 3. Abstract bubbles (top left)
+// 3. Handle empty ingredients or kitchenware
+// 4. Abstract bubbles (top left)
 const TaskScreen = ({
   navigation,
 }: {
@@ -36,21 +37,28 @@ const TaskScreen = ({
     React.useState<boolean>(false);
 
   // Store
-  const task = useStore((state) => state.task);
+  const task = useStore((state) => state.assignedTask);
+  const commands = useStore((state) => state.commands);
+  const stopConnection = useStore((state) => state.stopConnection);
+
   // const messageTitle = "No more tasks";
   // const messageDesc = "Thanks for your hard work!";
   const messageTitle = "There are no tasks available";
   const messageDesc = "Please wait for new tasks to become available.";
 
-  const handleTaskFinished = () => {};
-  const handleTaskReroll = () => {};
+  React.useEffect(() => {
+    return () => stopConnection();
+  }, []);
+
+  const handleTaskFinished = () => commands.completeTask();
+  const handleTaskReroll = () => commands.startSession();
 
   return (
     <SafeArea>
       <VStack p={theme.spacing.s}>
         {task ? (
           <>
-            <VStack p={theme.spacing.l} gap={theme.spacing.xl}>
+            <VStack pVH={{ h: theme.spacing.s }} gap={theme.spacing.xl}>
               <VStack flexMain={false} gap={theme.spacing.s}>
                 <Text style={styles.taskTitle}>{task.title}</Text>
                 <HStack
@@ -95,6 +103,7 @@ const TaskScreen = ({
               <Text style={TextStyle.h3}>{task.description}</Text>
               <VStack
                 flexMain={false}
+                pVH={{ h: theme.spacing.m }}
                 gap={isIngredientOpen ? 10 : theme.spacing.l}
               >
                 <Dropdown

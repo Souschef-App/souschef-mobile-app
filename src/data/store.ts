@@ -1,12 +1,15 @@
-import { create, StateCreator } from "zustand";
-import { UserSlice, createUserSlice } from "./slices/userSlice";
-import { TaskSlice, createTaskSlice } from "./slices/taskSlice";
+import { create } from "zustand";
+import {
+  createSessionSlice,
+  SessionSlice,
+} from "./slices/session/sessionSlice";
+import { createUserSlice, UserSlice } from "./slices/userSlice";
 
-export type StoreState = UserSlice & TaskSlice;
+export type StoreState = UserSlice & SessionSlice;
 
 const useStore = create<StoreState>()((...a) => ({
   ...createUserSlice(...a),
-  ...createTaskSlice(...a),
+  ...createSessionSlice(...a),
 }));
 
 export default useStore;

@@ -42,9 +42,9 @@ const LoginScreen = ({
 
   // Store
   const user = useStore((state) => state.user);
-  const loading = useStore((state) => state.loading);
-  const loginError = useStore((state) => state.error);
-  const clearError = useStore((state) => state.clearError);
+  const loading = useStore((state) => state.socketLoading);
+  const loginError = useStore((state) => state.userError);
+  const clearError = useStore((state) => state.clearUserError);
   const login = useStore((state) => state.login);
 
   React.useEffect(() => {

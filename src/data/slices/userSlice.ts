@@ -6,9 +6,9 @@ import { StoreState } from "../store";
 
 export interface UserSlice {
   user: User | null;
-  loading: boolean;
-  error: string | null;
-  clearError: () => void;
+  userLoading: boolean;
+  userError: string | null;
+  clearUserError: () => void;
   login: ({}: { email: string; password: string }) => Promise<void>;
   register: ({}: {
     username: string;
@@ -23,23 +23,23 @@ export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
   get
 ) => ({
   user: null,
-  loading: false,
-  error: null,
-  clearError: () => set({ error: null }),
+  userLoading: false,
+  userError: null,
+  clearUserError: () => set({ userError: null }),
   login: async (data) => {
-    set({ loading: true, error: null });
+    set({ socketLoading: true, userError: null });
     const [user, error] = await usePost<User>(ApiUrls.login, { json: data });
     set({
-      loading: false,
-      ...(user ? { user } : { error }),
+      socketLoading: false,
+      ...(user ? { user } : { userError: error }),
     });
   },
   register: async (data) => {
-    set({ loading: true, error: null });
+    set({ socketLoading: true, userError: null });
     const [user, error] = await usePost<User>(ApiUrls.register, { json: data });
     set({
-      loading: false,
-      ...(user ? { user } : { error }),
+      socketLoading: false,
+      ...(user ? { user } : { userError: error }),
     });
   },
 });

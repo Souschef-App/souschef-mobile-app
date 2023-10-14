@@ -6,6 +6,7 @@ import { CalendarScreen, HomeScreen, JoinScreen } from "../screens";
 import HomeStackNavigator from "./HomeStack";
 import MealPlanNavigator from "./MealPlanStack";
 import { BottomTabNavigatorParamList } from "./types";
+import JoinNavigator from "./JoinStack";
 
 const BottomTabs = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -48,10 +49,11 @@ const BottomTabsNavigator = () => {
       />
       <BottomTabs.Screen
         name="Join"
-        component={JoinScreen}
+        component={JoinNavigator}
         options={{
           headerShown: false,
           tabBarIcon: makeTabBarIcon("qr"),
+          unmountOnBlur: true,
         }}
       />
       <BottomTabs.Screen
