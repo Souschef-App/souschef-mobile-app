@@ -10,6 +10,12 @@ export const underline: ViewStyle = {
   borderBottomWidth: 2,
 };
 
+export const multiline: ViewStyle = {
+  backgroundColor: theme.colors.background2,
+  padding: 15,
+  flex: 1,
+};
+
 export const outline: ViewStyle = {
   height: theme.spacing.xl,
   borderColor: theme.colors.text,

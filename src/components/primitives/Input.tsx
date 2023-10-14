@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { HStack } from "./Stack";
 import Icon from "./Icon";
-import Button from "./Button";
 
 export type InputProps = {
   value: string;
@@ -30,6 +29,7 @@ export type InputProps = {
   placeholderColor?: ColorValue;
   keyboardType?: KeyboardTypeOptions;
   maxLength?: number;
+  multiline?: boolean;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   style?: ViewStyle;
   textStyle?: TextStyle;
@@ -61,6 +61,7 @@ const Input = forwardRef<TextInput, PropsWithChildren<InputProps>>(
           keyboardType={props.keyboardType}
           maxLength={props.maxLength}
           autoCapitalize={props.autoCapitalize}
+          multiline={props.multiline}
           style={{ flexGrow: 1, flexShrink: 1, ...props.textStyle }}
         />
         {props.children}
