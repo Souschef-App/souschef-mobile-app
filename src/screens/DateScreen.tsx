@@ -11,12 +11,12 @@ import Toast from 'react-native-toast-message';
 import { primary } from '../styles/ButtonStyle';
 import { TextStyle } from '../styles';
 
-interface CalendarScreenState {
+interface DateScreenState {
   selectedDate: string | null;
 }
 
 const DateScreen: React.FC = () => {
-  const [state, setState] = useState<CalendarScreenState>({
+  const [state, setState] = useState<DateScreenState>({
     selectedDate: null,
   });
 
