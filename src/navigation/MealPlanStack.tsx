@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { MealplanScreen } from "../screens";
-import { EnterDescriptionScreen } from "../screens/subtask-generation/EnterDescriptionScreen";
+import { EnterRecipeScreen } from "../screens/subtask-generation/EnterRecipeScreen";
 import { TaskBreakDownResultScreen } from "../screens/subtask-generation/TaskBreakDownResultScreen";
 import { MealPlanNavigatorParamList } from "./types";
 
@@ -17,7 +17,7 @@ const MealPlanNavigator = () => {
       />
       <MealPlanStack.Screen
         name="EnterDescriptionScreen"
-        component={EnterDescriptionScreen}
+        component={EnterRecipeScreen}
         options={{ headerShown: false }}
       />
       <MealPlanStack.Screen

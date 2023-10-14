@@ -5,7 +5,8 @@ import { ThemeContext } from "../../contexts/AppContext";
 
 import { ButtonStyle, TextStyle } from "../../styles";
 import { Theme } from "../../styles";
-import BottomSheet, { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { ScrollView } from "react-native-gesture-handler";
 
 const DummyReturnedList: any = [
   {
@@ -47,7 +48,7 @@ const StepComponent = ({ style: styles, theme, data, handlePresentModalPress }: 
           <Icon color={theme.colors.highlight} name={"pencil"} />
         </Button>
       </HStack>
-      <VStack p={10}>
+      <VStack pVH={{v: 0, h : 10}}>
         <HStack justifyContent="flex-start">
           <Text style={styles.itemHeader} >Kitchenware:</Text>
           {
@@ -101,20 +102,22 @@ export const TaskBreakDownResultScreen = () => {
   return (
     <BottomSheetModalProvider>
       <SafeArea>
-        <VStack align="flex-start" justifyContent="flex-start" style={styles.container} pVH={{v: 20, h : 20}} gap={20}>
-          <Text style={styles.title}>Original Task</Text>
-          <VStack style={styles.orgtask}>
-            <Text>Original Info here</Text>
-          </VStack>
+        <VStack 
+          align="flex-start" 
+          justifyContent="flex-start" 
+          style={styles.container} 
+          pVH={{v: 20, h : 20}} 
+          gap={0}>
+
           <Text style={styles.title}>Steps</Text>
-          <VStack flexMain={false}  gap={10} style={styles.listWrapper}>
+          <ScrollView style={styles.listWrapper}>
             {DummyReturnedList.map((item: any, index: number) => {
               return <StepComponent key={index} style={styles} data={item} handlePresentModalPress={handlePresentModalPress} theme={theme} />;
             })}
-          </VStack>
-          <VStack gap={10}>
-            <TextButton style={styles.acceptBtn} onPress={onAccept} title="Accept"/>
-            <TextButton style={styles.cancelBtn} onPress={onCancel} title="Cancel" /> 
+          </ScrollView>
+          <VStack gap={10} >
+            <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={onAccept} title="Accept"/>
+            <TextButton style={styles.cancelBtn} textStyle={styles.textButton} onPress={onCancel} title="Cancel" /> 
           </VStack>
         </VStack>
         <BottomSheetModal
@@ -153,7 +156,7 @@ const makeStyles = (theme: Theme) =>
       padding: 10,
     },
     stepComponentWrapper: {
-      backgroundColor: theme.colors.background2,
+      backgroundColor: theme.colors.background,
       flexGrow: 0,
       elevation: 5,
       borderRadius: 8
@@ -177,8 +180,11 @@ const makeStyles = (theme: Theme) =>
       alignItems: 'center',
     },
     listWrapper: {
-      // backgroundColor: theme.colors.background,
-      flexGrow: 0,
+      backgroundColor: theme.colors.background2,
+      // flexGrow: 0,
+      // flex: 1,
+      flexGrow: 10,
+      alignSelf: "stretch"
     },
     editbtn:{
        backgroundColor : theme.colors.background,
@@ -187,11 +193,18 @@ const makeStyles = (theme: Theme) =>
     },
     acceptBtn:{
       ...ButtonStyle.primary,
-      backgroundColor: theme.colors.primary
+      backgroundColor: theme.colors.primary,
+     alignSelf: "stretch"
 
     },
     cancelBtn:{
       ...ButtonStyle.primary,
-      backgroundColor: theme.colors.danger
+      backgroundColor: theme.colors.danger,
+      alignSelf: "stretch"
+    },
+    textButton:{
+      ...TextStyle.h3,
+      color: theme.colors.text,
     }
   });
+  

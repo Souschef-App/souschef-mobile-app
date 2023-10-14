@@ -1,4 +1,4 @@
-const baseUrl = `https://souschef-production.up.railway.app/api`;
+const baseUrl = `http://192.168.2.16:5000/api`;
 const user = `${baseUrl}/user`;
 const recipe = `${baseUrl}/recipe`;
 const cookingSession = `${baseUrl}/cookingsession`;
