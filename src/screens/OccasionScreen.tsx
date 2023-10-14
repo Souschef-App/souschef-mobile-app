@@ -20,6 +20,7 @@ function OccasionScreen() { //add logic and navigation
             <Icon name="chevronright" />
           </View>
         </TouchableOpacity>
+
         <View style={{ height: 5 }}></View>
         <TouchableOpacity style={style.touchable_container}>
           <View style={style.item}>
@@ -30,6 +31,7 @@ function OccasionScreen() { //add logic and navigation
             <Icon name="chevronright"/>
           </View>
         </TouchableOpacity>
+
         <View style={{ height: 5 }}></View>
         <TouchableOpacity style={style.touchable_container}>
           <View style={style.item}>
@@ -40,6 +42,7 @@ function OccasionScreen() { //add logic and navigation
             <Icon name="chevronright"/>
           </View>
         </TouchableOpacity>
+        
       </View>
     </View>
   );
