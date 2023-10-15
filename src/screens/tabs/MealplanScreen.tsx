@@ -13,7 +13,7 @@ import { Icon } from '../../components';
 import {primary} from '../../styles/ButtonStyle';
 import {TextStyle} from '../../styles/';
 
-interface Recipe {
+interface MealPlanRecipe {
   id: number;
   name: string;
   duration: number; // Add duration property
@@ -21,7 +21,7 @@ interface Recipe {
   imageUrl: string;
 }
 
-const allRecipes: Recipe[] = [
+const allRecipes: MealPlanRecipe[] = [
   //hardcoded recipes for now
   {
     id: 1,
@@ -65,7 +65,7 @@ const allRecipes: Recipe[] = [
   },
 ];
 
-const yourRecipes: Recipe[] = [
+const yourRecipes: MealPlanRecipe[] = [
   //hardcoded recipes for now
   {
     id: 8,
@@ -94,12 +94,12 @@ const yourRecipes: Recipe[] = [
   },
 ];
 
-const FavoriteRecipesScreen: React.FC = () => {
+const MealPlanScreen: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   const [filteredFavoriteRecipes, setFilteredFavoriteRecipes] =
-    useState<Recipe[]>(allRecipes);
+    useState<MealPlanRecipe[]>(allRecipes);
   const [filteredYourRecipes, setFilteredYourRecipes] =
-    useState<Recipe[]>(yourRecipes);
+    useState<MealPlanRecipe[]>(yourRecipes);
   const [showAllFavoriteRecipes, setShowAllFavoriteRecipes] =
     useState<boolean>(false);
   const [showAllYourRecipes, setShowAllYourRecipes] = useState<boolean>(false);
@@ -330,14 +330,14 @@ const styles = StyleSheet.create({
   },
   exploreMoreButton: {
     padding: 8,
-    backgroundColor: '#2E9DFB', // Background color for the button
-    borderRadius: 8, // Add border radius for a rounded button
-    alignItems: 'center', // Center the text horizontally
+    backgroundColor: '#2E9DFB', 
+    borderRadius: 8, 
+    alignItems: 'center', 
   },
   exploreMoreButtonText: {
-    color: 'white', // Text color for the button
-    fontWeight: 'bold', // Add fontWeight if desired
-    fontSize: 16, // Add fontSize if desired
+    color: 'white', 
+    fontWeight: 'bold', 
+    fontSize: 16, 
   },
   buttonText: {
     color: 'white',
@@ -345,12 +345,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   confirmButton: {
-    marginBottom: 20, // Add margin to separate Confirm button from Explore More
-    backgroundColor: '#4CAF50', // Customize the button color
+    marginBottom: 20, 
+    backgroundColor: '#4CAF50', 
     alignItems: 'center',
     marginHorizontal:40
   },
 
 });
 
-export default FavoriteRecipesScreen;
+export default MealPlanScreen;
