@@ -36,12 +36,14 @@ export type MealPlanNavigatorParamList = {
   MealPlan: undefined;
   EnterDescriptionScreen: undefined;
   TaskBreakDownResultScreen: undefined;
+  DateScreen: undefined;
 };
 
 export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealPlan: undefined,
   EnterDescriptionScreen: undefined,
   TaskBreakDownResultScreen: undefined,
+  DateScreen: undefined,
 };
 
 export const defaultJoinNavigatorParamList: JoinNavigatorParamList = {
@@ -128,6 +130,10 @@ export type CalendarScreenNavigationProp = BottomTabNavigationProp<
   BottomTabNavigatorParamList,
   "Calendar"
 >;
+
+export type DateScreenNavigationProp = NativeStackNavigationProp<
+  MealPlanNavigatorParamList,
+  "DateScreen">;
 
 // Type definition for route prop to a specific screen
 // E.g: Describe the type of "route" when accessing it in LoginScreen

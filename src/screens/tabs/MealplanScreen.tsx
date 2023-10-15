@@ -9,10 +9,10 @@ import {
   Image,
   ScrollView
 } from 'react-native';
-import { Icon } from '../../components';
+import { Button, Icon } from '../../components';
 import {primary} from '../../styles/ButtonStyle';
 import {TextStyle} from '../../styles/';
-
+import { DateScreenNavigationProp } from "../../navigation/types";
 interface MealPlanRecipe {
   id: number;
   name: string;
@@ -94,7 +94,9 @@ const yourRecipes: MealPlanRecipe[] = [
   },
 ];
 
-const MealPlanScreen: React.FC = () => {
+const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ navigation }) => {
+  const goToDateScreen = () => {
+    navigation.navigate('DateScreen');}
   const [searchText, setSearchText] = useState<string>('');
   const [filteredFavoriteRecipes, setFilteredFavoriteRecipes] =
     useState<MealPlanRecipe[]>(allRecipes);
@@ -227,13 +229,13 @@ const MealPlanScreen: React.FC = () => {
         )}
       />
       </ScrollView>
-      <TouchableOpacity
+      <Button
           style={[primary, styles.confirmButton]}
+          onPress={goToDateScreen}
         >
           <Text style={[TextStyle.h3, styles.buttonText]}>Create a New Meal Plan</Text>
-        </TouchableOpacity>
+        </Button>
     </View>
-    
   );
 };
 
@@ -317,8 +319,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E5E5',
     borderRadius: 12,
-    padding: 5,
-    marginBottom: 16,
+    padding: 10,
+    marginBottom: 50,
+    marginLeft:10,
     height:100,
     backgroundColor: 'white',
     elevation: 2,
