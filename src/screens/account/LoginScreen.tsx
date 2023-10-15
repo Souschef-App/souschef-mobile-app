@@ -106,9 +106,9 @@ const LoginScreen = ({
     id === focusedInput ? theme.colors.text : theme.colors.textDisabled;
 
   return (
-    <SafeArea>
+    <SafeArea backgroundColor={theme.colors.primary}>
       <VStack>
-        <VStack style={styles.tophalf}>
+        <VStack>
           <Text style={styles.header}>Welcome Back</Text>
         </VStack>
         <VStack
@@ -116,6 +116,7 @@ const LoginScreen = ({
           flexMain={false}
           pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
           gap={32}
+          style={styles.card}
         >
           <VStack flexMain={false} gap={theme.spacing.m}>
             <HStack p={theme.spacing.s} style={styles.errorBox}>
@@ -187,8 +188,8 @@ const LoginScreen = ({
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
-    tophalf: {
-      backgroundColor: theme.colors.primary,
+    card: {
+      backgroundColor: theme.colors.background,
     },
     header: {
       ...TextStyle.h1,

@@ -21,11 +21,8 @@ const WelcomeScreen = ({
   const register = () => navigation.navigate("Register");
 
   return (
-    <SafeArea>
-      <VStack
-        pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
-        style={styles.root}
-      >
+    <SafeArea backgroundColor={theme.colors.primary}>
+      <VStack pVH={{ v: theme.spacing.l, h: theme.spacing.m }}>
         <VStack>
           <Icon name="logo" size={256} />
         </VStack>
@@ -59,9 +56,6 @@ const WelcomeScreen = ({
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
-    root: {
-      backgroundColor: theme.colors.primary,
-    },
     appName: {
       ...TextStyle.h1,
     },

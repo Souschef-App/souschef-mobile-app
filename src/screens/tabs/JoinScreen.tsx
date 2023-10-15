@@ -23,46 +23,54 @@ const JoinScreen = ({
   };
 
   return (
-    <SafeArea>
+    <SafeArea backgroundColor={theme.colors.primary}>
       <VStack>
-        <VStack style={{ backgroundColor: theme.colors.primary }}>
+        <VStack>
           <Text style={TextStyle.h1}>JOIN SESSION</Text>
         </VStack>
-        <VStack flexCross={false} gap={16}>
-          <VStack flexMain={false} align="flex-start">
-            <Text style={{ ...TextStyle.h3, fontWeight: "bold" }}>Choose</Text>
-            <Text style={TextStyle.h4}>your join option</Text>
-          </VStack>
-          <HStack flexMain={false} gap={32}>
-            <Button onPress={handleQRCode}>
-              <VStack
-                flexMain={false}
-                flexCross={false}
-                gap={8}
-                style={{ ...styles.card, ...styles.qrCard }}
-              >
-                <Icon name="qr" size={48} color={theme.colors.text} />
-                <Text style={{ ...TextStyle.h4, color: theme.colors.text }}>
-                  QR-Code
-                </Text>
-              </VStack>
-            </Button>
-            <Button onPress={handleSessionCode}>
-              <VStack
-                flexMain={false}
-                flexCross={false}
-                gap={8}
-                style={{ ...styles.card, ...styles.codeCard }}
-              >
-                <Icon name="digit" size={48} color={theme.colors.background} />
-                <Text
-                  style={{ ...TextStyle.h4, color: theme.colors.background }}
+        <VStack style={{ backgroundColor: theme.colors.background }}>
+          <VStack flexCross={false} gap={16}>
+            <VStack flexMain={false} align="flex-start">
+              <Text style={{ ...TextStyle.h3, fontWeight: "bold" }}>
+                Choose
+              </Text>
+              <Text style={TextStyle.h4}>your join option</Text>
+            </VStack>
+            <HStack flexMain={false} gap={32}>
+              <Button onPress={handleQRCode}>
+                <VStack
+                  flexMain={false}
+                  flexCross={false}
+                  gap={8}
+                  style={{ ...styles.card, ...styles.qrCard }}
                 >
-                  Code
-                </Text>
-              </VStack>
-            </Button>
-          </HStack>
+                  <Icon name="qr" size={48} color={theme.colors.text} />
+                  <Text style={{ ...TextStyle.h4, color: theme.colors.text }}>
+                    QR-Code
+                  </Text>
+                </VStack>
+              </Button>
+              <Button onPress={handleSessionCode}>
+                <VStack
+                  flexMain={false}
+                  flexCross={false}
+                  gap={8}
+                  style={{ ...styles.card, ...styles.codeCard }}
+                >
+                  <Icon
+                    name="digit"
+                    size={48}
+                    color={theme.colors.background}
+                  />
+                  <Text
+                    style={{ ...TextStyle.h4, color: theme.colors.background }}
+                  >
+                    Code
+                  </Text>
+                </VStack>
+              </Button>
+            </HStack>
+          </VStack>
         </VStack>
       </VStack>
     </SafeArea>

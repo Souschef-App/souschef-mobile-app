@@ -116,9 +116,9 @@ const RegisterScreen = ({
     id === focusedInput ? theme.colors.text : theme.colors.textDisabled;
 
   return (
-    <SafeArea>
+    <SafeArea backgroundColor={theme.colors.primary}>
       <VStack>
-        <VStack style={styles.tophalf}>
+        <VStack>
           <Text style={styles.header}>Create Account</Text>
         </VStack>
         <VStack
@@ -126,6 +126,7 @@ const RegisterScreen = ({
           flexMain={false}
           pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
           gap={theme.spacing.l}
+          style={styles.card}
         >
           <VStack flexMain={false} gap={theme.spacing.m}>
             <HStack p={theme.spacing.s} style={styles.errorBox}>
@@ -218,8 +219,8 @@ const RegisterScreen = ({
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
-    tophalf: {
-      backgroundColor: theme.colors.primary,
+    card: {
+      backgroundColor: theme.colors.background,
     },
     header: {
       ...TextStyle.h1,
