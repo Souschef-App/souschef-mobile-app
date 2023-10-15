@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Icon} from '../components'; 
+import {Button, Icon} from '../components'; 
 import { primary,account } from '../styles/ButtonStyle';
 import { TextStyle } from '../styles';
+import { OccasionScreenNavigationProp } from '../navigation/types';
 
 interface TimeScreenState { //add navigation
   selectedTime: string | null;
 }
 
-const TimeScreen: React.FC = () => {
+const TimeScreen: React.FC <{ navigation: OccasionScreenNavigationProp }> = ({ navigation }) => {
+  const goToOccasionScreen = () => {
+    navigation.navigate('OccasionScreen');}
   const [state, setState] = useState<TimeScreenState>({
     selectedTime: null,
   });
@@ -65,9 +68,9 @@ const TimeScreen: React.FC = () => {
         />
       )}
 
-      <TouchableOpacity onPress={handleConfirmSession} style={[account,styles.confirmSessionButton]}>
-        <Text style={[TextStyle.h3,styles.buttonText]}>Confirm Session</Text>
-      </TouchableOpacity>
+      <Button onPress={goToOccasionScreen} style={[account,styles.confirmSessionButton]}>
+        <Text style={[TextStyle.h3,styles.buttonText]}>Confirm Time</Text>
+      </Button>
     </View>
   );
 };
