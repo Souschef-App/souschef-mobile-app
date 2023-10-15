@@ -139,12 +139,12 @@ const MealPlanScreen: React.FC = () => {
   return (
     
     <View style={styles.container}>
-      <Text style={styles.mealPlanTitle}>Meal Plan</Text>
-      <Text style={styles.dateText}>{getTodayDate()}</Text>
+      <Text style={[TextStyle.h2,styles.mealPlanTitle]}>Meal Plan</Text>
+      <Text style={[TextStyle.body,styles.dateText]}>{getTodayDate()}</Text>
       <View style={[primary, styles.searchContainer]}>
       <Icon name="search" size={15}/>
         <TextInput
-          style={TextStyle.body}
+          style={[TextStyle.body]}
           placeholder="Search Favorites"
           value={searchText}
           onChangeText={handleSearch}
@@ -158,9 +158,9 @@ const MealPlanScreen: React.FC = () => {
     <Icon name="heart"/> 
       </Text>
         <TouchableOpacity
-            style={styles.exploreMoreButton}
+            style={[primary,styles.exploreMoreButton]}
               onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
-            <Text style={styles.exploreMoreButtonText}>Explore More</Text>
+            <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Explore More</Text>
       </TouchableOpacity>
 
       </View>
@@ -197,9 +197,9 @@ const MealPlanScreen: React.FC = () => {
     <Icon name="clipboard"/> 
       </Text>
         <TouchableOpacity
-            style={styles.exploreMoreButton}
+            style={[primary,styles.exploreMoreButton]}
               onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
-            <Text style={styles.exploreMoreButtonText}>Add a Recipe</Text>
+            <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Add a Recipe</Text>
       </TouchableOpacity>
       </View>
       <FlatList
@@ -228,7 +228,7 @@ const MealPlanScreen: React.FC = () => {
       <TouchableOpacity
           style={[primary, styles.confirmButton]}
         >
-          <Text style={[TextStyle.h3, styles.buttonText]}>Confirm Date</Text>
+          <Text style={[TextStyle.h3, styles.buttonText]}>Create a New Meal Plan</Text>
         </TouchableOpacity>
     </View>
     
@@ -257,10 +257,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 15,
-  },
-  seeAllButton: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#4CAF50',
   },
   recipeItem: {
     flexDirection: 'row',
@@ -329,9 +325,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
   },
   exploreMoreButton: {
-    padding: 8,
     backgroundColor: '#2E9DFB', 
-    borderRadius: 8, 
     alignItems: 'center', 
   },
   exploreMoreButtonText: {
