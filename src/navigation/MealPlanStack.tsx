@@ -32,6 +32,11 @@ const MealPlanNavigator = () => {
         component={DateScreen}
         options={{ headerShown: false }}
       />
+       <MealPlanStack.Screen
+        name="TimeScreen"
+        component={TimeScreen}
+        options={{ headerShown: false }}
+      />
     </MealPlanStack.Navigator>
   );
 };

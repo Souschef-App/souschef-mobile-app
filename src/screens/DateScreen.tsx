@@ -9,13 +9,18 @@ import {
 import { Calendar } from 'react-native-calendars';
 import Toast from 'react-native-toast-message';
 import { primary } from '../styles/ButtonStyle';
-import { TextStyle } from '../styles';
+import { TextStyle } from '../styles'
+import { TimeScreenNavigationProp } from '../navigation/types';
+import { Button } from '../components';
+
 
 interface DateScreenState {
   selectedDate: string | null;
 }
 
-const DateScreen: React.FC = () => {
+const DateScreen: React.FC <{ navigation: TimeScreenNavigationProp }> = ({ navigation }) => {
+  const goToTimeScreen = () => {
+    navigation.navigate('TimeScreen');}
   const [state, setState] = useState<DateScreenState>({
     selectedDate: null,
   });
@@ -76,12 +81,12 @@ const DateScreen: React.FC = () => {
         />
       </View>
       {state.selectedDate && (
-        <TouchableOpacity
-          onPress={handleBookingConfirmation}
+        <Button
+          onPress={goToTimeScreen}
           style={[primary, styles.confirmationButton]}
         >
           <Text style={[TextStyle.h3, styles.buttonText]}>Confirm Date</Text>
-        </TouchableOpacity>
+        </Button>
       )}
     </ScrollView>
   );
