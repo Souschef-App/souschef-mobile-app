@@ -191,7 +191,7 @@ const MealPlanScreen: React.FC = () => {
       />
 
       {/* Your Recipes Section */}
-      <ScrollView><View style={styles.titleContainer}>
+      <View style={styles.titleContainer}>
       <Text style={TextStyle.h2}>
     Your Recipes {' '}
     <Icon name="clipboard"/> 
@@ -202,6 +202,7 @@ const MealPlanScreen: React.FC = () => {
             <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Add a Recipe</Text>
       </TouchableOpacity>
       </View>
+      <ScrollView>
       <FlatList
         data={displayedYourRecipes}
         keyExtractor={item => item.id.toString()}
@@ -224,7 +225,8 @@ const MealPlanScreen: React.FC = () => {
             </View>
           </TouchableOpacity>
         )}
-      /></ScrollView>
+      />
+      </ScrollView>
       <TouchableOpacity
           style={[primary, styles.confirmButton]}
         >
@@ -265,10 +267,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E5E5',
     borderRadius: 12,
-    padding: 5,
+    padding: 10,
     marginBottom: 16,
     backgroundColor: 'white',
     elevation: 2,
+    height:100,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -326,7 +329,9 @@ const styles = StyleSheet.create({
   },
   exploreMoreButton: {
     backgroundColor: '#2E9DFB', 
-    alignItems: 'center', 
+    alignItems: 'center',
+    height:50, 
+    marginTop:20
   },
   exploreMoreButtonText: {
     color: 'white', 
@@ -339,7 +344,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   confirmButton: {
-    marginBottom: 20, 
+    marginTop: 30, 
     backgroundColor: '#4CAF50', 
     alignItems: 'center',
     marginHorizontal:40
