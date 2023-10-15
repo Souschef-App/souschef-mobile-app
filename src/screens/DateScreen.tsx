@@ -14,7 +14,7 @@ import { TimeScreenNavigationProp } from '../navigation/types';
 import { Button } from '../components';
 
 
-interface DateScreenState {
+interface DateScreenState { //add logic
   selectedDate: string | null;
 }
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   confirmationButton: {
-    marginTop: 50, // Adjusted the margin to make it shorter
+    marginTop: 50, 
     backgroundColor: '#4CAF50',
     alignItems: 'center',
     width: 320,
