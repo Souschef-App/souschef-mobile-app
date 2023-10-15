@@ -6,17 +6,20 @@ import {
   StyleProp,
   TextInput,
   TextInputChangeEventData,
+  TextInputSubmitEditingEventData,
   TextStyle,
   ViewStyle,
 } from "react-native";
 import { HStack } from "./Stack";
 import Icon from "./Icon";
-import Button from "./Button";
 
 export type InputProps = {
   value: string;
   defaultValue?: string;
   onChange: (text: string) => void;
+  onSubmit?: (
+    event: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+  ) => void;
   onFocus?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
   onBlur?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
   icon?: string;
@@ -25,7 +28,8 @@ export type InputProps = {
   placeholder?: string;
   placeholderColor?: ColorValue;
   keyboardType?: KeyboardTypeOptions;
-  multiline?: boolean,
+  maxLength?: number;
+  multiline?: boolean;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   style?: ViewStyle;
   textStyle?: TextStyle;
@@ -48,12 +52,14 @@ const Input = forwardRef<TextInput, PropsWithChildren<InputProps>>(
           value={props.value}
           defaultValue={props.defaultValue}
           onChangeText={props.onChange}
+          onSubmitEditing={props.onSubmit}
           onFocus={props.onFocus}
           onBlur={props.onBlur}
           secureTextEntry={props.password}
           placeholder={props.placeholder}
           placeholderTextColor={props.placeholderColor}
           keyboardType={props.keyboardType}
+          maxLength={props.maxLength}
           autoCapitalize={props.autoCapitalize}
           multiline={props.multiline}
           style={{ flexGrow: 1, flexShrink: 1, ...props.textStyle }}

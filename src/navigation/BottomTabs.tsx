@@ -1,14 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 
-import {Icon} from '../components';
-import {
-  CalendarScreen,
-  HomeScreen,
-  QRScanScreen,
-} from '../screens';
-import {BottomTabNavigatorParamList} from './types';
-import MealPlanNavigator from './MealPlanStack';
+import { Icon } from "../components";
+import { CalendarScreen, HomeScreen, JoinScreen } from "../screens";
+import HomeStackNavigator from "./HomeStack";
+import MealPlanNavigator from "./MealPlanStack";
+import { BottomTabNavigatorParamList } from "./types";
+import JoinNavigator from "./JoinStack";
 
 const BottomTab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -48,12 +46,13 @@ const BottomTabs = () => {
           tabBarIcon: makeTabBarIcon('meal'),
         }}
       />
-      <BottomTab.Screen
-        name="QRScan"
-        component={QRScanScreen}
+      <BottomTabs.Screen
+        name="Join"
+        component={JoinNavigator}
         options={{
           headerShown: false,
-          tabBarIcon: makeTabBarIcon('qr'),
+          tabBarIcon: makeTabBarIcon("qr"),
+          unmountOnBlur: true,
         }}
       />
       <BottomTab.Screen

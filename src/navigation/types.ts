@@ -1,31 +1,33 @@
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import type {RouteProp} from '@react-navigation/native';
+import type {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {defaultRecipe, Recipe} from '../api/responses';
-
-export type HomeStackNavigatorParamList = {
-  BottomTabs: BottomTabNavigatorParamList;
-  Recipe: {
-    recipe: Recipe;
-  };
-  Task: {
-    sessionId: string;
-  };
-};
-
-export type BottomTabNavigatorParamList = {
-  Home: undefined;
-  Mealplan: MealPlanNavigatorParamList;
-  QRScan: undefined;
-  Calendar: undefined;
-};
 
 export type WelcomeStackNavigatorParamList = {
   Welcome: undefined;
   Login: undefined;
   Register: undefined;
   HomeStack: HomeStackNavigatorParamList;
-  WebSocket: undefined;
+};
+
+export type HomeStackNavigatorParamList = {
+  Tabs: BottomTabNavigatorParamList;
+  Task: undefined;
+  Feed: undefined;
+  Participants: undefined;
+};
+
+export type BottomTabNavigatorParamList = {
+  Home: undefined;
+  Mealplan: MealPlanNavigatorParamList;
+  Join: JoinNavigatorParamList;
+  Calendar: undefined;
+};
+
+export type JoinNavigatorParamList = {
+  JoinSelection: undefined;
+  QRCode: undefined;
+  SessionCode: undefined;
 };
 
 export type MealPlanNavigatorParamList = {
@@ -39,21 +41,25 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   EnterDescriptionScreen: undefined,
   TaskBreakDownResultScreen: undefined,
 };
+
+export const defaultJoinNavigatorParamList: JoinNavigatorParamList = {
+  JoinSelection: undefined,
+  QRCode: undefined,
+  SessionCode: undefined,
+};
+
 export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
   Home: undefined,
   Mealplan: defaultMealPlanNavigatorParamList,
-  QRScan: undefined,
+  Join: defaultJoinNavigatorParamList,
   Calendar: undefined,
 };
 
 export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
-  BottomTabs: defaultBottomTabNavigatorParamList,
-  Recipe: {
-    recipe: defaultRecipe,
-  },
-  Task: {
-    sessionId: '',
-  },
+  Tabs: defaultBottomTabNavigatorParamList,
+  Task: undefined,
+  Feed: undefined,
+  Participants: undefined,
 };
 
 export type WelcomeScreenNavigationProp =
@@ -74,8 +80,20 @@ export type RecipeScreenNavigationProp =
 export type CookScreenNavigationProp =
   NativeStackNavigationProp<HomeStackNavigatorParamList>;
 
-export type TaskScreenNavigationProp =
-  BottomTabNavigationProp<HomeStackNavigatorParamList>;
+export type JoinScreenNavigationProp = NativeStackNavigationProp<
+  JoinNavigatorParamList,
+  "JoinSelection"
+>;
+
+export type QRCodeScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<JoinNavigatorParamList, "QRCode">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
+>;
+
+export type SessionCodeScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<JoinNavigatorParamList, "SessionCode">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
+>;
 
 export type MealPlanNavigationProp =
   NativeStackNavigationProp<MealPlanNavigatorParamList>;
@@ -95,12 +113,3 @@ export type RegisterScreenRouteProp = RouteProp<
   'Register'
 >;
 
-export type RecipeScreenRouteProp = RouteProp<
-  HomeStackNavigatorParamList,
-  'Recipe'
->;
-
-export type TaskScreenRouteProp = RouteProp<
-  HomeStackNavigatorParamList,
-  'Task'
->;
