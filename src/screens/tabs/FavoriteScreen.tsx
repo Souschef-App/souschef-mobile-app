@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,16 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-import { Icon } from '../../components';
-import {primary} from '../../styles/ButtonStyle';
+import { Button, Icon } from '../../components';
+import { primary } from '../../styles/ButtonStyle';
 import { TextStyle as textStyle } from '../../styles/';
+import { RouteProp, NavigationProp } from '@react-navigation/native';
+import { MealNameScreenNavigationProp } from '../../navigation/types';
 
 interface Recipe {
   id: number;
   name: string;
-  duration: number; // Add duration property
+  duration: number;
   rating: number;
   imageUrl: string;
 }
@@ -93,7 +95,10 @@ const yourRecipes: Recipe[] = [
   },
 ];
 
-const FavoriteRecipesScreen: React.FC = () => {
+
+const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp }> = ({ navigation }) => {
+  const goToMealScreen = () => {
+    navigation.navigate('MealNameScreen');}
   const [searchText, setSearchText] = useState<string>('');
   const [filteredFavoriteRecipes, setFilteredFavoriteRecipes] =
     useState<Recipe[]>(allRecipes);
@@ -105,13 +110,13 @@ const FavoriteRecipesScreen: React.FC = () => {
 
   const handleSearch = (text: string) => {
     setSearchText(text);
-    const filteredFavorite = allRecipes.filter(recipe =>
-      recipe.name.toLowerCase().includes(text.toLowerCase()),
+    const filteredFavorite = allRecipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredFavoriteRecipes(filteredFavorite);
 
-    const filteredYourRecipe = yourRecipes.filter(recipe =>
-      recipe.name.toLowerCase().includes(text.toLowerCase()),
+    const filteredYourRecipe = yourRecipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredYourRecipes(filteredYourRecipe);
   };
@@ -127,7 +132,7 @@ const FavoriteRecipesScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={[primary, styles.searchContainer]}>
-      <Icon name="search" size={15}/>
+        <Icon name="search" size={15} />
         <TextInput
           style={textStyle.body}
           placeholder="Search Favorites"
@@ -141,23 +146,26 @@ const FavoriteRecipesScreen: React.FC = () => {
         <Text style={textStyle.h2}>Favorite Recipes</Text>
         <TouchableOpacity
           style={[styles.seeAllButton]}
-          onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
+          onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}
+        >
           <Text style={textStyle.body}>See All</Text>
         </TouchableOpacity>
       </View>
 
       <FlatList
         data={displayedFavoriteRecipes}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-          <TouchableOpacity style={[primary, styles.recipeItem]}>
-            <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Button
+            style={[primary, styles.recipeItem]}
+            onPress={goToMealScreen}
+          >
+            <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
               <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
                 <Text style={textStyle.body}>
-                  <Icon name="timer" size={16} /> {item.duration}{' '}
-                  min
+                  <Icon name="timer" size={16} /> {item.duration} min
                 </Text>
                 <Text style={styles.rating}>
                   {[...Array(Math.round(item.rating))].map((_, i) => (
@@ -166,7 +174,7 @@ const FavoriteRecipesScreen: React.FC = () => {
                 </Text>
               </View>
             </View>
-          </TouchableOpacity>
+          </Button>
         )}
       />
 
@@ -175,23 +183,26 @@ const FavoriteRecipesScreen: React.FC = () => {
         <Text style={textStyle.h2}>Your Recipes</Text>
         <TouchableOpacity
           style={[styles.seeAllButton]}
-          onPress={() => setShowAllYourRecipes(!showAllYourRecipes)}>
+          onPress={() => setShowAllYourRecipes(!showAllYourRecipes)}
+        >
           <Text style={textStyle.body}>See All</Text>
         </TouchableOpacity>
       </View>
 
       <FlatList
         data={displayedYourRecipes}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-          <TouchableOpacity style={[primary, styles.recipeItem]}>
-            <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Button
+            style={[primary, styles.recipeItem]}
+            onPress={goToMealScreen}
+          >
+            <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
               <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
                 <Text style={textStyle.body}>
-                  <Icon name="timer" size={16} /> {item.duration}{' '}
-                  min
+                  <Icon name="timer" size={16} /> {item.duration} min
                 </Text>
                 <Text style={styles.rating}>
                   {[...Array(Math.round(item.rating))].map((_, i) => (
@@ -200,7 +211,7 @@ const FavoriteRecipesScreen: React.FC = () => {
                 </Text>
               </View>
             </View>
-          </TouchableOpacity>
+          </Button>
         )}
       />
     </View>
@@ -237,7 +248,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
   },
   recipeImage: {
     width: 80,
@@ -269,10 +280,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
     alignItems: 'center',
-    paddingRight: 200, 
-    width: 390, 
+    paddingRight: 200,
+    width: 390,
   },
-
 });
 
 export default FavoriteRecipesScreen;

@@ -1,10 +1,27 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { TextStyle } from "../styles";
-import { Icon } from "../components";
+import { Button, Icon } from "../components";
 import { primary } from "../styles/ButtonStyle";
+import { CalendarScreenNavigationProp,  RecipeSelectorScreenNavigationProp } from "../navigation/types";
 
-function MealPlanScreen() { //add logic and navigation
+const MealPlanScreen: React.FC<{
+  navigation: RecipeSelectorScreenNavigationProp;
+}> = ({ navigation }) => {
+  const goToRecipeSelectorScreen = () => {
+    navigation.navigate("RecipeSelectorScreen");
+
+  };
+
+  const goToCalendarScreen = () => {
+    navigation.navigate("CalendarScreen");
+  };
+  const [mealPlanName, setMealPlanName] = useState("");
+  
+  useEffect(() => {
+    // Add any logic you need when the component mounts
+  }, []);
+
   return (    
     <SafeAreaView>
       <ScrollView>
@@ -31,11 +48,13 @@ function MealPlanScreen() { //add logic and navigation
                 <Icon
                   name="brochette"                  
                 />
-                <View style={styles.plusIconContainer}>
-                  <Icon
-                    name="plus"
-                  />
-                </View>
+                <Button onPress={goToRecipeSelectorScreen}>
+                  <View style={styles.plusIconContainer}>
+                    <Icon
+                      name="plus"
+                    />
+                  </View>
+                </Button>
               </View>
             </View>
             <View style={styles.sectionContainer}>
@@ -45,7 +64,7 @@ function MealPlanScreen() { //add logic and navigation
                     Teriyaki Pineapple Meatballs{' '}
                   </Text>
                   <Icon
-                    name="edit"
+                    name="pencil"
                   />
                 </View>
               </TouchableOpacity>
@@ -56,7 +75,7 @@ function MealPlanScreen() { //add logic and navigation
                 <View style={styles.item}>
                   <Text style={[TextStyle.h3,styles.itemText]}>Fruit Charcuterie Board{' '}</Text>
                   <Icon
-                    name="edit"
+                    name="pencil"
                   />
                 </View>
               </TouchableOpacity>
@@ -68,11 +87,13 @@ function MealPlanScreen() { //add logic and navigation
                 <Icon
                   name="meal"
                 />
-                <View style={styles.plusIconContainer}>
-                  <Icon
-                    name="plus"
-                  />
-                </View>
+                <Button onPress={goToRecipeSelectorScreen}>
+                  <View style={styles.plusIconContainer}>
+                    <Icon
+                      name="plus"
+                    />
+                  </View>
+                </Button>
               </View>
             </View>
             <View style={styles.sectionContainer}>
@@ -81,9 +102,9 @@ function MealPlanScreen() { //add logic and navigation
                   <Text style={[TextStyle.h3,styles.itemText]}>
                     Chorizo & mozzarella gnocchi bake{' '}
                   </Text>
-                  <Icon
-                    name="edit"
-                  />
+                  <View><Icon
+                    name="pencil"
+                  /></View>
                 </View>
               </TouchableOpacity>
             </View>
@@ -92,20 +113,23 @@ function MealPlanScreen() { //add logic and navigation
               <View style={styles.bellConcierge}>
                 <Text style={[TextStyle.h2,styles.title]}>Dessert{' '}</Text>
                 <Icon name= "cake" />
-                <View style={styles.plusIconContainer}>
-                  <Icon name="plus" />
-                </View>
+                <Button onPress={goToRecipeSelectorScreen}>
+                  <View style={styles.plusIconContainer}>
+                    <Icon
+                      name="plus"
+                    />
+                  </View>
+                </Button>
               </View>
             </View>
-
             <View style={styles.whiteSpace}></View> 
             
             <View style={styles.confirmButtonContainer}>
-              <TouchableOpacity style={[primary,styles.touchableContainerBlue]}>
+              <Button onPress={goToCalendarScreen} style={[primary,styles.touchableContainerBlue]}>
                 <View style={styles.itemCenter}>
                   <Text style={[TextStyle.body,styles.itemTextWhite]}>Confirm Session</Text>
                 </View>
-              </TouchableOpacity>
+              </Button>
             </View>
           </View>
         </View>
@@ -255,7 +279,6 @@ const styles = StyleSheet.create({
     marginLeft:200,
     alignContent:'flex-end',
     alignItems: 'center',
-
   },
 });
 

@@ -1,12 +1,15 @@
 import * as React from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import {Icon} from '../components'
-import { theme } from "../styles/theme";
-import { primary } from '../styles/ButtonStyle';
+import { Button, Icon } from '../components';
 import { TextStyle } from '../styles';
-function RecipeSelectorScreen() {
+import { primary } from '../styles/ButtonStyle';
+import { FavoriteScreenNavigationProp } from "../navigation/types";
 
-  return ( //add logic and navigation
+const RecipeSelectorScreen : React.FC<{ navigation: FavoriteScreenNavigationProp }> = ({ navigation }) => {
+  const goToFavScreen = () => {
+    navigation.navigate('FavoriteScreen');
+  }
+  return ( // add logic and navigation
     <View style={style.container}>
       <Text style={TextStyle.h1}>Where is This Recipe?</Text>
       <View style={style.item_container}>
@@ -16,27 +19,29 @@ function RecipeSelectorScreen() {
               <Icon
                 name="explore"
               />
-              <Text style={[TextStyle.h3,style.item_text]}>Find a Receipe</Text>
+              <Text style={[TextStyle.h3, style.item_text]}>Find a Recipe</Text>
             </View>
             <Icon
-              name="chevronright"
+              name="arrow-right"
+              size={15}
             />
           </View>
         </TouchableOpacity>
         <View style={{ height: 5 }} />
-        <TouchableOpacity style={style.touchable_container}>
+        <Button onPress={goToFavScreen} style={style.touchable_container}>
           <View style={style.item}>
             <View style={style.sub_item}>
               <Icon
                 name="heart"
               />
-              <Text style={[TextStyle.h3,style.item_text]}>From your Favourites</Text>
+              <Text style={[TextStyle.h3, style.item_text]}>From your Favorites</Text>
             </View>
             <Icon
-              name="chevronright"
+              name="arrow-right"
+              size={15}
             />
           </View>
-        </TouchableOpacity>
+        </Button>
         <View style={{ height: 5 }}></View>
         <TouchableOpacity style={style.touchable_container}>
           <View style={style.item}>
@@ -44,10 +49,11 @@ function RecipeSelectorScreen() {
               <Icon
                 name="plus"
               />
-              <Text style={[TextStyle.h3,style.item_text]}>Create a New Recepie</Text>
+              <Text style={[TextStyle.h3, style.item_text]}>Create a New Recipe</Text>
             </View>
             <Icon
-              name="chevronright"
+              name="arrow-right"
+              size={15}
             />
           </View>
         </TouchableOpacity>
