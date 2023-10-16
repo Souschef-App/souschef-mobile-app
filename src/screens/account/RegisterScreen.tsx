@@ -43,9 +43,9 @@ const RegisterScreen = ({
 
   // Store
   const user = useStore((state) => state.user);
-  const loading = useStore((state) => state.loading);
-  const registerError = useStore((state) => state.error);
-  const clearError = useStore((state) => state.clearError);
+  const loading = useStore((state) => state.socketLoading);
+  const registerError = useStore((state) => state.userError);
+  const clearError = useStore((state) => state.clearUserError);
   const register = useStore((state) => state.register);
 
   const handleEmailFocus = () => {
@@ -116,9 +116,9 @@ const RegisterScreen = ({
     id === focusedInput ? theme.colors.text : theme.colors.textDisabled;
 
   return (
-    <SafeArea>
+    <SafeArea backgroundColor={theme.colors.primary}>
       <VStack>
-        <VStack style={styles.tophalf}>
+        <VStack>
           <Text style={styles.header}>Create Account</Text>
         </VStack>
         <VStack
@@ -126,6 +126,7 @@ const RegisterScreen = ({
           flexMain={false}
           pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
           gap={theme.spacing.l}
+          style={styles.card}
         >
           <VStack flexMain={false} gap={theme.spacing.m}>
             <HStack p={theme.spacing.s} style={styles.errorBox}>
@@ -218,8 +219,8 @@ const RegisterScreen = ({
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
-    tophalf: {
-      backgroundColor: theme.colors.primary,
+    card: {
+      backgroundColor: theme.colors.background,
     },
     header: {
       ...TextStyle.h1,

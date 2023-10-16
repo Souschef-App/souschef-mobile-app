@@ -22,8 +22,14 @@ export type HomeStackNavigatorParamList = {
 export type BottomTabNavigatorParamList = {
   Home: undefined;
   Mealplan: MealPlanNavigatorParamList;
-  Join: undefined;
+  Join: JoinNavigatorParamList;
   Calendar: undefined;
+};
+
+export type JoinNavigatorParamList = {
+  JoinSelection: undefined;
+  QRCode: undefined;
+  SessionCode: undefined;
 };
 
 export type MealPlanNavigatorParamList = {
@@ -38,10 +44,16 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   TaskBreakDownResultScreen: undefined,
 };
 
+export const defaultJoinNavigatorParamList: JoinNavigatorParamList = {
+  JoinSelection: undefined,
+  QRCode: undefined,
+  SessionCode: undefined,
+};
+
 export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
   Home: undefined,
   Mealplan: defaultMealPlanNavigatorParamList,
-  Join: undefined,
+  Join: defaultJoinNavigatorParamList,
   Calendar: undefined,
 };
 
@@ -82,8 +94,18 @@ export type EnterDescriptionScreenNavigationProp = NativeStackNavigationProp<
   "EnterDescriptionScreen"
 >;
 
-export type JoinScreenNavigationProp = CompositeNavigationProp<
-  BottomTabNavigationProp<BottomTabNavigatorParamList, "Join">,
+export type JoinScreenNavigationProp = NativeStackNavigationProp<
+  JoinNavigatorParamList,
+  "JoinSelection"
+>;
+
+export type QRCodeScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<JoinNavigatorParamList, "QRCode">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
+>;
+
+export type SessionCodeScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<JoinNavigatorParamList, "SessionCode">,
   NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
 >;
 

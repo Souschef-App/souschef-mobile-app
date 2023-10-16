@@ -6,15 +6,13 @@ interface Task {
   id: string;
   title: string;
   description: string;
-  ingredients: Ingredient[]; // Change to list of ingredients
-  kitchenware: Kitchenware[]; // Change to list of kitchenware
   duration: number;
   difficulty: DIFFICULTY;
-  order: number;
+  priority: number;
   dependencies: number[];
-  points: number;
-  finished: boolean;
-  assignee: string; // Change to User
+  ingredients: Ingredient[]; // Change to list of ingredients
+  kitchenware: Kitchenware[]; // Change to list of kitchenware
+  // assignee: string;
 }
 
 export default Task;
