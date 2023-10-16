@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
-import { Modal, StyleSheet, Text, TextInput } from "react-native";
+import { Modal, StyleSheet, Text } from "react-native";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
 import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";

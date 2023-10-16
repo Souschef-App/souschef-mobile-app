@@ -1,5 +1,4 @@
-export interface RecipeStep {
-  ID: number;
+export interface RecipeStepDTO {
   Title: string;
   Description: string;
   Ingredients: string[];

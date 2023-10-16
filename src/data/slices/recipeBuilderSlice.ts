@@ -3,6 +3,7 @@ import { StoreState } from "../store";
 import { usePost } from "../../api/usePost";
 import { ApiUrls } from "../../api/constants";
 import { RecipeStep } from "../types/recipeStep";
+import { RecipeStepDTO } from "../types/recipeStepDTO";
 
 export interface RecipeBuilderSlice {
   loading: boolean;
@@ -43,11 +44,28 @@ export const createRecipeBuilderSlice: StateCreator<
 
     console.log(breakdownResult);
 
+    const removedExtraText = breakdownResult.slice(
+      breakdownResult.indexOf("{"),
+      breakdownResult.lastIndexOf("}") + 1
+    );
+    console.log(removedExtraText);
     try {
-      const response = JSON.parse(breakdownResult);
-      const tasks: RecipeStep[] = response.steps;
+      const response = JSON.parse(removedExtraText);
+      const tasks: RecipeStepDTO[] = response.recipe;
 
-      set({ brokenDownRecipe: tasks });
+      const subTasks: RecipeStep[] = [];
+
+      tasks.map((item, index) => {
+        const step: RecipeStep = {
+          ID: index,
+          ...item,
+        };
+        subTasks.push(step);
+      });
+
+      console.log(JSON.stringify(subTasks));
+
+      set({ brokenDownRecipe: subTasks });
     } catch (error) {
       console.log(error);
     }
