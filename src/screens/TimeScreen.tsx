@@ -4,17 +4,20 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Button, Icon} from '../components'; 
 import { primary,account } from '../styles/ButtonStyle';
 import { TextStyle } from '../styles';
-import { OccasionScreenNavigationProp } from '../navigation/types';
+import { OccasionScreenNavigationProp, TimeScreenRouteProp } from '../navigation/types';
 
-interface TimeScreenState { //add navigation
+
+interface TimeScreenState { 
   selectedTime: string | null;
+  selectedDate: string | null;
 }
 
-const TimeScreen: React.FC <{ navigation: OccasionScreenNavigationProp }> = ({ navigation }) => {
+const TimeScreen: React.FC <{ route: TimeScreenRouteProp, navigation: OccasionScreenNavigationProp }> = ({route, navigation }) => {
   const goToOccasionScreen = () => {
-    navigation.navigate('OccasionScreen');}
+    navigation.navigate('OccasionScreen', {date: state.selectedDate, time: state.selectedTime});}
   const [state, setState] = useState<TimeScreenState>({
     selectedTime: null,
+    selectedDate: route.params.date
   });
 
   const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);

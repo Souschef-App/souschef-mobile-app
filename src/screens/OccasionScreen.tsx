@@ -4,15 +4,22 @@ import { Button, Icon, TextButton } from '../components';
 import { theme } from "../styles/theme";
 import { primary } from '../styles/ButtonStyle';
 import { TextStyle } from '../styles';
-import { MealNameScreenNavigationProp } from "../navigation/types";
+import { MealNameScreenNavigationProp, OccasionScreenRouteProp } from "../navigation/types";
 
-const OccasionScreen: React.FC<{ navigation: MealNameScreenNavigationProp }> = ({ navigation }) => {
+const OccasionScreen: React.FC<{ route: OccasionScreenRouteProp, navigation: MealNameScreenNavigationProp }> = ({ route, navigation }) => {
+  
+  const {date, time} = route.params
+
   const goToMealNameScreen = () => {
-    navigation.navigate('MealNameScreen');
+    navigation.navigate('MealNameScreen', {
+      date, time
+    }); 
+
   }
 
   return (
     <View style={style.container}>
+      
       <Text style={[TextStyle.h2, style.title]}>What's The Occasion?</Text>
       <View style={style.item_container}>
         <Button onPress={goToMealNameScreen} style={style.touchable_container}>

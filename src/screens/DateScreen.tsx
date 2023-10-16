@@ -13,14 +13,13 @@ import { TextStyle } from '../styles'
 import { TimeScreenNavigationProp } from '../navigation/types';
 import { Button } from '../components';
 
-
-interface DateScreenState { //add logic
-  selectedDate: string | null;
+interface DateScreenState { 
+  selectedDate: string | null 
 }
 
 const DateScreen: React.FC <{ navigation: TimeScreenNavigationProp }> = ({ navigation }) => {
   const goToTimeScreen = () => {
-    navigation.navigate('TimeScreen');}
+    navigation.navigate('TimeScreen', {date: state.selectedDate});}
   const [state, setState] = useState<DateScreenState>({
     selectedDate: null,
   });

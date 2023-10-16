@@ -98,7 +98,7 @@ const yourRecipes: Recipe[] = [
 
 const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp }> = ({ navigation }) => {
   const goToMealScreen = () => {
-    navigation.navigate('MealNameScreen');}
+    navigation.navigate('MealNameScreen', {date: null, time: null});}
   const [searchText, setSearchText] = useState<string>('');
   const [filteredFavoriteRecipes, setFilteredFavoriteRecipes] =
     useState<Recipe[]>(allRecipes);

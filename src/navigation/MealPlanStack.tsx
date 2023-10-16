@@ -39,7 +39,7 @@ const MealPlanNavigator = () => {
        <MealPlanStack.Screen
         name="TimeScreen"
         component={TimeScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false }} 
       />
 
       <MealPlanStack.Screen

@@ -9,7 +9,7 @@ const RecipeSelectorScreen : React.FC<{ navigation: FavoriteScreenNavigationProp
   const goToFavScreen = () => {
     navigation.navigate('FavoriteScreen');
   }
-  return ( // add logic and navigation
+  return ( 
     <View style={style.container}>
       <Text style={TextStyle.h1}>Where is This Recipe?</Text>
       <View style={style.item_container}>

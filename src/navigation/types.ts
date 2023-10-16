@@ -2,6 +2,8 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type {
   RouteProp,
   CompositeNavigationProp,
+  NavigatorScreenParams,
+  Route,
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -11,6 +13,7 @@ export type WelcomeStackNavigatorParamList = {
   Register: undefined;
   HomeStack: HomeStackNavigatorParamList;
 };
+
 
 export type HomeStackNavigatorParamList = {
   Tabs: BottomTabNavigatorParamList;
@@ -37,25 +40,54 @@ export type MealPlanNavigatorParamList = {
   EnterDescriptionScreen: undefined;
   TaskBreakDownResultScreen: undefined;
   DateScreen: undefined;
-  TimeScreen: undefined;
-  MealNameScreen: undefined;
-  RecipeSelectorScreen: undefined;
-  OccasionScreen: undefined;
-  FavoriteScreen: undefined;
-  CalendarScreen: undefined;
-};
+  TimeScreen: {date: string | null};
+  MealNameScreen: {
+    date: string | null;
+    time: string | null;
+  };
+  RecipeSelectorScreen: {
+    date: string | null;
+    time: string | null;
+    mealName: string;
+  };
+  OccasionScreen: {
+    date: string | null;
+    time: string | null;
+  };
+  FavoriteScreen: undefined; 
+  CalendarScreen: {
+    date: string | null;
+    time: string | null;
+    mealName: string;
+  };
+}
 
 export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealPlan: undefined,
   EnterDescriptionScreen: undefined,
   TaskBreakDownResultScreen: undefined,
   DateScreen: undefined,
-  TimeScreen: undefined,
-  MealNameScreen: undefined,
-  RecipeSelectorScreen: undefined,
-  OccasionScreen: undefined,
+  TimeScreen: { date : null},
+  MealNameScreen: {
+    date: null,
+    time: null,
+
+  },
+  RecipeSelectorScreen: {
+    date: null,
+    time: null,
+    mealName: ''
+  },
+  OccasionScreen: {
+    date: null,
+    time: null
+  },
   FavoriteScreen: undefined,
-  CalendarScreen: undefined
+  CalendarScreen: {
+    date: null,
+    time: null,
+    mealName: ''
+  }
 };
 
 export const defaultJoinNavigatorParamList: JoinNavigatorParamList = {
@@ -157,7 +189,7 @@ export type TimeScreenNavigationProp = NativeStackNavigationProp<
 
   export type RecipeSelectorScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "RecipeSelectorScreen">
+  "CalendarScreen"> 
 
   export type OccasionScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
@@ -166,6 +198,29 @@ export type TimeScreenNavigationProp = NativeStackNavigationProp<
   export type FavoriteScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
   "FavoriteScreen">;
+
+
+
+export type TimeScreenRouteProp = RouteProp<
+  MealPlanNavigatorParamList,
+  "TimeScreen"
+>;
+
+export type OccasionScreenRouteProp = RouteProp<
+MealPlanNavigatorParamList,
+'OccasionScreen'
+>
+
+export type MealNameScreenRouteProp = RouteProp<
+MealPlanNavigatorParamList,
+'MealNameScreen'
+>
+export type CalendarScreenRouteProp = RouteProp<
+MealPlanNavigatorParamList,
+'CalendarScreen'
+>
+
+//i am running out of time 
 
 // Type definition for route prop to a specific screen
 // E.g: Describe the type of "route" when accessing it in LoginScreen

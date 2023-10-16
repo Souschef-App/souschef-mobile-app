@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Icon } from '../../components';
 import {primary} from '../../styles/ButtonStyle';
 import { TextStyle } from '../../styles/';
+import { CalendarScreenRouteProp } from '../../navigation/types';
 
 interface Booking {
   id: number;
@@ -23,7 +24,9 @@ interface Booking {
   mealPlanName: string;
 }
 
-interface CalendarScreenProps {}
+interface CalendarScreenProps {
+  route: CalendarScreenRouteProp
+}
 
 interface CalendarScreenState {
   selectedDate: string | null;
@@ -33,7 +36,9 @@ interface CalendarScreenState {
   isTimePickerVisible: boolean;
 }
 
-const CalendarScreen: React.FC<CalendarScreenProps> = () => {
+const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
+  const {date, time, mealName} = route.params;
+
   const [state, setState] = useState<CalendarScreenState>({
     selectedDate: null,
     selectedTime: null,
@@ -52,6 +57,24 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
       selectedDate: date,
     }));
   };
+
+  useEffect(() => {
+    if(date!=null && time!=null && mealName!=null) {
+      const newBooking: Booking = {
+        id: Date.now(),
+        date: date || '',
+        time: time || '',
+        mealPlanName: mealName || '',
+      };
+  
+      setState((prevState) => ({
+        ...prevState,
+        confirmedBookings: [...[], newBooking],
+       
+      }));
+    }
+  }, [])
+
 
   const handleTimeSelect = () => {
     setIsDateTimePickerVisible(true);
@@ -91,8 +114,8 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
         ...prevState,
         confirmedBookings: [...confirmedBookings, newBooking],
         selectedDate: null,
-        selectedTime: null,
-        mealNameInput: '',
+        selectedTime: null, 
+        mealNameInput: ''
       }));
     } else {
       Alert.alert('Please enter a meal plan name and select a time');

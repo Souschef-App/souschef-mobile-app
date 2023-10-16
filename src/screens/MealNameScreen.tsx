@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, TextInput, TouchableOpacity, TextInputChangeEventData, NativeSyntheticEvent } from "react-native";
 import { TextStyle } from "../styles";
 import { Button, Icon } from "../components";
 import { primary } from "../styles/ButtonStyle";
-import { CalendarScreenNavigationProp,  RecipeSelectorScreenNavigationProp } from "../navigation/types";
+import { MealNameScreenRouteProp,  RecipeSelectorScreenNavigationProp } from "../navigation/types";
 
 const MealPlanScreen: React.FC<{
+  route: MealNameScreenRouteProp;
   navigation: RecipeSelectorScreenNavigationProp;
-}> = ({ navigation }) => {
+}> = ({ route, navigation }) => {
+  const {date, time} = route.params;
+  const [mealPlanName, setMealPlanName] = useState<string>("");
+  
+  
   const goToRecipeSelectorScreen = () => {
-    navigation.navigate("RecipeSelectorScreen");
+    navigation.navigate("RecipeSelectorScreen", {date, time, mealName: mealPlanName});
 
-  };
+  }; 
 
   const goToCalendarScreen = () => {
-    navigation.navigate("CalendarScreen");
+    
+    navigation.navigate("CalendarScreen", {date, time: time, mealName: mealPlanName});
   };
-  const [mealPlanName, setMealPlanName] = useState("");
   
   useEffect(() => {
     // Add any logic you need when the component mounts
@@ -39,6 +44,8 @@ const MealPlanScreen: React.FC<{
           <View style={styles.inputContainer}>
             <TextInput
               style={[TextStyle.body,styles.inputSelfContainer]}
+              value={mealPlanName}
+              onChange={(e: NativeSyntheticEvent<TextInputChangeEventData>)=>setMealPlanName(e.nativeEvent.text)} 
               placeholder="Meal Plan Name"
             />
 
