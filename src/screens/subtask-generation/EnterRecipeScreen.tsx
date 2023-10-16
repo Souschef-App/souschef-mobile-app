@@ -5,6 +5,7 @@ import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
 import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
 import { ScrollView } from "react-native-gesture-handler";
+import useStore from "../../data/store";
 
 
 export const EnterRecipeScreen = ({
@@ -19,7 +20,13 @@ export const EnterRecipeScreen = ({
 
   const [text, setText] = useState("");
 
+  const setEnteredRecipe = useStore((state) => state.setEnteredRecipe);
+  const submitForBreakDown = useStore((state) => state.submitForBreakDown);
+
+
   const getSuggestions = () => {
+    setEnteredRecipe(taskList)
+    submitForBreakDown();
     navigation.navigate("TaskBreakDownResultScreen");
   };
 
@@ -27,7 +34,7 @@ export const EnterRecipeScreen = ({
     taskList.push(text)
     setText("")
     setModalVisible(!modalVisible)
-  }
+  } 
 
   return (
     <SafeArea>
@@ -38,13 +45,13 @@ export const EnterRecipeScreen = ({
         </HStack>
         <ScrollView style={{ backgroundColor: "#77777722", flex: 1, alignSelf: "stretch"}}>
           {
-              taskList.map((task , index) =>{
-                return (
-                  <VStack key={index} style={styles.card} align="flex-start" justifyContent="center">
-                     <Text style={styles.listText}>{index + 1}. {task}</Text>
-                  </VStack>
-                )
-              })
+            taskList.map((task , index) =>{
+              return (
+                <VStack key={index} style={styles.card} align="flex-start" justifyContent="center">
+                    <Text style={styles.listText}>{index + 1}. {task}</Text>
+                </VStack>
+              )
+            })
           }
         </ScrollView>
         <Modal

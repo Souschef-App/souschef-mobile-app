@@ -7,6 +7,7 @@ import { ButtonStyle, TextStyle } from "../../styles";
 import { Theme } from "../../styles";
 import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
+import useStore from "../../data/store";
 
 const DummyReturnedList: any = [
   {
@@ -43,7 +44,7 @@ const StepComponent = ({ style: styles, theme, data, handlePresentModalPress }: 
       m={5}
     >
       <HStack justifyContent="space-between">
-        <Text style={styles.tasktitle}>{data.title}</Text>
+        <Text style={styles.tasktitle}>{data.task}</Text>
         <Button style={styles.editbtn} onPress={() => handlePresentModalPress()}>
           <Icon color={theme.colors.highlight} name={"pencil"} />
         </Button>
@@ -53,7 +54,7 @@ const StepComponent = ({ style: styles, theme, data, handlePresentModalPress }: 
           <Text style={styles.itemHeader} >Kitchenware:</Text>
           {
               data.kitchenware.map((item : string, index : number)  => {
-                  return <Text key={index}>{item}</Text>
+                  return <Text key={index}>{item}, </Text>
               })
           }
         </HStack>
@@ -61,14 +62,14 @@ const StepComponent = ({ style: styles, theme, data, handlePresentModalPress }: 
           <Text style={styles.itemHeader} >Ingredients:</Text>
           {
               data.ingredients.map((item : string, index : number)  => {
-                  return <Text key={index}>{item}</Text>
+                  return <Text key={index}>{item}, </Text>
               })
           }
         </HStack>
-        <HStack justifyContent="flex-start">
+        {/* <HStack justifyContent="flex-start">
           <Text style={styles.itemHeader}>Description:</Text>
           <Text>{data.description}</Text>
-        </HStack>
+        </HStack> */}
       </VStack>
     </VStack> 
   );
@@ -77,6 +78,8 @@ const StepComponent = ({ style: styles, theme, data, handlePresentModalPress }: 
 export const TaskBreakDownResultScreen = () => {
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -111,7 +114,7 @@ export const TaskBreakDownResultScreen = () => {
 
           <Text style={styles.title}>Steps</Text>
           <ScrollView style={styles.listWrapper}>
-            {DummyReturnedList.map((item: any, index: number) => {
+            {brokenDownRecipe?.map((item: any, index: number) => {
               return <StepComponent key={index} style={styles} data={item} handlePresentModalPress={handlePresentModalPress} theme={theme} />;
             })}
           </ScrollView>
@@ -152,8 +155,9 @@ const makeStyles = (theme: Theme) =>
 
     },
     tasktitle: {
-      ...TextStyle.h2,
+      ...TextStyle.h3,
       padding: 10,
+      maxWidth: 300
     },
     stepComponentWrapper: {
       backgroundColor: theme.colors.background,
@@ -184,7 +188,8 @@ const makeStyles = (theme: Theme) =>
       // flexGrow: 0,
       // flex: 1,
       flexGrow: 10,
-      alignSelf: "stretch"
+      alignSelf: "stretch",
+      maxHeight: 500
     },
     editbtn:{
        backgroundColor : theme.colors.background,
