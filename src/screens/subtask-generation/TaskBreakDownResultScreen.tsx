@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo, useRef, useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { Button, HStack, Icon, Input, SafeArea, TextButton, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 
@@ -9,7 +9,6 @@ import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet
 import { ScrollView } from "react-native-gesture-handler";
 import useStore from "../../data/store";
 import { RecipeStep } from "../../data/types/recipeStep";
-import { useFocusEffect } from "@react-navigation/native";
 
 interface StepComponentProp {
   styles : any,
@@ -123,6 +122,7 @@ export const TaskBreakDownResultScreen = () => {
       Difficulty: brokenDownRecipe![ID].Difficulty,
     }
     updateRecipe(ID, step)
+    bottomSheetModalRef.current?.close();
   }
 
   return (
@@ -152,12 +152,11 @@ export const TaskBreakDownResultScreen = () => {
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
         >
-
-            <VStack gap={20} style={styles.contentContainer}>
-              <Input style={styles.input} value={ingredients} onChange={setIngredients} />
-              <Input style={styles.input} value={kitchenware} onChange={setKitchenware} />
-              <Input style={styles.input} value={description} onChange={setDescription} />
-              <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={() => onUpdateRecipe(editID!)} title="Update" /> 
+          <VStack gap={20} style={styles.contentContainer}>
+            <Input style={styles.input} value={ingredients} onChange={setIngredients} />
+            <Input style={styles.input} value={kitchenware} onChange={setKitchenware} />
+            <Input style={styles.input} value={description} onChange={setDescription} />
+            <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={() => onUpdateRecipe(editID!)} title="Update" /> 
           </VStack>
         </BottomSheetModal>
       </SafeArea>
@@ -178,8 +177,6 @@ const makeStyles = (theme: Theme) =>
     title: {
       ...TextStyle.h1,
       color: theme.colors.text,
-
-
     },
     tasktitle: {
       ...TextStyle.h3,
