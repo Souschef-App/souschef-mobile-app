@@ -22,7 +22,8 @@ export const usePost = async <T>(
     }
 
     // Request is unsuccessful
-    // 1. Attempt to extract server message
+    // 1. Attempt to extract server message.
+    console.log("Status " + JSON.stringify(response));
     const json = await response.json();
     if (json.error) {
       return [null, json.error];

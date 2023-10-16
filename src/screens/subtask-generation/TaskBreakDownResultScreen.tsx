@@ -1,40 +1,28 @@
-import React, { useCallback, useContext, useMemo, useRef } from "react";
-import { GestureResponderEvent, StyleSheet, Text, View } from "react-native";
-import { Button, HStack, Icon, SafeArea, TextButton, VStack } from "../../components";
+import React, { useCallback, useContext, useMemo, useRef, useState, useEffect } from "react";
+import { StyleSheet, Text } from "react-native";
+import { Button, HStack, Icon, Input, SafeArea, TextButton, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 
-import { ButtonStyle, TextStyle } from "../../styles";
+import { ButtonStyle, InputStyle, TextStyle } from "../../styles";
 import { Theme } from "../../styles";
-import BottomSheet, { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { ScrollView } from "react-native-gesture-handler";
+import useStore from "../../data/store";
+import { RecipeStep } from "../../data/types/recipeStep";
 
-const DummyReturnedList: any = [
-  {
-    "title" : "Step1",
-    "kitchenware" : ["spoons"],
-    "ingredients" : ["eggs"],
-    "description" : "Scramble the egg with the spoon"
-  },   
-  {
-    "title" : "Step2",
-    "kitchenware" : ["spoons"],
-    "ingredients" : ["eggs"],
-    "description" : "Scramble the egg with the spoon"
-  },
-  // {
-  //   "title" : "Step3",
-  //   "kitchenware" : ["spoons"],
-  //   "ingredients" : ["eggs"],
-  //   "description" : "Scramble the egg with the spoon"
-  // },
-  // {
-  //   "title" : "Step4",
-  //   "kitchenware" : ["spoons"],
-  //   "ingredients" : ["eggs"],
-  //   "description" : "Scramble the egg with the spoon"
-  // }
-];
+interface StepComponentProp {
+  styles : any,
+  theme : any,
+  data : RecipeStep,
+  handlePresentModalPress: (id : number) => void
+}
 
-const StepComponent = ({ style: styles, theme, data, handlePresentModalPress }: any) => {
+const StepComponent = ({ styles, theme, data, handlePresentModalPress }: StepComponentProp) => {
+
+  useEffect(()=>{
+    console.log("DATA " + JSON.stringify(data))
+  },[])
+
   return (
     <VStack
       align={"flex-start"}
@@ -42,31 +30,29 @@ const StepComponent = ({ style: styles, theme, data, handlePresentModalPress }: 
       m={5}
     >
       <HStack justifyContent="space-between">
-        <Text style={styles.tasktitle}>{data.title}</Text>
-        <Button style={styles.editbtn} onPress={() => handlePresentModalPress()}>
+        <Text style={styles.tasktitle}>{data.Title}</Text>
+        <Button style={styles.editbtn} onPress={() => handlePresentModalPress(data.ID)}>
           <Icon color={theme.colors.highlight} name={"pencil"} />
         </Button>
       </HStack>
-      <VStack p={10}>
+      <VStack justifyContent="flex-start" pVH={{v: 0, h : 10}}>
+        <Text style={styles.itemHeader}>Description:</Text>
+        <Text>{data.Description}</Text>
         <HStack justifyContent="flex-start">
           <Text style={styles.itemHeader} >Kitchenware:</Text>
           {
-              data.kitchenware.map((item : string, index : number)  => {
-                  return <Text key={index}>{item}</Text>
+              data.Kitchenware?.map((item : string, index : number)  => {
+                  return <Text key={index}>{item}, </Text>
               })
           }
         </HStack>
         <HStack justifyContent="flex-start">
-          <Text style={styles.itemHeader} >Ingredients:</Text>
+          <Text style={styles.itemHeader}>Ingredients:</Text>
           {
-              data.ingredients.map((item : string, index : number)  => {
-                  return <Text key={index}>{item}</Text>
+              data.Ingredients?.map((item : string, index : number)  => {
+                  return <Text key={index}>{item}, </Text>
               })
           }
-        </HStack>
-        <HStack justifyContent="flex-start">
-          <Text style={styles.itemHeader}>Description:</Text>
-          <Text>{data.description}</Text>
         </HStack>
       </VStack>
     </VStack> 
@@ -77,13 +63,39 @@ export const TaskBreakDownResultScreen = () => {
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
+  const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
+  const updateRecipe = useStore((state) => state.updateRecipe);
+
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const snapPoints = useMemo(() => ['50%'], []);
 
+  const [editID, setEditID] = useState<number>()
+  const [ingredients, setIngredients] = useState<string>("")
+  const [kitchenware, setKitchenware] = useState<string>("")
+  const [description, setDescription] = useState<string>("")
+
   // callbacks
-  const handlePresentModalPress = useCallback(() => {
+  const handlePresentModalPress = useCallback((ID : number) => {
     bottomSheetModalRef.current?.present();
+
+    if(brokenDownRecipe == null)
+      return
+
+    const step = brokenDownRecipe![ID]
+
+    const getString = (array : string[]) =>{
+      let string = ""
+      array?.map(item =>{
+        string += `${item},`
+      })
+      return string
+    }
+
+    setIngredients(getString(step.Ingredients));
+    setKitchenware(getString(step.Kitchenware));
+    setDescription(step.Description);
+    setEditID(step.ID)
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -98,23 +110,40 @@ export const TaskBreakDownResultScreen = () => {
     
   }
 
+  const onUpdateRecipe = (ID : number) =>{
+    const step : RecipeStep = {
+      ID: ID,
+      Description : description,
+      Kitchenware : kitchenware.split(","),
+      Ingredients : ingredients.split(","),
+      Duration: brokenDownRecipe![ID].Duration,
+      Title: brokenDownRecipe![ID].Title,
+      Dependencies: brokenDownRecipe![ID].Dependencies,
+      Difficulty: brokenDownRecipe![ID].Difficulty,
+    }
+    updateRecipe(ID, step)
+    bottomSheetModalRef.current?.close();
+  }
+
   return (
     <BottomSheetModalProvider>
       <SafeArea>
-        <VStack align="flex-start" justifyContent="flex-start" style={styles.container} pVH={{v: 20, h : 20}} gap={20}>
-          <Text style={styles.title}>Original Task</Text>
-          <VStack style={styles.orgtask}>
-            <Text>Original Info here</Text>
-          </VStack>
+        <VStack 
+          align="flex-start" 
+          justifyContent="flex-start" 
+          style={styles.container} 
+          pVH={{v: 20, h : 20}} 
+          gap={0}>
+
           <Text style={styles.title}>Steps</Text>
-          <VStack flexMain={false}  gap={10} style={styles.listWrapper}>
-            {DummyReturnedList.map((item: any, index: number) => {
-              return <StepComponent key={index} style={styles} data={item} handlePresentModalPress={handlePresentModalPress} theme={theme} />;
+          <ScrollView style={styles.listWrapper}>
+            {brokenDownRecipe?.map((item: any, index: number) => {
+              return <StepComponent key={index} styles={styles} data={item} handlePresentModalPress={handlePresentModalPress} theme={theme} />;
             })}
-          </VStack>
-          <VStack gap={10}>
-            <TextButton style={styles.acceptBtn} onPress={onAccept} title="Accept"/>
-            <TextButton style={styles.cancelBtn} onPress={onCancel} title="Cancel" /> 
+          </ScrollView>
+          <VStack gap={10} >
+            <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={onAccept} title="Save"/>
+            <TextButton style={styles.cancelBtn} textStyle={styles.textButton} onPress={onCancel} title="Cancel" /> 
           </VStack>
         </VStack>
         <BottomSheetModal
@@ -123,9 +152,12 @@ export const TaskBreakDownResultScreen = () => {
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
         >
-          <View style={styles.contentContainer}>
-            <Text>Awesome 🎉</Text>
-          </View>
+          <VStack gap={20} style={styles.contentContainer}>
+            <Input style={styles.input} value={ingredients} onChange={setIngredients} />
+            <Input style={styles.input} value={kitchenware} onChange={setKitchenware} />
+            <Input style={styles.input} value={description} onChange={setDescription} />
+            <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={() => onUpdateRecipe(editID!)} title="Update" /> 
+          </VStack>
         </BottomSheetModal>
       </SafeArea>
     </BottomSheetModalProvider>
@@ -145,15 +177,14 @@ const makeStyles = (theme: Theme) =>
     title: {
       ...TextStyle.h1,
       color: theme.colors.text,
-
-
     },
     tasktitle: {
-      ...TextStyle.h2,
+      ...TextStyle.h3,
       padding: 10,
+      maxWidth: 300
     },
     stepComponentWrapper: {
-      backgroundColor: theme.colors.background2,
+      backgroundColor: theme.colors.background,
       flexGrow: 0,
       elevation: 5,
       borderRadius: 8
@@ -175,10 +206,15 @@ const makeStyles = (theme: Theme) =>
     contentContainer: {
       flex: 1,
       alignItems: 'center',
+      padding: 50
     },
     listWrapper: {
-      // backgroundColor: theme.colors.background,
-      flexGrow: 0,
+      backgroundColor: theme.colors.background2,
+      // flexGrow: 0,
+      // flex: 1,
+      flexGrow: 10,
+      alignSelf: "stretch",
+      maxHeight: 500
     },
     editbtn:{
        backgroundColor : theme.colors.background,
@@ -187,11 +223,21 @@ const makeStyles = (theme: Theme) =>
     },
     acceptBtn:{
       ...ButtonStyle.primary,
-      backgroundColor: theme.colors.primary
+      backgroundColor: theme.colors.primary,
+     alignSelf: "stretch"
 
     },
     cancelBtn:{
       ...ButtonStyle.primary,
-      backgroundColor: theme.colors.danger
+      backgroundColor: theme.colors.danger,
+      alignSelf: "stretch"
+    },
+    textButton:{
+      ...TextStyle.h3,
+      color: theme.colors.text,
+    },
+    input: {
+      ...InputStyle.underline
     }
   });
+  

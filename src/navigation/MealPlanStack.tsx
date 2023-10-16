@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { CalendarScreen, MealplanScreen } from "../screens";
-import { EnterDescriptionScreen } from "../screens/subtask-generation/EnterDescriptionScreen";
+import { MealplanScreen } from "../screens";
+import { EnterRecipeScreen } from "../screens/subtask-generation/EnterRecipeScreen";
 import { TaskBreakDownResultScreen } from "../screens/subtask-generation/TaskBreakDownResultScreen";
 import { MealPlanNavigatorParamList } from "./types";
 import DateScreen from "../screens/DateScreen";
@@ -23,7 +23,7 @@ const MealPlanNavigator = () => {
       />
       <MealPlanStack.Screen
         name="EnterDescriptionScreen"
-        component={EnterDescriptionScreen}
+        component={EnterRecipeScreen}
         options={{ headerShown: false }}
       />
       <MealPlanStack.Screen

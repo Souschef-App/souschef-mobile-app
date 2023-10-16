@@ -31,6 +31,7 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   "arrow-down": require("./arrow-down.svg").default,
   "arrow-left": require("./arrow-left.svg").default,
   "arrow-right": require("./arrow-right.svg").default,
+  plus: require("./plus.svg").default,
   digit: require("./digit.svg").default,
   heart: require("./heart.svg").default,
   briefcase: require("./briefcase.svg").default,

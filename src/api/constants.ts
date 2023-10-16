@@ -1,8 +1,9 @@
-const baseUrl = `https://souschef-production.up.railway.app/api`;
+const baseUrl = `http://192.168.2.16:5000/api`;
 const user = `${baseUrl}/user`;
 const recipe = `${baseUrl}/recipe`;
 const cookingSession = `${baseUrl}/cookingsession`;
 const liveCookingSession = `${baseUrl}/live-cookingsession`;
+const subTaskGeneration = `${baseUrl}/subtask`;
 
 export const ApiUrls = {
   login: `${user}/login`,
@@ -14,4 +15,6 @@ export const ApiUrls = {
   getTask: `${liveCookingSession}/get-task`,
   completeTask: `${liveCookingSession}/complete-task`,
   rerollTask: `${liveCookingSession}/re-roll-task`,
+  startSubTaskSession: `${subTaskGeneration}/session`,
+  subtaskBreakDown: `${subTaskGeneration}/request`,
 };
