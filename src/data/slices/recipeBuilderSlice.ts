@@ -11,6 +11,7 @@ export interface RecipeBuilderSlice {
   brokenDownRecipe: RecipeStep[] | null;
   setEnteredRecipe: (recipe: string[]) => void;
   submitForBreakDown: () => void;
+  updateRecipe: (ID: number, updatedRecipe: RecipeStep) => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -69,5 +70,19 @@ export const createRecipeBuilderSlice: StateCreator<
     } catch (error) {
       console.log(error);
     }
+  },
+  updateRecipe: (ID: number, updatedRecipe: RecipeStep) => {
+    const list = get().brokenDownRecipe;
+
+    if (list == null) return;
+
+    const index = list.findIndex((item) => {
+      return item.ID === ID;
+    });
+    list.splice(index, 0, updatedRecipe);
+
+    console.log("LIST " + list);
+
+    set({ brokenDownRecipe: list });
   },
 });

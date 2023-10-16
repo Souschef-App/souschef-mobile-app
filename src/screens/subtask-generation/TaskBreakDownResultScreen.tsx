@@ -36,8 +36,9 @@ const StepComponent = ({ styles, theme, data, handlePresentModalPress }: StepCom
           <Icon color={theme.colors.highlight} name={"pencil"} />
         </Button>
       </HStack>
-      <Text>Description: {data.Description}</Text>
-      <VStack pVH={{v: 0, h : 10}}>
+      <VStack justifyContent="flex-start" pVH={{v: 0, h : 10}}>
+        <Text style={styles.itemHeader}>Description:</Text>
+        <Text>{data.Description}</Text>
         <HStack justifyContent="flex-start">
           <Text style={styles.itemHeader} >Kitchenware:</Text>
           {
@@ -64,11 +65,13 @@ export const TaskBreakDownResultScreen = () => {
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
+  const updateRecipe = useStore((state) => state.updateRecipe);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const snapPoints = useMemo(() => ['50%'], []);
 
+  const [editID, setEditID] = useState<number>()
   const [ingredients, setIngredients] = useState<string>("")
   const [kitchenware, setKitchenware] = useState<string>("")
   const [description, setDescription] = useState<string>("")
@@ -93,6 +96,7 @@ export const TaskBreakDownResultScreen = () => {
     setIngredients(getString(step.Ingredients));
     setKitchenware(getString(step.Kitchenware));
     setDescription(step.Description);
+    setEditID(step.ID)
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -105,6 +109,20 @@ export const TaskBreakDownResultScreen = () => {
 
   const onCancel = () =>{
     
+  }
+
+  const onUpdateRecipe = (ID : number) =>{
+    const step : RecipeStep = {
+      ID: ID,
+      Description : description,
+      Kitchenware : kitchenware.split(","),
+      Ingredients : ingredients.split(","),
+      Duration: brokenDownRecipe![ID].Duration,
+      Title: brokenDownRecipe![ID].Title,
+      Dependencies: brokenDownRecipe![ID].Dependencies,
+      Difficulty: brokenDownRecipe![ID].Difficulty,
+    }
+    updateRecipe(ID, step)
   }
 
   return (
@@ -139,7 +157,7 @@ export const TaskBreakDownResultScreen = () => {
               <Input style={styles.input} value={ingredients} onChange={setIngredients} />
               <Input style={styles.input} value={kitchenware} onChange={setKitchenware} />
               <Input style={styles.input} value={description} onChange={setDescription} />
-              <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={onCancel} title="Update" /> 
+              <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={() => onUpdateRecipe(editID!)} title="Update" /> 
           </VStack>
         </BottomSheetModal>
       </SafeArea>
