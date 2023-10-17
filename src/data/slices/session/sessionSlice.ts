@@ -4,6 +4,7 @@ import { Task } from "../../types";
 import { listeners } from "./listeners";
 
 export interface SessionSlice {
+  sessionCompleted: boolean;
   assignedTask: Task | null;
   socket: WebSocket | null;
   socketError: string | null;
@@ -36,6 +37,7 @@ export const createSessionSlice: StateCreator<
   };
 
   return {
+    sessionCompleted: false,
     assignedTask: null,
     socket: null,
     socketLoading: false,
@@ -43,6 +45,7 @@ export const createSessionSlice: StateCreator<
     clearSocketError: () => set({ socketError: null }),
     startConnection: (url: string) => {
       const userID = get().user?.id;
+      console.log("USERID:", get().user);
       if (!get().socket && userID) {
         set({ socketLoading: true });
         const socket = new WebSocket(url + `?UserID=${userID}`);
@@ -53,13 +56,13 @@ export const createSessionSlice: StateCreator<
       const socket = get().socket;
       if (socket) {
         socket.close();
-        set({ socket: null, socketError: null });
+        set({ socket: null, socketError: null, sessionCompleted: false });
       }
     },
     commands: {
       startSession: () => sendCommand("session_start"),
       stopSession: () => sendCommand("session_stop"),
-      completeTask: () => sendCommand("task_complete"),
+      completeTask: () => sendCommand("task_completed"),
       rerollTask: () => sendCommand("task_reroll"),
     },
   };

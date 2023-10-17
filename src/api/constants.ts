@@ -1,4 +1,6 @@
-const baseUrl = `https://souschef-production.up.railway.app/api`;
+import { API_BASE } from "@env";
+
+const baseUrl = `http://${API_BASE}:5000/api`;
 const user = `${baseUrl}/user`;
 const recipe = `${baseUrl}/recipe`;
 const cookingSession = `${baseUrl}/cookingsession`;
@@ -9,9 +11,5 @@ export const ApiUrls = {
   register: `${user}/register`,
   publicRecipes: `${recipe}/public-recipes`,
   getTodaysMealPlans: `${cookingSession}/get-todays-cooking-session-by-user`,
-  startMealPlan: `${liveCookingSession}/start`,
-  joinMealPlan: `${liveCookingSession}/join`,
-  getTask: `${liveCookingSession}/get-task`,
-  completeTask: `${liveCookingSession}/complete-task`,
-  rerollTask: `${liveCookingSession}/re-roll-task`,
+  getLiveSessionIP: `${liveCookingSession}/get-ip`,
 };

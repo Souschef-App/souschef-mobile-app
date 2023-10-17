@@ -4,6 +4,7 @@ import { SafeArea } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 import { HomeScreenNavigationProp } from "../../navigation/types";
 import { Theme } from "../../styles";
+import useStore from "../../data/store";
 
 const HomeScreen = ({
   navigation,
@@ -13,6 +14,10 @@ const HomeScreen = ({
   // Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  const user = useStore((state) => state.user);
+
+  console.log(user);
 
   return (
     <SafeArea>

@@ -103,7 +103,12 @@ const RegisterScreen = ({
   React.useEffect(() => {
     setErrorMsg(registerError || "");
     if (user) {
-      navigation.replace("HomeStack", defaultHomeStackNavigatorParamList);
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
+        ],
+      });
     }
   }, [registerError, user]);
 

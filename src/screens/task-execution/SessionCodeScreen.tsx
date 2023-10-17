@@ -22,6 +22,7 @@ const SessionCodeScreen = ({
   const socket = useStore((state) => state.socket);
   const loading = useStore((state) => state.socketLoading);
   const error = useStore((state) => state.socketError);
+  const startConnection = useStore((state) => state.startConnection);
 
   React.useEffect(() => {
     if (socket) {
@@ -35,8 +36,10 @@ const SessionCodeScreen = ({
   };
 
   const handleSubmit = () => {
+    // navigation.push("Task");
     if (!loading) {
       console.log("Requesting WebSocket IP from REST Server!");
+      startConnection("ws://192.168.0.244:8080/ws");
     }
   };
 
