@@ -8,7 +8,7 @@ type CommandHandlerMap = {
 const handleServerError = (set: SessionSetState, payload: any) => {
   const str: string = payload;
   const error = str.charAt(0).toUpperCase() + str.slice(1);
-  set({ socketError: error });
+  set({ sessionError: error });
 };
 
 const handleServerTaskCompleted = (set: SessionSetState, payload: any) => {

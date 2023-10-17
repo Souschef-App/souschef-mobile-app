@@ -5,7 +5,7 @@ import { SessionSetState } from "./sessionSlice";
 const initListeners = (set: SessionSetState, socket: WebSocket) => {
   socket.onopen = () => {
     console.log("WebSocket connected");
-    set({ socket, socketLoading: false });
+    set({ socket, sessionLoading: false });
   };
   socket.onmessage = (e) => {
     const message: ServerMessage = JSON.parse(e.data);
@@ -16,7 +16,7 @@ const initListeners = (set: SessionSetState, socket: WebSocket) => {
   };
   socket.onerror = (e) => {
     console.log("WebSocket error", e);
-    set({ socketLoading: false, socketError: "Something went wrong..." });
+    set({ sessionError: "Failed to join session: Please try again" });
   };
   socket.onclose = (e) => {
     if (e.code === 1000) {

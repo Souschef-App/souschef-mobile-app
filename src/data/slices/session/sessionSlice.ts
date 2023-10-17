@@ -1,3 +1,5 @@
+import { ApiUrls } from "../../../api/constants";
+import { useGet } from "../../../api/useGet";
 import { StateCreator, StoreApi } from "zustand";
 import { StoreState } from "../../store";
 import { Task } from "../../types";
@@ -7,9 +9,10 @@ export interface SessionSlice {
   sessionCompleted: boolean;
   assignedTask: Task | null;
   socket: WebSocket | null;
-  socketError: string | null;
-  socketLoading: boolean;
+  sessionError: string | null;
+  sessionLoading: boolean;
   clearSocketError: () => void;
+  joinSession: (code: string) => Promise<void>;
   startConnection: (url: string) => void;
   stopConnection: () => void;
   commands: {
@@ -40,13 +43,37 @@ export const createSessionSlice: StateCreator<
     sessionCompleted: false,
     assignedTask: null,
     socket: null,
-    socketLoading: false,
-    socketError: null,
-    clearSocketError: () => set({ socketError: null }),
+    sessionLoading: false,
+    sessionError: null,
+    clearSocketError: () => set({ sessionError: null }),
+    joinSession: async (code: string) => {
+      const fiveDigitRegex = /^\d{5}$/;
+      if (!fiveDigitRegex.test(code)) {
+        set({
+          sessionError:
+            "The provided code must be a 5-digit number.\nPlease check and try again.",
+        });
+        return;
+      }
+
+      set({ sessionLoading: true, sessionError: null });
+      const [ipAddress, error] = await useGet<string>(
+        ApiUrls.getLiveSessionIP,
+        {
+          code: parseInt(code),
+        }
+      );
+      set({
+        sessionLoading: false,
+        sessionError: error,
+      });
+      if (ipAddress) {
+        get().startConnection(`ws://${ipAddress}/ws`);
+      }
+    },
     startConnection: (url: string) => {
       const userID = get().user?.id;
       if (!get().socket && userID) {
-        set({ socketLoading: true });
         const socket = new WebSocket(url + `?UserID=${userID}`);
         listeners.init(set, socket);
       }
@@ -55,7 +82,7 @@ export const createSessionSlice: StateCreator<
       const socket = get().socket;
       if (socket) {
         socket.close();
-        set({ socket: null, socketError: null, sessionCompleted: false });
+        set({ socket: null, sessionError: null, sessionCompleted: false });
       }
     },
     commands: {

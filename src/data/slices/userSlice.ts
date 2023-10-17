@@ -27,18 +27,18 @@ export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
   userError: null,
   clearUserError: () => set({ userError: null }),
   login: async (data) => {
-    set({ socketLoading: true, userError: null });
+    set({ userLoading: true, userError: null });
     const [user, error] = await usePost<User>(ApiUrls.login, { json: data });
     set({
-      socketLoading: false,
+      userLoading: false,
       ...(user ? { user } : { userError: error }),
     });
   },
   register: async (data) => {
-    set({ socketLoading: true, userError: null });
+    set({ userLoading: true, userError: null });
     const [user, error] = await usePost<User>(ApiUrls.register, { json: data });
     set({
-      socketLoading: false,
+      userLoading: false,
       ...(user ? { user } : { userError: error }),
     });
   },
