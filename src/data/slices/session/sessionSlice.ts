@@ -74,6 +74,7 @@ export const createSessionSlice: StateCreator<
     startConnection: (url: string) => {
       const userID = get().user?.id;
       if (!get().socket && userID) {
+        set({ sessionLoading: true });
         const socket = new WebSocket(url + `?UserID=${userID}`);
         listeners.init(set, socket);
       }

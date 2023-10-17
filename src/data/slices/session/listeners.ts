@@ -16,7 +16,10 @@ const initListeners = (set: SessionSetState, socket: WebSocket) => {
   };
   socket.onerror = (e) => {
     console.log("WebSocket error", e);
-    set({ sessionError: "Failed to join session: Please try again" });
+    set({
+      sessionLoading: false,
+      sessionError: "Failed to join session: Please try again",
+    });
   };
   socket.onclose = (e) => {
     if (e.code === 1000) {

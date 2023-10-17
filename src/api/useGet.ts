@@ -9,8 +9,12 @@ export const useGet = async <T>(
 
     // Request is successful
     if (response.ok) {
-      const result: T = await response.json();
+      // TODO: TEMPORARY
+      const text = await response.text();
+      const result: T = JSON.parse(text);
       return [result, null];
+      //   const result: T = await response.json();
+      //   return [result, null];
     }
 
     // Request is unsuccessful, read error
