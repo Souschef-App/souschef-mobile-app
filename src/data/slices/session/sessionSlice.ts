@@ -45,7 +45,6 @@ export const createSessionSlice: StateCreator<
     clearSocketError: () => set({ socketError: null }),
     startConnection: (url: string) => {
       const userID = get().user?.id;
-      console.log("USERID:", get().user);
       if (!get().socket && userID) {
         set({ socketLoading: true });
         const socket = new WebSocket(url + `?UserID=${userID}`);
