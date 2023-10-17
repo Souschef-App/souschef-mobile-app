@@ -42,7 +42,7 @@ const LoginScreen = ({
 
   // Store
   const user = useStore((state) => state.user);
-  const loading = useStore((state) => state.sessionLoading);
+  const loading = useStore((state) => state.userLoading);
   const loginError = useStore((state) => state.userError);
   const clearError = useStore((state) => state.clearUserError);
   const login = useStore((state) => state.login);
