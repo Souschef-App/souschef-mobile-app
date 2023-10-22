@@ -5,11 +5,12 @@ import { ThemeContext } from "../../contexts/AppContext";
 
 import { ButtonStyle, InputStyle, TextStyle } from "../../styles";
 import { Theme } from "../../styles";
-import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ScrollView } from "react-native-gesture-handler";
 import useStore from "../../data/store";
 import { RecipeStep } from "../../data/types/recipeStep";
 import { DIFFICULTY } from "../../data/types";
+import CustomBackdrop from "../../components/customBackdrop";
 
 interface StepComponentProp {
   styles : any,
@@ -188,6 +189,13 @@ export const TaskBreakDownResultScreen = () => {
           index={0}
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
+          backdropComponent={(props) =>{
+            return <CustomBackdrop animatedIndex={{
+            value: 1
+          }} animatedPosition={{
+            value: 1
+          }} />}
+        } 
         >
           <VStack  gap={20} style={styles.contentContainer}>
             <VStack align="flex-start">
