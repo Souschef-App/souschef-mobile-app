@@ -33,6 +33,7 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   "arrow-right": require("./arrow-right.svg").default,
   plus: require("./plus.svg").default,
   digit: require("./digit.svg").default,
+  retry: require("./retry.svg").default,
   // Add more mappings for other SVGs
 };
 

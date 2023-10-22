@@ -14,6 +14,17 @@ export interface RecipeBuilderSlice {
   updateRecipe: (ID: number, updatedRecipe: RecipeStep) => void;
 }
 
+const defaultRecipeStep : RecipeStep = {
+  ID: 0,
+  Title: "HII",
+  Description: "asdfsfasdfasfsf sasfasd asdfasd asd asdfasdf asd fasdfsadf sadfdsaf",
+  Ingredients: ["chicken"],
+  Kitchenware: ["pan"],
+  Duration: 10,
+  Difficulty: 1,
+  Dependencies: []
+}
+
 export const createRecipeBuilderSlice: StateCreator<
   StoreState,
   [],
@@ -22,7 +33,7 @@ export const createRecipeBuilderSlice: StateCreator<
 > = (set, get) => ({
   loading: false,
   enteredRecipe: null,
-  brokenDownRecipe: null,
+  brokenDownRecipe: [defaultRecipeStep],
   setEnteredRecipe: (recipe: string[]) => {
     set({ enteredRecipe: recipe });
   },
