@@ -3,7 +3,10 @@ import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import { Input, SafeArea, TextButton, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
-import { SessionCodeScreenNavigationProp } from "../../navigation/types";
+import {
+  SessionCodeScreenNavigationProp,
+  defaultTaskDrawerNavigatorParamList,
+} from "../../navigation/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 
 const fiveDigitRegex = /^\d{5}$/;
@@ -30,7 +33,7 @@ const SessionCodeScreen = ({
 
   React.useEffect(() => {
     if (socket) {
-      navigation.push("Task");
+      navigation.push("TaskDrawer", defaultTaskDrawerNavigatorParamList);
     }
   }, [socket]);
 

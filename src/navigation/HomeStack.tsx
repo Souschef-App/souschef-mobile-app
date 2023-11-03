@@ -1,9 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { TaskScreen } from "../screens";
-import FeedScreen from "../screens/task-execution/FeedScreen";
-import ParticipantsScreen from "../screens/task-execution/ParticipantsScreen";
+import { ParticipantsScreen } from "../screens";
 import BottomTabsNavigator from "./BottomTabs";
+import TaskDrawerNavigator from "./TaskDrawer";
 import { HomeStackNavigatorParamList } from "./types";
 
 const HomeStack = createNativeStackNavigator<HomeStackNavigatorParamList>();
@@ -17,13 +16,8 @@ const HomeStackNavigator = () => {
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="Task"
-        component={TaskScreen}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name="Feed"
-        component={FeedScreen}
+        name="TaskDrawer"
+        component={TaskDrawerNavigator}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen

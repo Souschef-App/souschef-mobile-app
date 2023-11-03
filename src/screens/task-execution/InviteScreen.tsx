@@ -1,14 +1,14 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
-import { Button, SafeArea, VStack } from "../../components";
+import { SafeArea, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
-import { FeedScreenNavigationProp } from "../../navigation/types";
+import { InviteScreenNavigationProp } from "../../navigation/types";
 import { Theme } from "../../styles";
 
-const FeedScreen = ({
+const InviteScreen = ({
   navigation,
 }: {
-  navigation: FeedScreenNavigationProp;
+  navigation: InviteScreenNavigationProp;
 }) => {
   // Theme
   const theme = React.useContext(ThemeContext);
@@ -17,10 +17,7 @@ const FeedScreen = ({
   return (
     <SafeArea>
       <VStack>
-        <Text>Feed Screen</Text>
-        <Button onPress={() => navigation.navigate("Participants")}>
-          <Text>Participants</Text>
-        </Button>
+        <Text>Invite Screen</Text>
       </VStack>
     </SafeArea>
   );
@@ -28,4 +25,4 @@ const FeedScreen = ({
 
 const makeStyles = (theme: Theme) => StyleSheet.create({});
 
-export default FeedScreen;
+export default InviteScreen;

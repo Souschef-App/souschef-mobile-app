@@ -18,9 +18,6 @@ import {
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { emailRegex } from "../../utils/regex";
 
-// TODO:
-// 1. Implement "forgot password" functionality
-// 2. (Optional) Diagonal line UI
 const RegisterScreen = ({
   navigation,
 }: {
@@ -229,6 +226,7 @@ const makeStyles = (theme: Theme) =>
     },
     header: {
       ...TextStyle.h1,
+      color: "#fff",
     },
     errorBox: {
       // backgroundColor: theme.colors.background2,

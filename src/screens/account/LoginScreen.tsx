@@ -21,7 +21,7 @@ import { emailRegex } from "../../utils/regex";
 // 1. Find solution for keyboard pushing UI
 // 2. Implement "forgot password" functionality
 // 3. Dynamically change screen animation between Login & Register
-// 4. (Optional) Diagonal line UI
+// 4. Curve line UI
 const LoginScreen = ({
   navigation,
 }: {
@@ -161,7 +161,7 @@ const LoginScreen = ({
           </VStack>
           <VStack flexMain={false} gap={theme.spacing.m}>
             <TextButton
-              title="Login"
+              title="Log In"
               onPress={tryLogin}
               style={styles.login}
               textStyle={styles.loginText}
@@ -188,6 +188,7 @@ const makeStyles = (theme: Theme) =>
     },
     header: {
       ...TextStyle.h1,
+      color: "#fff",
     },
     errorBox: {
       // backgroundColor: theme.colors.background2,
