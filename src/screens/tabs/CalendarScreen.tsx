@@ -16,6 +16,7 @@ import { Icon } from '../../components';
 import {primary} from '../../styles/ButtonStyle';
 import { TextStyle } from '../../styles/';
 import { CalendarScreenRouteProp } from '../../navigation/types';
+import { useSessionApi } from '../../hooks/useSessionApi';
 
 interface Booking {
   id: number;
@@ -37,7 +38,9 @@ interface CalendarScreenState {
 }
 
 const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
-  const {date, time, mealName} = route.params;
+  const {date, time, mealName} = route.params ? route.params : {date: null, time: null, mealName: null};
+
+  const [mealPlans, setMealPlans] = useState<any[]>([])
 
   const [state, setState] = useState<CalendarScreenState>({
     selectedDate: null,
@@ -48,8 +51,8 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
   });
 
   const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
-
   const [dateTime, setDateTime] = useState(new Date());
+  const { createMealSession, getMealPlans, getMealSessions } = useSessionApi()
 
   const handleDateSelect = (date: string) => {
     setState((prevState) => ({
@@ -58,21 +61,43 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
     }));
   };
 
-  useEffect(() => {
-    if(date!=null && time!=null && mealName!=null) {
-      const newBooking: Booking = {
-        id: Date.now(),
-        date: date || '',
-        time: time || '',
-        mealPlanName: mealName || '',
-      };
-  
+  const refreshSessions = () => {
+    getMealSessions().then((res: any) => {  
+      console.log(res.data);
       setState((prevState) => ({
         ...prevState,
-        confirmedBookings: [...[], newBooking],
-       
+        confirmedBookings: res.data.map((session: any) => ({
+          id: session.id,
+          date: session.dateTime.substring(0, 10),
+          time: session.dateTime.substring(11, 5),
+          mealPlanName: session.plan ? session.plan.name : "Test Meal Plan"
+        })),
+        selectedDate: null,
+        selectedTime: null, 
+        mealNameInput: ''
       }));
-    }
+    })
+  }
+
+  useEffect(() => {
+    getMealPlans().then((res: any) => {
+      console.log(res.data);
+      setMealPlans(res.data);
+        
+      if(date!=null && time!=null && mealName!=null) {
+        console.log(mealName);
+
+        createMealSession({
+          DateTime: date + "T" + time,
+          PlanId: res.data.find((plan: any) => plan.name === mealName).id
+        }).then((res: any) => {
+          refreshSessions()
+        })
+      }
+      else {
+        refreshSessions()
+      }
+    })
   }, [])
 
 
@@ -84,7 +109,9 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
     setIsDateTimePickerVisible(false);
 
     if (date) {
-      const formattedTime = `${date.getHours()}:${date.getMinutes()}`;
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const formattedTime = `${hours}:${minutes}`;
       setState((prevState) => ({
         ...prevState,
         selectedTime: formattedTime,
@@ -101,22 +128,23 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
 
   const handleBookingConfirmation = () => {
     const { selectedDate, selectedTime, mealNameInput, confirmedBookings } = state;
+    
+    console.log ({
+      DateTime: selectedDate + "T" + selectedTime,
+      PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
+    });
 
     if (selectedDate && selectedTime && mealNameInput) {
-      const newBooking: Booking = {
-        id: Date.now(),
-        date: selectedDate,
-        time: selectedTime,
-        mealPlanName: mealNameInput,
-      };
-
-      setState((prevState) => ({
-        ...prevState,
-        confirmedBookings: [...confirmedBookings, newBooking],
-        selectedDate: null,
-        selectedTime: null, 
-        mealNameInput: ''
-      }));
+      console.log ({
+        DateTime: selectedDate + "T" + selectedTime,
+        PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
+      });
+      createMealSession({
+        DateTime: selectedDate + "T" + selectedTime,
+        PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
+      }).then((res: any) => {
+        refreshSessions()
+      })
     } else {
       Alert.alert('Please enter a meal plan name and select a time');
     }

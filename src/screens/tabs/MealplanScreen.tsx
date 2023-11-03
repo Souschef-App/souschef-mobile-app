@@ -171,7 +171,7 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
         data={displayedFavoriteRecipes}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <TouchableOpacity style={[primary, styles.recipeFavItem]}>
+          <TouchableOpacity key={`favRecipe${item.id}`} style={[primary, styles.recipeFavItem]}>
             <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
               <Text style={TextStyle.h3}>{item.name}</Text>

@@ -44,17 +44,30 @@ export type MealPlanNavigatorParamList = {
   MealNameScreen: {
     date: string | null;
     time: string | null;
+    mealName: string;
+    occasion: number;
+    recipes: any[];
   };
   RecipeSelectorScreen: {
     date: string | null;
     time: string | null;
+    occasion: number;
+    recipes: any[];
     mealName: string;
+    mealType: string;
   };
   OccasionScreen: {
     date: string | null;
     time: string | null;
   };
-  FavoriteScreen: undefined; 
+  FavoriteScreen: {
+    date: string | null;
+    time: string | null;
+    occasion: number;
+    recipes: any[];
+    mealName: string;
+    mealType: string;
+  };
   CalendarScreen: {
     date: string | null;
     time: string | null;
@@ -71,22 +84,33 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealNameScreen: {
     date: null,
     time: null,
-
+    mealName: "",
+    recipes: [],
+    occasion: 1
   },
   RecipeSelectorScreen: {
     date: null,
     time: null,
-    mealName: ''
+    mealName: "",
+    recipes: [],
+    occasion: 1,
+    mealType: "Appetizer"
   },
   OccasionScreen: {
     date: null,
     time: null
   },
-  FavoriteScreen: undefined,
-  CalendarScreen: {
+  FavoriteScreen: {
     date: null,
     time: null,
-    mealName: ''
+    mealName: "",
+    recipes: [],
+    occasion: 1,
+    mealType: "Appetizer"
+  },
+  CalendarScreen: {
+    date: null,
+    time: null
   }
 };
 
@@ -215,6 +239,18 @@ export type MealNameScreenRouteProp = RouteProp<
 MealPlanNavigatorParamList,
 'MealNameScreen'
 >
+
+
+export type FavoriteScreenRouteProp = RouteProp<
+MealPlanNavigatorParamList,
+'FavoriteScreen'
+>
+
+export type RecipeSelectorScreenRouteProp = RouteProp<
+MealPlanNavigatorParamList,
+'RecipeSelectorScreen'
+>
+
 export type CalendarScreenRouteProp = RouteProp<
 MealPlanNavigatorParamList,
 'CalendarScreen'

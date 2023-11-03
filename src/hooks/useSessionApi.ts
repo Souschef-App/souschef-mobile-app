@@ -8,16 +8,17 @@ export function useSessionApi() {
 
   // Fetch favorite recipes and update state
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchFavoriteRecipes = () => {
-    sessionapi
-      .getFavoriteRecipes()
-      .then(response => {
-        setFavoriteRecipes(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching favorite recipes:', error);
-      });
+  const fetchFavoriteRecipes = (userId: string) => {
+    return sessionapi.getFavoriteRecipes(userId)
   };
+  
+  const fetchAllRecipes = () => {
+    return sessionapi.getAllRecipes()
+  };
+
+  const createMealPlan = (data: any) => {
+    return sessionapi.createMealPlan(data);
+  }
 
   // Fetch meal plans and update state
   const fetchMealPlans = () => {
@@ -30,45 +31,31 @@ export function useSessionApi() {
         console.error('Error fetching meal plans:', error);
       });
   };
-  // Fetch sessions and update state
-  const fetchSessions = () => {
-    sessionapi
-      .getSessions()
-      .then((response: {data: SetStateAction<any[]>}) => {
-        setSessions(response.data);
-      })
-      .catch((error: any) => {
-        console.error('Error fetching sessions:', error);
-      });
-  };
 
-  // Create a new session
-  const createSession = (newSession: any) => {
-    sessionapi
-      .createSession(newSession)
-      .then((response: {data: any}) => {
-        // Handle success, update state, or perform other actions
-        console.log('Created Session:', response.data);
-      })
-      .catch((error: any) => {
-        console.error('Error creating session:', error);
-      });
-  };
+  const addRecipeToMealPlan = (planId: string, type: string, recipeId: any) => {
+    return sessionapi.addRecipeToMealPlan(planId, type, recipeId);
+  }
 
-  // add more functions for other API endpoints as needed
+  const getMealPlans = () => {
+    return sessionapi.getMealPlans();
+  }
 
-  // Use useEffect to automatically fetch data when the component using this hook mounts
-  useEffect(() => {
-    fetchFavoriteRecipes();
-    fetchMealPlans();
-    fetchSessions();
-  }, [fetchFavoriteRecipes]);
+  const createMealSession = (data: any) => {
+    return sessionapi.createMealSession(data);
+  }
+
+  const getMealSessions = () => {
+    return sessionapi.getMealSessions();
+  }
 
   return {
-    favoriteRecipes,
-    mealPlans,
-    sessions,
-    createSession, // Export the createSession function
+    fetchFavoriteRecipes,
+    fetchAllRecipes,
+    createMealPlan,
+    addRecipeToMealPlan,
+    createMealSession,
+    getMealPlans,
+    getMealSessions
     // Add other functions here as needed
   };
 }

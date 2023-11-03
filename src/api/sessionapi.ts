@@ -1,19 +1,19 @@
 // create a server connection;
 import axios, {AxiosInstance} from 'axios';
 
-const API_BASE_URL = 'http://api.com/api'; //change to real port
+const API_BASE_URL = 'http://192.168.2.86:8082/api'; 
 
-const AxiosInstance: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+let axiosInst: AxiosInstance = axios.create({
+    baseURL: API_BASE_URL,
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 
 // Add a request interceptor to include authentication tokens if needed
-AxiosInstance.interceptors.request.use(
-  config => {
+axiosInst.interceptors.request.use(
+  ( config: any ) => {
     const authToken = 'your-auth-token'; // Replace with the actual token retrieval logic
     // Add the token to the request headers if it exists
     if (authToken) {
@@ -21,31 +21,41 @@ AxiosInstance.interceptors.request.use(
     }
     return config;
   },
-  error => {
+  ( error: any ) => {
     return Promise.reject(error);
   },
 );
 
 export const sessionapi = {
-  getFavoriteRecipes: () => AxiosInstance.get('/mealsession/facoriterecipes'),
-  addFavoriteRecipe: (data: any) =>
-    AxiosInstance.post('/mealsession/favoriterecipes', data),
-  updateFavoriteRecipe: (id: number, data: any) =>
-    AxiosInstance.put(`/mealsession/favoriterecipes/${id}`, data),
-  deleteFavoriteRecipe: (id: number) =>
-    AxiosInstance.delete(`/mealsession/favoriterecipes/${id}`),
+  getAllRecipes: () => axiosInst.get('/recipe/public-recipes'),
 
-  getMealPlans: () => AxiosInstance.get('/cooking/mealplans'),
-  createMealPlan: (data: any) => AxiosInstance.post('/cooking/mealplans', data),
-  updateMealPlan: (id: number, data: any) =>
-    AxiosInstance.put(`/cooking/mealplans/${id}`, data),
-  deleteMealPlan: (id: number) =>
-    AxiosInstance.delete(`/cooking/mealplans/${id}`),
+  getFavoriteRecipes: (id: string) => axiosInst.get(`/favoriterecipes/${id}`),
+  addFavoriteRecipe: (id: string, recipeId: string) =>
+    axiosInst.post(`/favoriterecipes/${id}/${recipeId}`, {}),
+  deleteFavoriteRecipe: (id: string, recipeId: string) =>
+    axiosInst.delete(`/favoriterecipes/${id}/${recipeId}`),
 
-  getSessions: () => AxiosInstance.get('/cooking/sessions'),
-  createSession: (data: any) => AxiosInstance.post('/cooking/sessions', data),
-  updateSession: (id: number, data: any) =>
-    AxiosInstance.put(`/cooking/sessions/${id}`, data),
-  deleteSession: (id: number) =>
-    AxiosInstance.delete(`/cooking/sessions/${id}`),
+  getMealPlans: () => axiosInst.get('/mealplans'),
+  getMealPlan: (id: string) => axiosInst.get(`/mealplans/${id}`),
+  createMealPlan: (data: any) => axiosInst.post('/mealplans', data),
+  updateMealPlan: (id: string, data: any) =>
+    axiosInst.put(`/mealplans/${id}`, data),
+  deleteMealPlan: (id: string) =>
+    axiosInst.delete(`/mealplans/${id}`),
+
+  getMealPlanRecipes: (id: string) => axiosInst.get(`/mealplans/${id}/recipes`),
+  addRecipeToMealPlan: (id: string, type: string, recipeId: string) => axiosInst.post(`/mealplans/${id}/recipes/${type}/${recipeId}`),
+  deleteRecipeFromMealPlan: (id: string, recipeId: string) => axiosInst.delete(`/mealplans/${id}/recipes/${recipeId}`),
+
+  getMealSessions: () => axiosInst.get('/mealsessions'),
+  getMealSession: (id: string) => axiosInst.get('/mealsessions'),
+  createMealSession: (data: any) => axiosInst.post('/mealsessions', data),
+  updateMealSession: (id: string, data: any) =>
+    axiosInst.put(`/mealsessions/${id}`, data),
+  deleteMealSession: (id: string) =>
+    axiosInst.delete(`/mealsessions/${id}`),
+
+  getMealSessionUsers: (id: string) => axiosInst.get(`/mealsessions/${id}`),
+  addUserToMealSession: (id: string, userId: string) => axiosInst.post(`/mealsessions/${id}/users/${userId}`),
+  deleteUserFromMealSession: (id: string, userId: string) => axiosInst.delete(`/mealsessions/${id}/users/${userId}`)
 };
