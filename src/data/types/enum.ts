@@ -45,4 +45,5 @@ export enum SERVER_MESSAGE {
   Error = "error",
   TaskNew = "task_new",
   TaskCompleted = "task_completed",
+  MealCompleted = "meal_completed",
 }

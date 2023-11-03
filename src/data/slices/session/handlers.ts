@@ -6,9 +6,9 @@ type CommandHandlerMap = {
 };
 
 const handleServerError = (set: SessionSetState, payload: any) => {
-  const errorMsg: string = payload;
-  console.log(errorMsg);
-  set({ socketError: errorMsg });
+  const str: string = payload;
+  const error = str.charAt(0).toUpperCase() + str.slice(1);
+  set({ sessionError: error });
 };
 
 const handleServerTaskCompleted = (set: SessionSetState, payload: any) => {
@@ -19,17 +19,19 @@ const handleServerTaskCompleted = (set: SessionSetState, payload: any) => {
 };
 
 const handleServerTaskNew = (set: SessionSetState, payload: any) => {
-  const task: Task = payload;
-  if (task) {
-    console.log("New task:", task.title);
-    set({ assignedTask: task });
-  }
+  const task: Task | null = payload;
+  set({ assignedTask: task });
+};
+
+const handleServerMealCompleted = (set: SessionSetState, _: any) => {
+  set({ assignedTask: null, sessionCompleted: true });
 };
 
 const commandHandlerMap: CommandHandlerMap = {
   [SERVER_MESSAGE.Error]: handleServerError,
   [SERVER_MESSAGE.TaskCompleted]: handleServerTaskCompleted,
   [SERVER_MESSAGE.TaskNew]: handleServerTaskNew,
+  [SERVER_MESSAGE.MealCompleted]: handleServerMealCompleted,
 };
 
 export default commandHandlerMap;

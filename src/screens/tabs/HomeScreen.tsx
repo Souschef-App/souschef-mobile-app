@@ -4,6 +4,7 @@ import { SafeArea } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 import { HomeScreenNavigationProp } from "../../navigation/types";
 import { Theme } from "../../styles";
+import useStore from "../../data/store";
 
 const HomeScreen = ({
   navigation,

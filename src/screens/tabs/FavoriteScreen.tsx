@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,22 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  ScrollView
 } from 'react-native';
 import { Button, Icon } from '../../components';
-import {primary} from '../../styles/ButtonStyle';
-import {TextStyle} from '../../styles/';
-import { DateScreenNavigationProp } from "../../navigation/types";
-interface MealPlanRecipe {
+import { primary } from '../../styles/ButtonStyle';
+import { TextStyle as textStyle } from '../../styles/';
+import { RouteProp, NavigationProp } from '@react-navigation/native';
+import { MealNameScreenNavigationProp } from '../../navigation/types';
+
+interface Recipe {
   id: number;
   name: string;
-  duration: number; // Add duration property
+  duration: number;
   rating: number;
   imageUrl: string;
 }
 
-const allRecipes: MealPlanRecipe[] = [
+const allRecipes: Recipe[] = [
   //hardcoded recipes for now
   {
     id: 1,
@@ -65,7 +66,7 @@ const allRecipes: MealPlanRecipe[] = [
   },
 ];
 
-const yourRecipes: MealPlanRecipe[] = [
+const yourRecipes: Recipe[] = [
   //hardcoded recipes for now
   {
     id: 8,
@@ -94,27 +95,28 @@ const yourRecipes: MealPlanRecipe[] = [
   },
 ];
 
-const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ navigation }) => {
-  const goToDateScreen = () => {
-    navigation.navigate('DateScreen');}
+
+const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp }> = ({ navigation }) => {
+  const goToMealScreen = () => {
+    navigation.navigate('MealNameScreen', {date: null, time: null});}
   const [searchText, setSearchText] = useState<string>('');
   const [filteredFavoriteRecipes, setFilteredFavoriteRecipes] =
-    useState<MealPlanRecipe[]>(allRecipes);
+    useState<Recipe[]>(allRecipes);
   const [filteredYourRecipes, setFilteredYourRecipes] =
-    useState<MealPlanRecipe[]>(yourRecipes);
+    useState<Recipe[]>(yourRecipes);
   const [showAllFavoriteRecipes, setShowAllFavoriteRecipes] =
     useState<boolean>(false);
   const [showAllYourRecipes, setShowAllYourRecipes] = useState<boolean>(false);
 
   const handleSearch = (text: string) => {
     setSearchText(text);
-    const filteredFavorite = allRecipes.filter(recipe =>
-      recipe.name.toLowerCase().includes(text.toLowerCase()),
+    const filteredFavorite = allRecipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredFavoriteRecipes(filteredFavorite);
 
-    const filteredYourRecipe = yourRecipes.filter(recipe =>
-      recipe.name.toLowerCase().includes(text.toLowerCase()),
+    const filteredYourRecipe = yourRecipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredYourRecipes(filteredYourRecipe);
   };
@@ -127,26 +129,12 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
     ? filteredYourRecipes
     : filteredYourRecipes.slice(0, 3);
 
-    const getTodayDate = () => {
-      const currentDate = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      };
-      return currentDate.toLocaleDateString(undefined, options);
-    };
-
   return (
-    
     <View style={styles.container}>
-      <Text style={[TextStyle.h2,styles.mealPlanTitle]}>Meal Plan</Text>
-      <Text style={[TextStyle.body,styles.dateText]}>{getTodayDate()}</Text>
       <View style={[primary, styles.searchContainer]}>
-      <Icon name="search" size={15}/>
+        <Icon name="search" size={15} />
         <TextInput
-          style={[TextStyle.body]}
+          style={textStyle.body}
           placeholder="Search Favorites"
           value={searchText}
           onChangeText={handleSearch}
@@ -155,30 +143,29 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
 
       {/* Favorite Recipes Section */}
       <View style={styles.titleContainer}>
-      <Text style={TextStyle.h2}>
-    Favorite Recipes
-    <Icon name="heart"/> 
-      </Text>
+        <Text style={textStyle.h2}>Favorite Recipes</Text>
         <TouchableOpacity
-            style={[primary,styles.exploreMoreButton]}
-              onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
-            <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Explore More</Text>
-      </TouchableOpacity>
-
+          style={[styles.seeAllButton]}
+          onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}
+        >
+          <Text style={textStyle.body}>See All</Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
         data={displayedFavoriteRecipes}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-          <TouchableOpacity style={[primary, styles.recipeFavItem]}>
-            <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Button
+            style={[primary, styles.recipeItem]}
+            onPress={goToMealScreen}
+          >
+            <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
-              <Text style={TextStyle.h3}>{item.name}</Text>
+              <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
-                <Text style={TextStyle.body}>
-                  <Icon name="timer" size={16} /> {item.duration}{' '}
-                  min
+                <Text style={textStyle.body}>
+                  <Icon name="timer" size={16} /> {item.duration} min
                 </Text>
                 <Text style={styles.rating}>
                   {[...Array(Math.round(item.rating))].map((_, i) => (
@@ -187,36 +174,35 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
                 </Text>
               </View>
             </View>
-          </TouchableOpacity>
+          </Button>
         )}
-         horizontal={true}
       />
 
       {/* Your Recipes Section */}
       <View style={styles.titleContainer}>
-      <Text style={TextStyle.h2}>
-    Your Recipes {' '}
-    <Icon name="clipboard"/> 
-      </Text>
+        <Text style={textStyle.h2}>Your Recipes</Text>
         <TouchableOpacity
-            style={[primary,styles.exploreMoreButton]}
-              onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
-            <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Add a Recipe</Text>
-      </TouchableOpacity>
+          style={[styles.seeAllButton]}
+          onPress={() => setShowAllYourRecipes(!showAllYourRecipes)}
+        >
+          <Text style={textStyle.body}>See All</Text>
+        </TouchableOpacity>
       </View>
-      <ScrollView>
+
       <FlatList
         data={displayedYourRecipes}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-          <TouchableOpacity style={[primary, styles.recipeItem]}>
-            <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Button
+            style={[primary, styles.recipeItem]}
+            onPress={goToMealScreen}
+          >
+            <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
-              <Text style={TextStyle.h3}>{item.name}</Text>
+              <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
-                <Text style={TextStyle.body}>
-                  <Icon name="timer" size={16} /> {item.duration}{' '}
-                  min
+                <Text style={textStyle.body}>
+                  <Icon name="timer" size={16} /> {item.duration} min
                 </Text>
                 <Text style={styles.rating}>
                   {[...Array(Math.round(item.rating))].map((_, i) => (
@@ -225,16 +211,9 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
                 </Text>
               </View>
             </View>
-          </TouchableOpacity>
+          </Button>
         )}
       />
-      </ScrollView>
-      <Button
-          style={[primary, styles.confirmButton]}
-          onPress={goToDateScreen}
-        >
-          <Text style={[TextStyle.h3, styles.buttonText]}>Create a New Meal Plan</Text>
-        </Button>
     </View>
   );
 };
@@ -245,22 +224,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F7FB',
     padding: 10,
   },
-  mealPlanTitle: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginLeft: 10,
-  },
-  dateText: {
-    fontSize: 18,
-    marginLeft: 10,
-    marginBottom: 10,
-  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 15,
+    marginBottom: 10,
+  },
+  seeAllButton: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#4CAF50',
   },
   recipeItem: {
     flexDirection: 'row',
@@ -269,15 +241,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E5E5',
     borderRadius: 12,
-    padding: 10,
+    padding: 16,
     marginBottom: 16,
     backgroundColor: 'white',
     elevation: 2,
-    height:100,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
   },
   recipeImage: {
     width: 80,
@@ -309,50 +280,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
     alignItems: 'center',
-    paddingRight: 200, 
-    width: 390, 
+    paddingRight: 200,
+    width: 390,
   },
-  recipeFavItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 50,
-    marginLeft:10,
-    height:100,
-    backgroundColor: 'white',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
-  },
-  exploreMoreButton: {
-    backgroundColor: '#2E9DFB', 
-    alignItems: 'center',
-    height:50, 
-    marginTop:20
-  },
-  exploreMoreButtonText: {
-    color: 'white', 
-    fontWeight: 'bold', 
-    fontSize: 16, 
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  confirmButton: {
-    marginTop: 30, 
-    backgroundColor: '#4CAF50', 
-    alignItems: 'center',
-    marginHorizontal:40
-  },
-
 });
 
-export default MealPlanScreen;
+export default FavoriteRecipesScreen;

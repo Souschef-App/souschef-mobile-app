@@ -9,7 +9,7 @@ interface Task {
   duration: number;
   difficulty: DIFFICULTY;
   priority: number;
-  dependencies: number[];
+  dependencies: string[];
   ingredients: Ingredient[]; // Change to list of ingredients
   kitchenware: Kitchenware[]; // Change to list of kitchenware
   // assignee: string;

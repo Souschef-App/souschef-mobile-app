@@ -42,7 +42,7 @@ const LoginScreen = ({
 
   // Store
   const user = useStore((state) => state.user);
-  const loading = useStore((state) => state.socketLoading);
+  const loading = useStore((state) => state.userLoading);
   const loginError = useStore((state) => state.userError);
   const clearError = useStore((state) => state.clearUserError);
   const login = useStore((state) => state.login);
@@ -66,16 +66,6 @@ const LoginScreen = ({
 
   // Methods
   const tryLogin = () => {
-    // TEMPORARY
-    navigation.reset({
-      index: 0,
-      routes: [
-        { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
-      ],
-    });
-
-    return;
-
     if (email.length === 0 || password.length === 0) {
       setErrorMsg("Please make sure all fields are filled.");
       return;
@@ -93,7 +83,12 @@ const LoginScreen = ({
   React.useEffect(() => {
     setErrorMsg(loginError || "");
     if (user) {
-      navigation.replace("HomeStack", defaultHomeStackNavigatorParamList);
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
+        ],
+      });
     }
   }, [loginError, user]);
 

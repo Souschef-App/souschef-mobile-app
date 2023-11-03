@@ -43,7 +43,7 @@ const RegisterScreen = ({
 
   // Store
   const user = useStore((state) => state.user);
-  const loading = useStore((state) => state.socketLoading);
+  const loading = useStore((state) => state.userLoading);
   const registerError = useStore((state) => state.userError);
   const clearError = useStore((state) => state.clearUserError);
   const register = useStore((state) => state.register);
@@ -103,7 +103,12 @@ const RegisterScreen = ({
   React.useEffect(() => {
     setErrorMsg(registerError || "");
     if (user) {
-      navigation.replace("HomeStack", defaultHomeStackNavigatorParamList);
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
+        ],
+      });
     }
   }, [registerError, user]);
 

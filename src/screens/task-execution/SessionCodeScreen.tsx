@@ -20,8 +20,9 @@ const SessionCodeScreen = ({
 
   // Store
   const socket = useStore((state) => state.socket);
-  const loading = useStore((state) => state.socketLoading);
-  const error = useStore((state) => state.socketError);
+  const loading = useStore((state) => state.sessionLoading);
+  const error = useStore((state) => state.sessionError);
+  const joinSession = useStore((state) => state.joinSession);
 
   React.useEffect(() => {
     if (socket) {
@@ -35,8 +36,10 @@ const SessionCodeScreen = ({
   };
 
   const handleSubmit = () => {
+    // navigation.push("Task");
     if (!loading) {
       console.log("Requesting WebSocket IP from REST Server!");
+      joinSession(sessionCode);
     }
   };
 
@@ -95,6 +98,7 @@ const makeStyles = (theme: Theme) =>
     },
     errorText: {
       ...TextStyle.body,
+      textAlign: "center",
       color: theme.colors.danger,
     },
     submit: {

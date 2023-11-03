@@ -1,24 +1,20 @@
-export const usePost = async <T>(
+export const useGet = async <T>(
   url: string,
-  params?: { json?: {}; query?: {} }
+  query?: {}
 ): Promise<[result: T | null, error: string | null]> => {
   try {
-    const response = await fetch(
-      url + "?" + new URLSearchParams(params?.query),
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params?.json),
-      }
-    );
+    const response = await fetch(url + "?" + new URLSearchParams(query), {
+      method: "GET",
+    });
 
     // Request is successful
     if (response.ok) {
-      const result: T = await response.json();
+      // TODO: TEMPORARY
+      const text = await response.text();
+      const result: T = JSON.parse(text);
       return [result, null];
+      //   const result: T = await response.json();
+      //   return [result, null];
     }
 
     // Request is unsuccessful, read error

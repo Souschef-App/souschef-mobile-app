@@ -34,6 +34,12 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   plus: require("./plus.svg").default,
   digit: require("./digit.svg").default,
   retry: require("./retry.svg").default,
+  heart: require("./heart.svg").default,
+  briefcase: require("./briefcase.svg").default,
+  graduationcap: require("./graduationcap.svg").default,
+  brochette: require("./brochette.svg").default,
+  cake: require("./cake.svg").default,
+
   // Add more mappings for other SVGs
 };
 
