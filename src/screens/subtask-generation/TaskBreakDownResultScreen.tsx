@@ -9,8 +9,9 @@ import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from 
 import { ScrollView } from "react-native-gesture-handler";
 import useStore from "../../data/store";
 import { RecipeStep } from "../../data/types/recipeStep";
-import { DIFFICULTY } from "../../data/types";
+import { DIFFICULTY, Task } from "../../data/types";
 import CustomBackdrop from "../../components/customBackdrop";
+import { TaskAvailable } from "../task-execution/task-components";
 
 interface StepComponentProp {
   styles : any,
@@ -107,9 +108,9 @@ export const TaskBreakDownResultScreen = () => {
   const snapPoints = useMemo(() => ['50%'], []);
 
   const [editID, setEditID] = useState<number>()
-  const [ingredients, setIngredients] = useState<string>("")
-  const [kitchenware, setKitchenware] = useState<string>("")
-  const [description, setDescription] = useState<string>("")
+  // const [ingredients, setIngredients] = useState<string>("")
+  // const [kitchenware, setKitchenware] = useState<string>("")
+  // const [description, setDescription] = useState<string>("")
 
   // callbacks
   const handlePresentModalPress = useCallback((ID : number) => {
@@ -128,10 +129,10 @@ export const TaskBreakDownResultScreen = () => {
       return string
     }
 
-    setIngredients(getString(step.Ingredients));
-    setKitchenware(getString(step.Kitchenware));
-    setDescription(step.Description);
-    setEditID(step.ID)
+    // setIngredients(getString(step.ingredients));
+    // setKitchenware(getString(step.kitchenware));
+    // setDescription(step.description);
+    // setEditID(step.id)
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -146,20 +147,20 @@ export const TaskBreakDownResultScreen = () => {
     
   }
 
-  const onUpdateRecipe = (ID : number) =>{
-    const step : RecipeStep = {
-      ID: ID,
-      Description : description,
-      Kitchenware : kitchenware.split(","),
-      Ingredients : ingredients.split(","),
-      Duration: brokenDownRecipe![ID].Duration,
-      Title: brokenDownRecipe![ID].Title,
-      Dependencies: brokenDownRecipe![ID].Dependencies,
-      Difficulty: brokenDownRecipe![ID].Difficulty,
-    }
-    updateRecipe(ID, step)
-    bottomSheetModalRef.current?.close();
-  }
+  // const onUpdateRecipe = (ID : number) =>{
+  //   const step : RecipeStep = {
+  //     ID: ID,
+  //     Description : description,
+  //     Kitchenware : kitchenware.split(","),
+  //     Ingredients : ingredients.split(","),
+  //     Duration: brokenDownRecipe![ID].Duration,
+  //     Title: brokenDownRecipe![ID].Title,
+  //     Dependencies: brokenDownRecipe![ID].Dependencies,
+  //     Difficulty: brokenDownRecipe![ID].Difficulty,
+  //   }
+  //   updateRecipe(ID, step)
+  //   bottomSheetModalRef.current?.close();
+  // }
 
   return (
     <BottomSheetModalProvider>
@@ -174,11 +175,19 @@ export const TaskBreakDownResultScreen = () => {
             <Text style={styles.title}>Steps</Text>
             <IconButton icon="retry" iconColor={theme.colors.background} onPress={()=>{}} style={styles.retry} />
           </HStack>
-          <ScrollView style={styles.listWrapper}>
-            {brokenDownRecipe?.map((item: any, index: number) => {
-              return <StepComponent key={index} styles={styles} data={item} handlePresentModalPress={handlePresentModalPress} theme={theme} />;
-            })}
-          </ScrollView>
+
+          <VStack>
+          {
+            brokenDownRecipe?.map((item: Task, index: number) => {
+              
+              return <TaskAvailable task={item} />
+            })
+          }
+          </VStack>
+
+
+
+
           <VStack gap={10} >
             <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={onAccept} title="Save"/>
             <TextButton style={styles.cancelBtn} textStyle={styles.textButton} onPress={onCancel} title="Cancel" /> 
@@ -200,18 +209,18 @@ export const TaskBreakDownResultScreen = () => {
           <VStack  gap={20} style={styles.contentContainer}>
             <VStack align="flex-start">
               <Text style={styles.itemHeader}>Ingredients</Text>
-              <Input style={styles.input} value={ingredients} onChange={setIngredients} />
+              {/* <Input style={styles.input} value={ingredients} onChange={setIngredients} /> */}
             </VStack>
             <VStack align="flex-start">
               <Text style={styles.itemHeader}>Kitchenware</Text>
-              <Input style={styles.input} value={kitchenware} onChange={setKitchenware} />
+              {/* <Input style={styles.input} value={kitchenware} onChange={setKitchenware} /> */}
             </VStack>
             <VStack align="flex-start">
               <Text style={styles.itemHeader}>Task</Text>
-              <Input style={styles.input} value={description} onChange={setDescription} />
+              {/* <Input style={styles.input} value={description} onChange={setDescription} /> */}
             </VStack>
             <HStack gap={10}>
-              <TextButton style={styles.updateBtn} textStyle={styles.textButton} onPress={() => onUpdateRecipe(editID!)} title="Update" /> 
+              {/* <TextButton style={styles.updateBtn} textStyle={styles.textButton} onPress={() => onUpdateRecipe(editID!)} title="Update" />  */}
               <IconButton icon="retry" iconColor={theme.colors.background} onPress={()=>{}} style={styles.retry} />
             </HStack>
           </VStack>
