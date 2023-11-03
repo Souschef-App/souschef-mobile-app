@@ -33,17 +33,3 @@ export enum OCCASION_TYPE {
   Professional,
   Educational,
 }
-
-export enum CLIENT_COMMANDS {
-  SessionStart = "session_start",
-  SessionStop = "session_stop",
-  TaskComplete = "task_completed",
-  TaskReroll = "task_reroll",
-}
-
-export enum SERVER_MESSAGE {
-  Error = "error",
-  TaskNew = "task_new",
-  TaskCompleted = "task_completed",
-  MealCompleted = "meal_completed",
-}

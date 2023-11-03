@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 import { StoreState } from "../store";
-import { usePost } from "../../api/usePost";
+import jsonRequest from "../../api/requests";
 import { ApiUrls } from "../../api/constants";
 import { RecipeStep } from "../types/recipeStep";
 import { RecipeStepDTO } from "../types/recipeStepDTO";
@@ -34,7 +34,7 @@ export const createRecipeBuilderSlice: StateCreator<
 
     console.log(result);
 
-    const [breakdownResult, error] = await usePost<string>(
+    const [breakdownResult, error] = await jsonRequest.post<string>(
       ApiUrls.subtaskBreakDown,
       {
         json: { recipe: result },

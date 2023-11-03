@@ -20,7 +20,7 @@ const TaskScreen = ({
   // Store
   const task = useStore((state) => state.assignedTask);
   const completed = useStore((state) => state.sessionCompleted);
-  const stopConnection = useStore((state) => state.stopConnection);
+  const stopConnection = useStore((state) => state.leaveSession);
 
   React.useEffect(() => {
     return () => stopConnection();

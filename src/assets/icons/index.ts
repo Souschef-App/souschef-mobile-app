@@ -38,9 +38,6 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   graduationcap: require("./graduationcap.svg").default,
   brochette: require("./brochette.svg").default,
   cake: require("./cake.svg").default,
-  plus: require("./plus.svg").default
-
-
   // Add more mappings for other SVGs
 };
 

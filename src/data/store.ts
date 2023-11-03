@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import {
+  createRecipeBuilderSlice,
+  RecipeBuilderSlice,
+} from "./slices/recipeBuilderSlice";
+import {
   createSessionSlice,
   SessionSlice,
 } from "./slices/session/sessionSlice";
 import { createUserSlice, UserSlice } from "./slices/userSlice";
-import {
-  createRecipeBuilderSlice,
-  RecipeBuilderSlice,
-} from "./slices/recipeBuilderSlice";
 
 export type StoreState = UserSlice & SessionSlice & RecipeBuilderSlice;
 

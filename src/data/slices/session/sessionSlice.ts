@@ -1,20 +1,28 @@
 import { ApiUrls } from "../../../api/constants";
-import { useGet } from "../../../api/useGet";
+import jsonRequest from "../../../api/requests";
 import { StateCreator, StoreApi } from "zustand";
 import { StoreState } from "../../store";
-import { Task } from "../../types";
-import { listeners } from "./listeners";
+import {
+  FeedSnapshot,
+  LiveSession,
+  SESSION_CLIENT_CMD,
+  SessionUser,
+  Task,
+  User,
+} from "../../types";
+import client from "./client";
 
 export interface SessionSlice {
-  sessionCompleted: boolean;
   assignedTask: Task | null;
+  connectedUsers: User[];
+  livefeed: FeedSnapshot[];
   socket: WebSocket | null;
+  sessionCompleted: boolean;
   sessionError: string | null;
   sessionLoading: boolean;
-  clearSocketError: () => void;
+  clearSessionError: () => void;
   joinSession: (code: string) => Promise<void>;
-  startConnection: (url: string) => void;
-  stopConnection: () => void;
+  leaveSession: () => void;
   commands: {
     startSession: () => void;
     stopSession: () => void;
@@ -40,74 +48,53 @@ export const createSessionSlice: StateCreator<
   };
 
   return {
-    sessionCompleted: false,
     assignedTask: null,
+    connectedUsers: [],
+    livefeed: [],
     socket: null,
+    sessionCompleted: false,
     sessionLoading: false,
     sessionError: null,
-    clearSocketError: () => set({ sessionError: null }),
+    clearSessionError: () => set({ sessionError: null }),
     joinSession: async (code: string) => {
-      const fiveDigitRegex = /^\d{5}$/;
-      if (!fiveDigitRegex.test(code)) {
+      set({ sessionLoading: true, sessionError: null });
+
+      const query = { code: parseInt(code) };
+      const [session, error] = await jsonRequest.get<LiveSession>(
+        ApiUrls.getLiveSession,
+        query
+      );
+
+      if (error != null) {
+        set({ sessionLoading: false, sessionError: error });
+        return;
+      }
+
+      const sessionUser = get().user as SessionUser;
+      if (sessionUser == null) {
         set({
+          sessionLoading: false,
           sessionError:
-            "The provided code must be a 5-digit number.\nPlease check and try again.",
+            "You are not logged in. Please log in to access this feature.",
         });
         return;
       }
 
-      set({ sessionLoading: true, sessionError: null });
-      const [ipAddress, error] = await useGet<string>(
-        ApiUrls.getLiveSessionIP,
-        {
-          code: parseInt(code),
-        }
-      );
-      set({
-        sessionLoading: false,
-        sessionError: error,
-      });
-      if (ipAddress) {
-        get().startConnection(`ws://${ipAddress}/ws`);
-      }
+      get().leaveSession();
+      client.connect(`ws://${session?.ip}/ws`, sessionUser, set);
     },
-    startConnection: (url: string) => {
-      const userID = get().user?.id;
-      if (!get().socket && userID) {
-        set({ sessionLoading: true });
-        const socket = new WebSocket(url + `?UserID=${userID}`);
-        listeners.init(set, socket);
-      }
-    },
-    stopConnection: () => {
+    leaveSession: () => {
       const socket = get().socket;
-      if (socket) {
+      if (socket && socket.OPEN) {
         socket.close();
         set({ socket: null, sessionError: null, sessionCompleted: false });
       }
     },
     commands: {
-      startSession: () => sendCommand("session_start"),
-      stopSession: () => sendCommand("session_stop"),
-      completeTask: () => sendCommand("task_completed"),
-      rerollTask: () => sendCommand("task_reroll"),
+      startSession: () => sendCommand(SESSION_CLIENT_CMD.SessionStart),
+      stopSession: () => sendCommand(SESSION_CLIENT_CMD.SessionStop),
+      completeTask: () => sendCommand(SESSION_CLIENT_CMD.TaskComplete),
+      rerollTask: () => sendCommand(SESSION_CLIENT_CMD.TaskReroll),
     },
   };
 };
-
-// const defaultTask: Task = {
-//   id: "",
-//   title: "Chop Carrots",
-//   description: "Chop the carrots into thin slices",
-//   duration: 10,
-//   difficulty: DIFFICULTY.Medium,
-//   priority: -1,
-//   dependencies: [],
-//   ingredients: [
-//     { id: "", name: "Carrot", quantity: 2, unit: COOKING_UNIT.None },
-//   ],
-//   kitchenware: [
-//     { id: "", name: "Knife", quantity: 1 },
-//     { id: "", name: "Cutting board", quantity: 1 },
-//   ],
-// };
