@@ -9,9 +9,7 @@ import {
 
 // TODO:
 // 1. Prevent dropdowns from moving other components
-// 2. Live feed floating button
 // 3. Handle empty ingredients or kitchenware
-// 4. Abstract bubbles (top left)
 const TaskScreen = ({
   navigation,
 }: {
@@ -20,10 +18,10 @@ const TaskScreen = ({
   // Store
   const task = useStore((state) => state.assignedTask);
   const completed = useStore((state) => state.sessionCompleted);
-  const stopConnection = useStore((state) => state.leaveSession);
+  const leaveSession = useStore((state) => state.leaveSession);
 
   React.useEffect(() => {
-    return () => stopConnection();
+    return () => leaveSession();
   }, []);
 
   if (completed) {

@@ -16,7 +16,6 @@ export type WelcomeStackNavigatorParamList = {
 export type HomeStackNavigatorParamList = {
   Tabs: BottomTabNavigatorParamList;
   TaskDrawer: TaskDrawerNavigatorParamList;
-  Participants: undefined;
 };
 
 export type TaskDrawerNavigatorParamList = {
@@ -115,7 +114,6 @@ export const defaultTaskDrawerNavigatorParamList: TaskDrawerNavigatorParamList =
 export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
   Tabs: defaultBottomTabNavigatorParamList,
   TaskDrawer: defaultTaskDrawerNavigatorParamList,
-  Participants: undefined,
 };
 
 export type WelcomeScreenNavigationProp = NativeStackNavigationProp<
@@ -171,11 +169,6 @@ export type TaskScreenNavigationProp = CompositeNavigationProp<
 export type FeedScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<TaskDrawerNavigatorParamList, "Feed">,
   NativeStackNavigationProp<HomeStackNavigatorParamList, "TaskDrawer">
->;
-
-export type ParticipantsScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  "Participants"
 >;
 
 export type InviteScreenNavigationProp = DrawerNavigationProp<

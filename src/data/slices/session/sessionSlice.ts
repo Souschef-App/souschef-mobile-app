@@ -4,24 +4,42 @@ import { StateCreator, StoreApi } from "zustand";
 import { StoreState } from "../../store";
 import {
   FeedSnapshot,
-  LiveSession,
   SESSION_CLIENT_CMD,
-  SessionUser,
   Task,
   User,
+  LiveSession,
+  TASK_STATUS,
+  SessionUser,
 } from "../../types";
-import client from "./client";
+import { Client } from "./client";
+import { fakeTask, fakeUser } from "../../__mocks__";
 
-export interface SessionSlice {
+type SessionState = {
   assignedTask: Task | null;
   connectedUsers: User[];
   livefeed: FeedSnapshot[];
-  socket: WebSocket | null;
+  session: LiveSession | null;
   sessionCompleted: boolean;
   sessionError: string | null;
   sessionLoading: boolean;
-  clearSessionError: () => void;
-  joinSession: (code: string) => Promise<void>;
+  clientConnected: boolean;
+};
+
+const initialState: SessionState = {
+  assignedTask: null,
+  connectedUsers: [],
+  livefeed: [],
+  session: null,
+  sessionCompleted: false,
+  sessionLoading: false,
+  sessionError: null,
+  clientConnected: false,
+};
+
+type SessionActions = {
+  resetSessionSlice: () => void;
+  joinSession: (code: number) => Promise<void>;
+  joinFakeSession: () => void;
   leaveSession: () => void;
   commands: {
     startSession: () => void;
@@ -29,8 +47,9 @@ export interface SessionSlice {
     completeTask: () => void;
     rerollTask: () => void;
   };
-}
+};
 
+export type SessionSlice = SessionState & SessionActions;
 export type SessionSetState = StoreApi<SessionSlice>["setState"];
 
 export const createSessionSlice: StateCreator<
@@ -39,39 +58,27 @@ export const createSessionSlice: StateCreator<
   [],
   SessionSlice
 > = (set, get) => {
-  const sendCommand = (commandType: string) => {
-    const socket = get().socket;
-    if (socket && socket.OPEN) {
-      const command = { type: commandType };
-      socket.send(JSON.stringify(command));
-    }
-  };
+  const client = new Client(set);
 
   return {
-    assignedTask: null,
-    connectedUsers: [],
-    livefeed: [],
-    socket: null,
-    sessionCompleted: false,
-    sessionLoading: false,
-    sessionError: null,
-    clearSessionError: () => set({ sessionError: null }),
-    joinSession: async (code: string) => {
+    ...initialState,
+    resetSessionSlice: () => set(initialState),
+    joinSession: async (code: number) => {
       set({ sessionLoading: true, sessionError: null });
 
-      const query = { code: parseInt(code) };
+      const query = { code };
       const [session, error] = await jsonRequest.get<LiveSession>(
         ApiUrls.getLiveSession,
         query
       );
 
-      if (error != null) {
+      if (error) {
         set({ sessionLoading: false, sessionError: error });
         return;
       }
 
-      const sessionUser = get().user as SessionUser;
-      if (sessionUser == null) {
+      const sessionUser: SessionUser | null = get().user;
+      if (!sessionUser) {
         set({
           sessionLoading: false,
           sessionError:
@@ -80,21 +87,40 @@ export const createSessionSlice: StateCreator<
         return;
       }
 
-      get().leaveSession();
-      client.connect(`ws://${session?.ip}/ws`, sessionUser, set);
+      set({ session });
+      client.connect(`ws://${session?.ip}/ws`, sessionUser);
     },
+    joinFakeSession: () =>
+      set({
+        clientConnected: true,
+        assignedTask: fakeTask,
+        connectedUsers: [fakeUser],
+        session: {
+          code: 12345,
+          ip: "localhost",
+        },
+        livefeed: [
+          {
+            user: fakeUser,
+            task: fakeTask,
+            status: TASK_STATUS.Assigned,
+            timestamp: new Date(),
+          },
+        ],
+      }),
     leaveSession: () => {
-      const socket = get().socket;
-      if (socket && socket.OPEN) {
-        socket.close();
-        set({ socket: null, sessionError: null, sessionCompleted: false });
-      }
+      client.leave();
+      set({
+        session: null,
+        sessionError: null,
+        sessionCompleted: false,
+      });
     },
     commands: {
-      startSession: () => sendCommand(SESSION_CLIENT_CMD.SessionStart),
-      stopSession: () => sendCommand(SESSION_CLIENT_CMD.SessionStop),
-      completeTask: () => sendCommand(SESSION_CLIENT_CMD.TaskComplete),
-      rerollTask: () => sendCommand(SESSION_CLIENT_CMD.TaskReroll),
+      startSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStart),
+      stopSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStop),
+      completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskComplete),
+      rerollTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskReroll),
     },
   };
 };

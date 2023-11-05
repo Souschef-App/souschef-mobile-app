@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import { Input, SafeArea, TextButton, VStack } from "../../components";
-import { ThemeContext } from "../../contexts/AppContext";
+import { AppContext, ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
 import {
   SessionCodeScreenNavigationProp,
@@ -16,6 +16,8 @@ const SessionCodeScreen = ({
 }: {
   navigation: SessionCodeScreenNavigationProp;
 }) => {
+  const appConfig = React.useContext(AppContext);
+
   // Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -25,24 +27,25 @@ const SessionCodeScreen = ({
   const [errorMsg, setErrorMsg] = React.useState<string>("");
 
   // Store
-  const socket = useStore((state) => state.socket);
+  const socketConnected = useStore((state) => state.clientConnected);
   const loading = useStore((state) => state.sessionLoading);
   const error = useStore((state) => state.sessionError);
-  const clearError = useStore((state) => state.clearSessionError);
   const joinSession = useStore((state) => state.joinSession);
+  const joinFakeSession = useStore((state) => state.joinFakeSession);
+  const cleanup = useStore((state) => state.resetSessionSlice);
 
   React.useEffect(() => {
-    if (socket) {
+    if (socketConnected) {
       navigation.push("TaskDrawer", defaultTaskDrawerNavigatorParamList);
     }
-  }, [socket]);
+  }, [socketConnected]);
 
   React.useEffect(() => {
     setErrorMsg(error || "");
   }, [error]);
 
   React.useEffect(() => {
-    clearError();
+    return () => cleanup();
   }, []);
 
   const handleInputOnChange = (text: string) => {
@@ -51,14 +54,18 @@ const SessionCodeScreen = ({
   };
 
   const handleSubmit = () => {
+    if (appConfig.useFakeData) {
+      joinFakeSession();
+      return;
+    }
+
     if (!fiveDigitRegex.test(sessionCode)) {
       setErrorMsg("The provided code must be a 5-digit number.");
       return;
     }
 
     if (!loading) {
-      console.log("Requesting WebSocket IP from REST Server!");
-      joinSession(sessionCode);
+      joinSession(parseInt(sessionCode));
     }
   };
 

@@ -15,6 +15,7 @@ export type IconButtonProps = {
   iconColor?: ColorValue;
   iconSize?: number;
   title?: string;
+  reverseOrder?: boolean;
   style?: ViewStyle;
   iconStyle?: ViewStyle;
   textStyle?: TextStyle;
@@ -38,7 +39,7 @@ const IconButton = (propsIn: IconButtonProps) => {
       onPress={props.onPress}
       style={{
         position: "relative",
-        flexDirection: "row",
+        flexDirection: props.reverseOrder ? "row-reverse" : "row",
         justifyContent: "center",
         alignItems: "center",
         columnGap: 8,

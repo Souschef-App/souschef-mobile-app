@@ -1,9 +1,7 @@
-import { SKILL_LEVEL } from "../enum";
+import { SKILL_LEVEL } from "..";
 
-interface SessionUser {
+export interface SessionUser {
   id: string;
   name: string;
   skillLevel: SKILL_LEVEL;
 }
-
-export default SessionUser;

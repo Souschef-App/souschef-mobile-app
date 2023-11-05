@@ -1,7 +1,13 @@
-import { SESSION_SERVER_MSG, Task, User, WelcomeSnapshot } from "../../types";
+import {
+  FeedSnapshot,
+  SESSION_SERVER_MSG,
+  Task,
+  User,
+  WelcomeSnapshot,
+} from "../../types";
 import { SessionSetState } from "./sessionSlice";
 
-type CommandHandlerMap = {
+type MessageHandlerMap = {
   [key in SESSION_SERVER_MSG]: (set: SessionSetState, payload: any) => void;
 };
 
@@ -16,6 +22,11 @@ const handleError = (set: SessionSetState, payload: any) => {
 
 const handleHandshake = (set: SessionSetState, payload: WelcomeSnapshot) => {
   if (!payload) return;
+
+  for (let i = 0; i < payload.livefeed.length; i++) {
+    payload.livefeed[i].timestamp = new Date(payload.livefeed[i].timestamp);
+  }
+
   set({ connectedUsers: payload.users, livefeed: payload.livefeed });
 };
 
@@ -26,7 +37,6 @@ const handleClientConnected = (set: SessionSetState, payload: User) => {
 
 const handleClientDisconnected = (set: SessionSetState, payload: User) => {
   if (!payload) return;
-
   set((state) => ({
     connectedUsers: state.connectedUsers.filter((u) => u.id !== payload.id),
   }));
@@ -36,17 +46,21 @@ const handleMealCompleted = (set: SessionSetState, _: any) => {
   set({ assignedTask: null, sessionCompleted: true });
 };
 
-const handleTaskNew = (set: SessionSetState, payload: any) => {
-  const task: Task | null = payload;
-  set({ assignedTask: task });
+const handleTaskNew = (set: SessionSetState, payload: Task) => {
+  set({ assignedTask: payload });
 };
 
-const handleFeedSnapshot = (set: SessionSetState, payload: any) => {
-  const task: Task | null = payload;
-  set({ assignedTask: task });
+const handleFeedSnapshot = (set: SessionSetState, payload: FeedSnapshot) => {
+  if (!payload) {
+    // Force re-render
+    set((state) => ({ livefeed: [...state.livefeed] }));
+  } else {
+    payload.timestamp = new Date(payload.timestamp);
+    set((state) => ({ livefeed: [payload, ...state.livefeed] }));
+  }
 };
 
-const commandHandlerMap: CommandHandlerMap = {
+const messageHandlerMap: MessageHandlerMap = {
   [SESSION_SERVER_MSG.Error]: handleError,
   [SESSION_SERVER_MSG.Handshake]: handleHandshake,
   [SESSION_SERVER_MSG.ClientConnected]: handleClientConnected,
@@ -56,4 +70,4 @@ const commandHandlerMap: CommandHandlerMap = {
   [SESSION_SERVER_MSG.FeedSnapshot]: handleFeedSnapshot,
 };
 
-export default commandHandlerMap;
+export default messageHandlerMap;

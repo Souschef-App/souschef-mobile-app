@@ -8,7 +8,7 @@ import {
   VStack,
   ValidationInput,
 } from "../../components";
-import { ThemeContext } from "../../contexts/AppContext";
+import { AppContext, ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
 import {
   LoginScreenNavigationProp,
@@ -27,6 +27,8 @@ const LoginScreen = ({
 }: {
   navigation: LoginScreenNavigationProp;
 }) => {
+  const appConfig = useContext(AppContext);
+
   // Theme
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -43,15 +45,12 @@ const LoginScreen = ({
   // Store
   const user = useStore((state) => state.user);
   const loading = useStore((state) => state.userLoading);
-  const loginError = useStore((state) => state.userError);
-  const clearError = useStore((state) => state.clearUserError);
+  const error = useStore((state) => state.userError);
   const login = useStore((state) => state.login);
+  const fakeLogin = useStore((state) => state.fakeLogin);
+  const cleanup = useStore((state) => state.resetUserSlice);
 
   React.useEffect(() => {
-    if (!loginError && errorMsg !== "") {
-      setErrorMsg("");
-    }
-
     // Show status ONLY if valid
     const isValid = emailRegex.test(email);
     setIsEmailStatusVisible(isValid);
@@ -59,13 +58,37 @@ const LoginScreen = ({
   }, [email]);
 
   React.useEffect(() => {
-    if (errorMsg !== "" && !loginError) {
+    if (!error && errorMsg !== "") {
       setErrorMsg("");
     }
-  }, [password]);
+  }, [email, password]);
+
+  React.useEffect(() => {
+    setErrorMsg(error || "");
+  }, [error]);
+
+  React.useEffect(() => {
+    if (user) {
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
+        ],
+      });
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    return () => cleanup();
+  }, []);
 
   // Methods
   const tryLogin = () => {
+    if (appConfig.useFakeData) {
+      fakeLogin();
+      return;
+    }
+
     if (email.length === 0 || password.length === 0) {
       setErrorMsg("Please make sure all fields are filled.");
       return;
@@ -79,23 +102,6 @@ const LoginScreen = ({
 
     login({ email, password });
   };
-
-  React.useEffect(() => {
-    setErrorMsg(loginError || "");
-    if (user) {
-      navigation.reset({
-        index: 0,
-        routes: [
-          { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
-        ],
-      });
-    }
-  }, [loginError, user]);
-
-  React.useEffect(() => {
-    // Clear zustand error when onMount
-    clearError();
-  }, []);
 
   const isFocusedColor = (id: string) =>
     id === focusedInput ? theme.colors.text : theme.colors.textDisabled;

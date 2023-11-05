@@ -41,9 +41,9 @@ const RegisterScreen = ({
   // Store
   const user = useStore((state) => state.user);
   const loading = useStore((state) => state.userLoading);
-  const registerError = useStore((state) => state.userError);
-  const clearError = useStore((state) => state.clearUserError);
+  const error = useStore((state) => state.userError);
   const register = useStore((state) => state.register);
+  const cleanup = useStore((state) => state.resetUserSlice);
 
   const handleEmailFocus = () => {
     setFocusedInput("email");
@@ -55,10 +55,6 @@ const RegisterScreen = ({
   };
 
   React.useEffect(() => {
-    if (!registerError && errorMsg !== "") {
-      setErrorMsg("");
-    }
-
     // Show status ONLY if valid
     const isValid = emailRegex.test(email);
     setIsEmailStatusVisible(isValid);
@@ -66,10 +62,29 @@ const RegisterScreen = ({
   }, [email]);
 
   React.useEffect(() => {
-    if (errorMsg !== "" && !registerError) {
+    if (errorMsg !== "" && !error) {
       setErrorMsg("");
     }
-  }, [password]);
+  }, [email, password]);
+
+  React.useEffect(() => {
+    setErrorMsg(error || "");
+  }, [error]);
+
+  React.useEffect(() => {
+    if (user) {
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
+        ],
+      });
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    return () => cleanup();
+  }, []);
 
   // Methods
   const tryRegister = () => {
@@ -96,23 +111,6 @@ const RegisterScreen = ({
 
     register({ username: name, email, password, passwordConfirm });
   };
-
-  React.useEffect(() => {
-    setErrorMsg(registerError || "");
-    if (user) {
-      navigation.reset({
-        index: 0,
-        routes: [
-          { name: "HomeStack", params: defaultHomeStackNavigatorParamList },
-        ],
-      });
-    }
-  }, [registerError, user]);
-
-  React.useEffect(() => {
-    // Clear zustand error when onMount
-    clearError();
-  }, []);
 
   const isFocusedColor = (id: string) =>
     id === focusedInput ? theme.colors.text : theme.colors.textDisabled;
