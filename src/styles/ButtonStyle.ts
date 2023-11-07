@@ -33,6 +33,7 @@ export const primary: ViewStyle = {
     width: 0,
     height: -1,
   },
+  alignSelf: "stretch",
 };
 
 export const account: ViewStyle = {
@@ -40,4 +41,12 @@ export const account: ViewStyle = {
   ...padding(0, 16),
   ...buttonCore.curved,
   height: 56,
+};
+
+export const round: ViewStyle = {
+  ...buttonCore.center,
+  ...padding(0, 16),
+  ...buttonCore.rounded,
+  height: 56,
+  width: 56,
 };

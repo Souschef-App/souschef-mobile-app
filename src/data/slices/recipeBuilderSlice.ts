@@ -28,6 +28,19 @@ const defaultRecipeStep: Task = {
   priority: 0,
 };
 
+const defaultRecipeStep2: Task = {
+  id: "0",
+  title: "Chicken",
+  description:
+    "asdfsfasdfasfsf sasfasd asdfasd asd asdfasdf asd fasdfsadf sadfdsaf",
+  ingredients: [],
+  kitchenware: [],
+  duration: 10,
+  difficulty: 1,
+  dependencies: [],
+  priority: 0,
+};
+
 export const createRecipeBuilderSlice: StateCreator<
   StoreState,
   [],
@@ -36,7 +49,7 @@ export const createRecipeBuilderSlice: StateCreator<
 > = (set, get) => ({
   loading: false,
   enteredRecipe: null,
-  brokenDownRecipe: [defaultRecipeStep],
+  brokenDownRecipe: [defaultRecipeStep, defaultRecipeStep2],
   setEnteredRecipe: (recipe: string[]) => {
     set({ enteredRecipe: recipe });
   },
