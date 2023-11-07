@@ -36,7 +36,7 @@ const WelcomeScreen = ({
           </VStack>
           <VStack rowGap={theme.spacing.m}>
             <TextButton
-              title="Login"
+              title="Log In"
               onPress={login}
               style={styles.login}
               textStyle={styles.buttonText}
@@ -58,6 +58,7 @@ const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     appName: {
       ...TextStyle.h1,
+      color: "#fff",
     },
     message: { ...TextStyle.h3 },
     buttonText: {

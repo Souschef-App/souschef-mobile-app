@@ -47,14 +47,13 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
             <Text style={styles.taskTitle}>{task.title}</Text>
             <HStack
               flexMain={false}
-              gap={theme.spacing.m}
+              gap={theme.spacing.l}
               style={{ height: theme.spacing.l }}
             >
               <HStack flexMain={false} gap={theme.spacing.s}>
                 <Icon name="timer" color={theme.colors.text} size={24} />
                 <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
               </HStack>
-              <Divider thickness={3} color={theme.colors.background2} />
               <HStack flexMain={false} gap={theme.spacing.s}>
                 <Icon name="star" color={theme.colors.highlight2} size={24} />
                 <Icon
@@ -92,7 +91,7 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
             >
               <HStack
                 mAll={{ l: theme.spacing.s, r: theme.spacing.xs }}
-                gap={theme.spacing.b}
+                gap={28}
               >
                 <Divider color={theme.colors.background2} />
                 <VStack
@@ -119,7 +118,7 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
               onPress={() => setIsKitchenwareOpen(!isKitchenwareOpen)}
               textStyle={styles.dropdownTitle}
             >
-              <HStack mVH={{ h: theme.spacing.s }} gap={theme.spacing.b}>
+              <HStack mVH={{ h: theme.spacing.s }} gap={28}>
                 <Divider color={theme.colors.background2} />
                 <VStack
                   pVH={{ v: theme.spacing.s }}

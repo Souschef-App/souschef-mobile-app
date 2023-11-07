@@ -3,8 +3,13 @@ import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import { Input, SafeArea, TextButton, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
-import { SessionCodeScreenNavigationProp } from "../../navigation/types";
+import {
+  SessionCodeScreenNavigationProp,
+  defaultTaskDrawerNavigatorParamList,
+} from "../../navigation/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
+
+const fiveDigitRegex = /^\d{5}$/;
 
 const SessionCodeScreen = ({
   navigation,
@@ -17,18 +22,28 @@ const SessionCodeScreen = ({
 
   // State
   const [sessionCode, setSessionCode] = React.useState<string>("");
+  const [errorMsg, setErrorMsg] = React.useState<string>("");
 
   // Store
   const socket = useStore((state) => state.socket);
   const loading = useStore((state) => state.sessionLoading);
   const error = useStore((state) => state.sessionError);
+  const clearError = useStore((state) => state.clearSessionError);
   const joinSession = useStore((state) => state.joinSession);
 
   React.useEffect(() => {
     if (socket) {
-      navigation.push("Task");
+      navigation.push("TaskDrawer", defaultTaskDrawerNavigatorParamList);
     }
   }, [socket]);
+
+  React.useEffect(() => {
+    setErrorMsg(error || "");
+  }, [error]);
+
+  React.useEffect(() => {
+    clearError();
+  }, []);
 
   const handleInputOnChange = (text: string) => {
     const cleanedText = text.replace(/[^0-9]/g, "");
@@ -36,7 +51,11 @@ const SessionCodeScreen = ({
   };
 
   const handleSubmit = () => {
-    // navigation.push("Task");
+    if (!fiveDigitRegex.test(sessionCode)) {
+      setErrorMsg("The provided code must be a 5-digit number.");
+      return;
+    }
+
     if (!loading) {
       console.log("Requesting WebSocket IP from REST Server!");
       joinSession(sessionCode);
@@ -57,7 +76,7 @@ const SessionCodeScreen = ({
             {loading ? (
               <ActivityIndicator size="large" />
             ) : (
-              error && <Text style={styles.errorText}>{error}</Text>
+              <Text style={styles.errorMsg}>{errorMsg}</Text>
             )}
           </VStack>
           <Input
@@ -96,7 +115,7 @@ const makeStyles = (theme: Theme) =>
       textAlign: "center",
       fontWeight: "normal",
     },
-    errorText: {
+    errorMsg: {
       ...TextStyle.body,
       textAlign: "center",
       color: theme.colors.danger,

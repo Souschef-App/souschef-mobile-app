@@ -1,9 +1,8 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 import type {
-  RouteProp,
   CompositeNavigationProp,
-  NavigatorScreenParams,
-  Route,
+  RouteProp,
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -14,12 +13,16 @@ export type WelcomeStackNavigatorParamList = {
   HomeStack: HomeStackNavigatorParamList;
 };
 
-
 export type HomeStackNavigatorParamList = {
   Tabs: BottomTabNavigatorParamList;
+  TaskDrawer: TaskDrawerNavigatorParamList;
+  Participants: undefined;
+};
+
+export type TaskDrawerNavigatorParamList = {
   Task: undefined;
   Feed: undefined;
-  Participants: undefined;
+  Invite: undefined;
 };
 
 export type BottomTabNavigatorParamList = {
@@ -40,7 +43,7 @@ export type MealPlanNavigatorParamList = {
   EnterDescriptionScreen: undefined;
   TaskBreakDownResultScreen: undefined;
   DateScreen: undefined;
-  TimeScreen: {date: string | null};
+  TimeScreen: { date: string | null };
   MealNameScreen: {
     date: string | null;
     time: string | null;
@@ -54,40 +57,39 @@ export type MealPlanNavigatorParamList = {
     date: string | null;
     time: string | null;
   };
-  FavoriteScreen: undefined; 
+  FavoriteScreen: undefined;
   CalendarScreen: {
     date: string | null;
     time: string | null;
     mealName: string;
   };
-}
+};
 
 export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealPlan: undefined,
   EnterDescriptionScreen: undefined,
   TaskBreakDownResultScreen: undefined,
   DateScreen: undefined,
-  TimeScreen: { date : null},
+  TimeScreen: { date: null },
   MealNameScreen: {
     date: null,
     time: null,
-
   },
   RecipeSelectorScreen: {
     date: null,
     time: null,
-    mealName: ''
+    mealName: "",
   },
   OccasionScreen: {
     date: null,
-    time: null
+    time: null,
   },
   FavoriteScreen: undefined,
   CalendarScreen: {
     date: null,
     time: null,
-    mealName: ''
-  }
+    mealName: "",
+  },
 };
 
 export const defaultJoinNavigatorParamList: JoinNavigatorParamList = {
@@ -103,10 +105,16 @@ export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
   Calendar: undefined,
 };
 
+export const defaultTaskDrawerNavigatorParamList: TaskDrawerNavigatorParamList =
+  {
+    Task: undefined,
+    Feed: undefined,
+    Invite: undefined,
+  };
+
 export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
   Tabs: defaultBottomTabNavigatorParamList,
-  Task: undefined,
-  Feed: undefined,
+  TaskDrawer: defaultTaskDrawerNavigatorParamList,
   Participants: undefined,
 };
 
@@ -155,19 +163,24 @@ export type SessionCodeScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
 >;
 
-export type TaskScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  "Task"
+export type TaskScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "TaskDrawer">,
+  DrawerNavigationProp<TaskDrawerNavigatorParamList, "Task">
 >;
 
-export type FeedScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  "Feed"
+export type FeedScreenNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<TaskDrawerNavigatorParamList, "Feed">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "TaskDrawer">
 >;
 
 export type ParticipantsScreenNavigationProp = NativeStackNavigationProp<
   HomeStackNavigatorParamList,
   "Participants"
+>;
+
+export type InviteScreenNavigationProp = DrawerNavigationProp<
+  TaskDrawerNavigatorParamList,
+  "Invite"
 >;
 
 export type CalendarScreenNavigationProp = BottomTabNavigationProp<
@@ -177,29 +190,33 @@ export type CalendarScreenNavigationProp = BottomTabNavigationProp<
 
 export type DateScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "DateScreen">;
+  "DateScreen"
+>;
 
 export type TimeScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "TimeScreen">;
+  "TimeScreen"
+>;
 
-  export type MealNameScreenNavigationProp = NativeStackNavigationProp<
+export type MealNameScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "MealNameScreen">;
+  "MealNameScreen"
+>;
 
-  export type RecipeSelectorScreenNavigationProp = NativeStackNavigationProp<
+export type RecipeSelectorScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "CalendarScreen"> 
+  "CalendarScreen"
+>;
 
-  export type OccasionScreenNavigationProp = NativeStackNavigationProp<
+export type OccasionScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "OccasionScreen">;
+  "OccasionScreen"
+>;
 
-  export type FavoriteScreenNavigationProp = NativeStackNavigationProp<
+export type FavoriteScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "FavoriteScreen">;
-
-
+  "FavoriteScreen"
+>;
 
 export type TimeScreenRouteProp = RouteProp<
   MealPlanNavigatorParamList,
@@ -207,20 +224,20 @@ export type TimeScreenRouteProp = RouteProp<
 >;
 
 export type OccasionScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'OccasionScreen'
->
+  MealPlanNavigatorParamList,
+  "OccasionScreen"
+>;
 
 export type MealNameScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'MealNameScreen'
->
+  MealPlanNavigatorParamList,
+  "MealNameScreen"
+>;
 export type CalendarScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'CalendarScreen'
->
+  MealPlanNavigatorParamList,
+  "CalendarScreen"
+>;
 
-//i am running out of time 
+//i am running out of time
 
 // Type definition for route prop to a specific screen
 // E.g: Describe the type of "route" when accessing it in LoginScreen

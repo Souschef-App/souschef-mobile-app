@@ -41,11 +41,10 @@ const JoinScreen = ({
                 <VStack
                   flexMain={false}
                   flexCross={false}
-                  gap={8}
                   style={{ ...styles.card, ...styles.qrCard }}
                 >
-                  <Icon name="qr" size={48} color={theme.colors.text} />
-                  <Text style={{ ...TextStyle.h4, color: theme.colors.text }}>
+                  <Icon name="qr" size={48} color="#fff" />
+                  <Text style={{ ...TextStyle.h4, color: "#fff" }}>
                     QR-Code
                   </Text>
                 </VStack>
@@ -54,7 +53,6 @@ const JoinScreen = ({
                 <VStack
                   flexMain={false}
                   flexCross={false}
-                  gap={8}
                   style={{ ...styles.card, ...styles.codeCard }}
                 >
                   <Icon
@@ -63,9 +61,13 @@ const JoinScreen = ({
                     color={theme.colors.background}
                   />
                   <Text
-                    style={{ ...TextStyle.h4, color: theme.colors.background }}
+                    style={{
+                      ...TextStyle.h4,
+                      color: theme.colors.background,
+                      textAlign: "center",
+                    }}
                   >
-                    Code
+                    {"Session\nCode"}
                   </Text>
                 </VStack>
               </Button>
@@ -90,7 +92,7 @@ const makeStyles = (theme: Theme) =>
       },
     },
     qrCard: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.secondary,
     },
     codeCard: {
       backgroundColor: theme.colors.text,

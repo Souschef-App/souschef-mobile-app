@@ -1,12 +1,19 @@
-import { ServerMessage } from "../../types";
+import { SESSION_CLIENT_CMD, ServerMessage, SessionUser } from "../../types";
 import commandHandlerMap from "./handlers";
 import { SessionSetState } from "./sessionSlice";
 
-const initListeners = (set: SessionSetState, socket: WebSocket) => {
+const connect = (url: string, identity: SessionUser, set: SessionSetState) => {
+  set({ sessionLoading: true, sessionError: null });
+
+  const socket = new WebSocket(url);
+
   socket.onopen = () => {
-    console.log("WebSocket connected");
     set({ socket, sessionLoading: false });
+
+    const msg = { type: SESSION_CLIENT_CMD.Handshake, payload: identity };
+    socket.send(JSON.stringify(msg));
   };
+
   socket.onmessage = (e) => {
     const message: ServerMessage = JSON.parse(e.data);
     if (message) {
@@ -14,6 +21,7 @@ const initListeners = (set: SessionSetState, socket: WebSocket) => {
       handler(set, message.payload);
     }
   };
+
   socket.onerror = (e) => {
     console.log("WebSocket error", e);
     set({
@@ -21,6 +29,7 @@ const initListeners = (set: SessionSetState, socket: WebSocket) => {
       sessionError: "Failed to join session: Please try again",
     });
   };
+
   socket.onclose = (e) => {
     if (e.code === 1000) {
       console.log("WebSocket closed cleanly");
@@ -31,6 +40,8 @@ const initListeners = (set: SessionSetState, socket: WebSocket) => {
   };
 };
 
-export const listeners = {
-  init: initListeners,
+const client = {
+  connect,
 };
+
+export default client;

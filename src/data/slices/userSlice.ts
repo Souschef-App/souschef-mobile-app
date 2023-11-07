@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand";
 import { ApiUrls } from "../../api/constants";
 import { User } from "../types";
-import { usePost } from "../../api/usePost";
+import jsonRequest from "../../api/requests";
 import { StoreState } from "../store";
 
 export interface UserSlice {
@@ -28,7 +28,9 @@ export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
   clearUserError: () => set({ userError: null }),
   login: async (data) => {
     set({ userLoading: true, userError: null });
-    const [user, error] = await usePost<User>(ApiUrls.login, { json: data });
+    const [user, error] = await jsonRequest.post<User>(ApiUrls.login, {
+      json: data,
+    });
     set({
       userLoading: false,
       ...(user ? { user } : { userError: error }),
@@ -36,7 +38,9 @@ export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
   },
   register: async (data) => {
     set({ userLoading: true, userError: null });
-    const [user, error] = await usePost<User>(ApiUrls.register, { json: data });
+    const [user, error] = await jsonRequest.post<User>(ApiUrls.register, {
+      json: data,
+    });
     set({
       userLoading: false,
       ...(user ? { user } : { userError: error }),
