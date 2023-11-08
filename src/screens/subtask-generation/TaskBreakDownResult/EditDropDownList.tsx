@@ -25,7 +25,7 @@ export const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, 
               align="flex-start"
               gap={theme.spacing.b}
             >
-            {items.map((item, index) => (
+            {items.map((item : any, index : number) => (
                 <HStack justifyContent="space-between" key={index}>
                   <Text style={TextStyle.h4}>{item.name}</Text>
                   <Text style={TextStyle.h4}>

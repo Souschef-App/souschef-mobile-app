@@ -23,8 +23,6 @@ export const TaskBreakDownResultScreen = () => {
   // const [kitchenware, setKitchenware] = useState<string>("")
   // const [description, setDescription] = useState<string>("")
 
-
-
   const onAccept = () =>{
 
   }

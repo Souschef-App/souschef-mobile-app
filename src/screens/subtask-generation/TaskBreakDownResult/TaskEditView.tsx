@@ -41,6 +41,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
 
   const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
   const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
+  const [isEditRatingVisible, setIsEditRatingVisible] = useState(false) 
 
 
   return (
@@ -71,7 +72,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             </HStack>
             <Divider thickness={3} color={theme.colors.background2} />
 
-            <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>{}}>
+            <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>setIsEditRatingVisible(true)}>
               <HStack flexMain={false} gap={theme.spacing.s}>
                 <Icon name="star" color={theme.colors.highlight2} size={24} />
                 <Icon
@@ -143,6 +144,24 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           <Modal.Footer>
             <HStack gap={15}>
               <TextButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditTitleVisible(false)} />
+              <TextButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+            </HStack>
+          </Modal.Footer>
+        </Modal.Container>
+      </Modal>
+      <Modal isVisible={isEditRatingVisible}>
+        <Modal.Container>
+          <Modal.Header title="Edit Rating" />
+          <Modal.Body>
+            <HStack>
+              <IconButton icon="star" onPress={()=>{}}/>
+              <IconButton icon="star" onPress={()=>{}}/>
+              <IconButton icon="star" onPress={()=>{}}/>
+            </HStack>
+          </Modal.Body>
+          <Modal.Footer>
+            <HStack gap={15}>
+              <TextButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditRatingVisible(false)} />
               <TextButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
             </HStack>
           </Modal.Footer>
