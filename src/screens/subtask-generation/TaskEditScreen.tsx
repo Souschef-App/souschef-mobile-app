@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { StyleSheet, Text } from "react-native";
 import {
+  Button,
   Divider,
   Dropdown,
   HStack,
   Icon,
   IconButton,
+  TextButton,
   VStack,
 } from "../../components";
 import useStore from "../../data/store";
@@ -17,6 +19,42 @@ import { ThemeContext } from "../../contexts/AppContext";
 export type TaskAvailaleProps = {
   task: Task;
 };
+
+const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, styles, onEdit, isEditMode} : any) =>{
+  return(
+    <Button style={isEditMode ? styles.highlightEdit : null} onPress={() => onEdit()}>
+      <Dropdown 
+        title={title}
+        icon={icon}
+        iconColor={theme.colors.primary}
+        isOpen={isOpen}
+        onPress={() => setIsOpen(!setIsOpen)}
+        textStyle={styles.dropdownTitle}
+      >
+        <HStack
+          mAll={{ l: theme.spacing.s, r: theme.spacing.xs }}
+          gap={theme.spacing.b}
+        >
+          <Divider color={theme.colors.background2} />
+          <VStack
+            pVH={{ v: theme.spacing.s }}
+            align="flex-start"
+            gap={theme.spacing.b}
+          >
+            {items.map((i, index) => (
+              <HStack justifyContent="space-between" key={index}>
+                <Text style={TextStyle.h4}>{i.name}</Text>
+                <Text style={TextStyle.h4}>
+                  {formatIngredientQuantity(i)}
+                </Text>
+              </HStack>
+            ))}
+          </VStack>
+        </HStack>
+      </Dropdown>
+    </Button>
+  )
+}
 
 const TaskAvailable = (props: TaskAvailaleProps) => {
   // Theme
@@ -38,15 +76,18 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
   const handleTaskFinished = () => commands.completeTask();
   const handleTaskReroll = () => commands.rerollTask();
 
-  return (
+  const [canEdit, setCanEdit] = useState(false)
 
+  return (
     <VStack style={styles.card} p={theme.spacing.m}>
       <VStack gap={theme.spacing.xl}>
         <VStack flexMain={false} gap={theme.spacing.s}>
-          <HStack justifyContent="flex-end">
+          <HStack justifyContent="space-between">
+            <IconButton icon="pencil" onPress={()=> setCanEdit(!canEdit)} />
             <IconButton style={styles.retry} icon="retry" onPress={() => { }} iconColor="#fff" iconSize={30} />
           </HStack>
-          <Text style={styles.taskTitle}>{task.title}</Text>
+          {/* <Text style={styles.taskTitle}>{task.title}</Text> */}
+          <TextButton style={canEdit ? styles.highlightEdit : null} textStyle={styles.taskTitle} title={task.title} onPress={()=>{}} />
           <HStack
             flexMain={false}
             gap={theme.spacing.m}
@@ -54,116 +95,75 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
           >
             <HStack flexMain={false} gap={theme.spacing.s}>
               <Icon name="timer" color={theme.colors.text} size={24} />
-              <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
+              <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>{}}>
+                <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
+              </Button>
             </HStack>
             <Divider thickness={3} color={theme.colors.background2} />
-            <HStack flexMain={false} gap={theme.spacing.s}>
-              <Icon name="star" color={theme.colors.highlight2} size={24} />
-              <Icon
-                name={
-                  task.difficulty > DIFFICULTY.Easy ? "star" : "star-outline"
-                }
-                color={theme.colors.highlight2}
-                size={24}
-              />
-              <Icon
-                name={
-                  task.difficulty > DIFFICULTY.Medium
-                    ? "star"
-                    : "star-outline"
-                }
-                color={theme.colors.highlight2}
-                size={24}
-              />
-            </HStack>
+
+            <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>{}}>
+              <HStack flexMain={false} gap={theme.spacing.s}>
+                <Icon name="star" color={theme.colors.highlight2} size={24} />
+                <Icon
+                  name={
+                    task.difficulty > DIFFICULTY.Easy ? "star" : "star-outline"
+                  }
+                  color={theme.colors.highlight2}
+                  size={24}
+                />
+                <Icon
+                  name={
+                    task.difficulty > DIFFICULTY.Medium
+                      ? "star"
+                      : "star-outline"
+                  }
+                  color={theme.colors.highlight2}
+                  size={24}
+                />
+              </HStack>
+            </Button>
           </HStack>
         </VStack>
-        <Text style={TextStyle.h3}>{task.description}</Text>
+        <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>{}}>
+          <Text style={TextStyle.h3}>{task.description}</Text>
+        </Button>
         <VStack
           flexMain={false}
           pVH={{ h: theme.spacing.m }}
           gap={isIngredientOpen ? 10 : theme.spacing.l}
         >
-          <Dropdown
-            title="Ingredient"
+          <EditDropdownList 
+            title="Ingredients"
             icon="ingredient"
-            iconColor={theme.colors.primary}
-            isOpen={isIngredientOpen}
-            onPress={() => setIsIngredientOpen(!isIngredientOpen)}
-            textStyle={styles.dropdownTitle}
-          >
-            <HStack
-              mAll={{ l: theme.spacing.s, r: theme.spacing.xs }}
-              gap={theme.spacing.b}
-            >
-              <Divider color={theme.colors.background2} />
-              <VStack
-                pVH={{ v: theme.spacing.s }}
-                align="flex-start"
-                gap={theme.spacing.b}
-              >
-                {task.ingredients.map((i, index) => (
-                  <HStack justifyContent="space-between" key={index}>
-                    <Text style={TextStyle.h4}>{i.name}</Text>
-                    <Text style={TextStyle.h4}>
-                      {formatIngredientQuantity(i)}
-                    </Text>
-                  </HStack>
-                ))}
-              </VStack>
-            </HStack>
-          </Dropdown>
-          <Dropdown
+            theme={theme} 
+            isOpen={isIngredientOpen} 
+            setIsOpen={() => setIsIngredientOpen(!isIngredientOpen)} 
+            items={task.ingredients}
+            styles={styles}
+            isEditMode={canEdit}/>
+
+          <EditDropdownList 
             title="Kitchenware"
             icon="kitchenware"
-            iconColor={theme.colors.text}
-            isOpen={isKitchenwareOpen}
-            onPress={() => setIsKitchenwareOpen(!isKitchenwareOpen)}
-            textStyle={styles.dropdownTitle}
-          >
-            <HStack mVH={{ h: theme.spacing.s }} gap={theme.spacing.b}>
-              <Divider color={theme.colors.background2} />
-              <VStack
-                pVH={{ v: theme.spacing.s }}
-                align="flex-start"
-                gap={theme.spacing.b}
-              >
-                {task.kitchenware.map((k, index) => (
-                  <HStack justifyContent="space-between" key={index}>
-                    <Text style={TextStyle.h4}>{k.name}</Text>
-                    <Text style={TextStyle.h4}>{`${k.quantity}x`}</Text>
-                  </HStack>
-                ))}
-              </VStack>
-            </HStack>
-          </Dropdown>
-          <Dropdown
-          title="Dependencies"
-          icon="clipboard"
-          iconColor={theme.colors.text}
-          isOpen={isDependenciesOpen}
-          onPress={() => setIsDependenciesOpen(!isDependenciesOpen)}
-          textStyle={styles.dropdownTitle}
-            >
-          <HStack mVH={{ h: theme.spacing.s }} gap={theme.spacing.b}>
-            <Divider color={theme.colors.background2} />
-            <VStack
-              pVH={{ v: theme.spacing.s }}
-              align="flex-start"
-              gap={theme.spacing.b}
-            >
-              {task.kitchenware.map((k, index) => (
-                <HStack justifyContent="space-between" key={index}>
-                  <Text style={TextStyle.h4}>{k.name}</Text>
-                  <Text style={TextStyle.h4}>{`${k.quantity}x`}</Text>
-                </HStack>
-              ))}
-            </VStack>
-          </HStack>
-        </Dropdown>
-      </VStack>
-    </VStack>   
-      </VStack >
+            theme={theme} 
+            isOpen={isIngredientOpen}
+            setIsOpen={() => setIsKitchenwareOpen(!isKitchenwareOpen)} 
+            items={task.kitchenware}
+            styles={styles}
+            isEditMode={canEdit}/>
+
+          <EditDropdownList 
+            title="Dependencies"
+            icon="clipboard"
+            theme={theme} 
+            isOpen={isDependenciesOpen} 
+            setIsOpen={() => setIsDependenciesOpen(!isDependenciesOpen)} 
+            items={task.dependencies}
+            styles={styles}
+            isEditMode={canEdit}/>
+        </VStack>
+      </VStack>   
+    </VStack >
 
   );
 };
@@ -210,6 +210,11 @@ const makeStyles = (theme: Theme) =>
       borderRadius: 1000,
       padding: 12
     },
+    highlightEdit:{
+      ...ButtonStyle.editable,
+      // alignSelf: "stretch",
+      backgroundColor: "#2F394A33",
+    }
   });
 
 export default TaskAvailable;

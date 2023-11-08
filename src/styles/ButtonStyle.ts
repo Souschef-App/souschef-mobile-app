@@ -50,3 +50,11 @@ export const round: ViewStyle = {
   height: 56,
   width: 56,
 };
+
+export const editable: ViewStyle = {
+  ...buttonCore.center,
+  ...padding(0, 16),
+  ...buttonCore.curved,
+  margin: 0,
+  // height: 56,
+};
