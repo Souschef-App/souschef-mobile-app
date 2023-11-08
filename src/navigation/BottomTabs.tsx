@@ -2,22 +2,24 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 
 import { Icon } from "../components";
-import { CalendarScreen, HomeScreen, JoinScreen } from "../screens";
-import HomeStackNavigator from "./HomeStack";
+import { CalendarScreen, HomeScreen } from "../screens";
+import JoinNavigator from "./JoinStack";
 import MealPlanNavigator from "./MealPlanStack";
 import { BottomTabNavigatorParamList } from "./types";
-import JoinNavigator from "./JoinStack";
+import { ThemeContext } from "../contexts/AppContext";
 
 const BottomTabs = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
 const BottomTabsNavigator = () => {
+  const theme = React.useContext(ThemeContext);
+
   return (
     <BottomTabs.Navigator
       screenOptions={() => ({
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: "#2e9dfb",
-        tabBarInactiveTintColor: "#b3bac0",
+        tabBarActiveTintColor: theme.colors.highlight,
+        tabBarInactiveTintColor: theme.colors.textDisabled,
         tabBarStyle: {
           // Seamless transition (color)
           borderTopWidth: 0,

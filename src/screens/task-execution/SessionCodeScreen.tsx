@@ -1,13 +1,13 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text } from "react-native";
-import { Input, SafeArea, TextButton, VStack } from "../../components";
+import { OtpInput, SafeArea, VStack } from "../../components";
 import { AppContext, ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
 import {
   SessionCodeScreenNavigationProp,
   defaultTaskDrawerNavigatorParamList,
 } from "../../navigation/types";
-import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
+import { TextStyle, Theme } from "../../styles";
 
 const fiveDigitRegex = /^\d{5}$/;
 
@@ -23,7 +23,6 @@ const SessionCodeScreen = ({
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   // State
-  const [sessionCode, setSessionCode] = React.useState<string>("");
   const [errorMsg, setErrorMsg] = React.useState<string>("");
 
   // Store
@@ -48,60 +47,52 @@ const SessionCodeScreen = ({
     return () => cleanup();
   }, []);
 
-  const handleInputOnChange = (text: string) => {
-    const cleanedText = text.replace(/[^0-9]/g, "");
-    setSessionCode(cleanedText);
-  };
-
-  const handleSubmit = () => {
+  const handleInputFilled = (otp: string) => {
     if (appConfig.useFakeData) {
       joinFakeSession();
       return;
     }
 
-    if (!fiveDigitRegex.test(sessionCode)) {
+    if (!fiveDigitRegex.test(otp)) {
       setErrorMsg("The provided code must be a 5-digit number.");
       return;
     }
 
     if (!loading) {
-      joinSession(parseInt(sessionCode));
+      joinSession(parseInt(otp));
     }
   };
 
   return (
     <SafeArea>
-      <VStack>
-        <VStack gap={theme.spacing.s} p={theme.spacing.m}>
-          <Text style={TextStyle.h1}>Session Code</Text>
-          <Text style={TextStyle.body}>
-            Enter the session code found on the host's device.
+      <VStack
+        justifyContent="flex-start"
+        pVH={{ v: theme.spacing.xxxl }}
+        gap={theme.spacing.m}
+      >
+        <VStack flexMain={false} gap={theme.spacing.s} p={theme.spacing.m}>
+          <Text style={TextStyle.h1}>Enter Session Code</Text>
+          <Text style={styles.instruction}>
+            The session code can be found on the host's device.
           </Text>
         </VStack>
-        <VStack gap={theme.spacing.l}>
-          <VStack flexMain={false}>
+        <VStack
+          flexMain={false}
+          pVH={{ h: theme.spacing.l }}
+          gap={theme.spacing.m}
+        >
+          <VStack style={{ height: theme.spacing.b }}>
             {loading ? (
               <ActivityIndicator size="large" />
             ) : (
               <Text style={styles.errorMsg}>{errorMsg}</Text>
             )}
           </VStack>
-          <Input
-            value={sessionCode}
-            onChange={handleInputOnChange}
-            placeholder="Enter session code"
-            keyboardType="number-pad"
-            maxLength={5}
-            style={styles.input}
-            textStyle={styles.inputText}
-          />
-        </VStack>
-        <VStack flexMain={false} p={theme.spacing.m}>
-          <TextButton
-            title="SUBMIT"
-            onPress={handleSubmit}
-            style={styles.submit}
-            textStyle={styles.submitText}
+          <OtpInput
+            pinCount={5}
+            onCodeFilled={handleInputFilled}
+            codeInputBlurStyle={styles.box}
+            codeInputFocusStyle={{ borderColor: theme.colors.highlight }}
           />
         </VStack>
       </VStack>
@@ -111,30 +102,23 @@ const SessionCodeScreen = ({
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({
-    input: {
-      ...InputStyle.outline,
-      width: "75%",
-      //   backgroundColor: "red",
-    },
-    inputText: {
-      ...TextStyle.h3,
-      flexGrow: 0,
+    instruction: {
+      ...TextStyle.body,
       textAlign: "center",
-      fontWeight: "normal",
+    },
+    box: {
+      width: 50,
+      height: 75,
+      fontSize: 24,
+      textAlign: "center",
+      borderWidth: 1.5,
+      borderRadius: 4,
+      borderColor: theme.colors.textDisabled,
     },
     errorMsg: {
       ...TextStyle.body,
       textAlign: "center",
       color: theme.colors.danger,
-    },
-    submit: {
-      ...ButtonStyle.primary,
-      alignSelf: "stretch",
-      backgroundColor: theme.colors.highlight,
-    },
-    submitText: {
-      ...TextStyle.h3,
-      color: theme.colors.background,
     },
   });
 

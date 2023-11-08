@@ -1,19 +1,18 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, Text } from "react-native";
 import {
   Divider,
   Dropdown,
   HStack,
   Icon,
   IconButton,
-  SafeArea,
   VStack,
 } from "../../../components";
+import { ThemeContext } from "../../../contexts/AppContext";
 import useStore from "../../../data/store";
 import { DIFFICULTY, Task } from "../../../data/types";
 import { ButtonStyle, TextStyle, Theme } from "../../../styles";
 import { formatIngredientQuantity } from "../../../utils/format";
-import { ThemeContext } from "../../../contexts/AppContext";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -28,6 +27,7 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
   const task = props.task;
 
   // State
+  const [refresh, setRefresh] = React.useState(false);
   const [isIngredientOpen, setIsIngredientOpen] =
     React.useState<boolean>(false);
   const [isKitchenwareOpen, setIsKitchenwareOpen] =
@@ -37,13 +37,30 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
   const commands = useStore((state) => state.commands);
 
   const handleTaskFinished = () => commands.completeTask();
-  const handleTaskReroll = () => commands.rerollTask();
+  const handleTaskReroll = () => {
+    setRefresh(true);
+    commands.rerollTask();
+
+    // TODO: Wait for WebSocket reply
+    setTimeout(() => {
+      setRefresh(false);
+    }, 500);
+  };
 
   return (
-    <SafeArea>
-      <VStack p={theme.spacing.m}>
-        <VStack gap={theme.spacing.xl}>
-          <VStack flexMain={false} gap={theme.spacing.s}>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      refreshControl={
+        <RefreshControl refreshing={refresh} onRefresh={handleTaskReroll} />
+      }
+    >
+      <VStack gap={theme.spacing.xl} p={theme.spacing.m}>
+        <VStack
+          justifyContent="flex-end"
+          gap={theme.spacing.xl}
+          style={{ flex: 1 }}
+        >
+          <VStack flexMain={false} gap={theme.spacing.m}>
             <Text style={styles.taskTitle}>{task.title}</Text>
             <HStack
               flexMain={false}
@@ -76,88 +93,106 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
             </HStack>
           </VStack>
           <Text style={TextStyle.h3}>{task.description}</Text>
-          <VStack
-            flexMain={false}
-            pVH={{ h: theme.spacing.m }}
-            gap={isIngredientOpen ? 10 : theme.spacing.l}
-          >
-            <Dropdown
-              title="Ingredient"
-              icon="ingredient"
-              iconColor={theme.colors.primary}
-              isOpen={isIngredientOpen}
-              onPress={() => setIsIngredientOpen(!isIngredientOpen)}
-              textStyle={styles.dropdownTitle}
-            >
-              <HStack
-                mAll={{ l: theme.spacing.s, r: theme.spacing.xs }}
-                gap={28}
-              >
-                <Divider color={theme.colors.background2} />
-                <VStack
-                  pVH={{ v: theme.spacing.s }}
-                  align="flex-start"
-                  gap={theme.spacing.b}
-                >
-                  {task.ingredients.map((i, index) => (
-                    <HStack justifyContent="space-between" key={index}>
-                      <Text style={TextStyle.h4}>{i.name}</Text>
-                      <Text style={TextStyle.h4}>
-                        {formatIngredientQuantity(i)}
-                      </Text>
-                    </HStack>
-                  ))}
-                </VStack>
-              </HStack>
-            </Dropdown>
-            <Dropdown
-              title="Kitchenware"
-              icon="kitchenware"
-              iconColor={theme.colors.text}
-              isOpen={isKitchenwareOpen}
-              onPress={() => setIsKitchenwareOpen(!isKitchenwareOpen)}
-              textStyle={styles.dropdownTitle}
-            >
-              <HStack mVH={{ h: theme.spacing.s }} gap={28}>
-                <Divider color={theme.colors.background2} />
-                <VStack
-                  pVH={{ v: theme.spacing.s }}
-                  align="flex-start"
-                  gap={theme.spacing.b}
-                >
-                  {task.kitchenware.map((k, index) => (
-                    <HStack justifyContent="space-between" key={index}>
-                      <Text style={TextStyle.h4}>{k.name}</Text>
-                      <Text style={TextStyle.h4}>{`${k.quantity}x`}</Text>
-                    </HStack>
-                  ))}
-                </VStack>
-              </HStack>
-            </Dropdown>
-          </VStack>
         </VStack>
-        <VStack flexMain={false} gap={theme.spacing.s}>
+        <VStack style={{ flex: 1 }}>
+          <ScrollView
+            overScrollMode="never"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              padding: 8,
+              paddingBottom: 56 + 32,
+            }}
+            style={{
+              alignSelf: "stretch",
+            }}
+          >
+            <VStack
+              flexMain={false}
+              pVH={{ h: theme.spacing.m }}
+              gap={isIngredientOpen ? 10 : theme.spacing.l}
+            >
+              <Dropdown
+                title="Ingredients"
+                icon="ingredient"
+                iconColor={theme.colors.primary}
+                isOpen={isIngredientOpen}
+                onPress={() => setIsIngredientOpen(!isIngredientOpen)}
+                textStyle={styles.dropdownTitle}
+              >
+                <HStack mAll={{ l: 12 }} gap={theme.spacing.b + 2}>
+                  <Divider color={theme.colors.background2} />
+                  <VStack>
+                    {task.ingredients.length > 0 ? (
+                      task.ingredients.map((i, index) => (
+                        <HStack
+                          key={index}
+                          justifyContent="space-between"
+                          style={{ height: theme.spacing.xxl }}
+                        >
+                          <Text style={TextStyle.h4}>{i.name}</Text>
+                          <Text style={TextStyle.h4}>
+                            {formatIngredientQuantity(i)}
+                          </Text>
+                        </HStack>
+                      ))
+                    ) : (
+                      <HStack
+                        justifyContent="space-between"
+                        style={{ height: theme.spacing.xxl }}
+                      >
+                        <Text style={TextStyle.h4}>None Required</Text>
+                      </HStack>
+                    )}
+                  </VStack>
+                </HStack>
+              </Dropdown>
+              <Dropdown
+                title="Kitchenware"
+                icon="kitchenware"
+                iconColor={theme.colors.text}
+                isOpen={isKitchenwareOpen}
+                onPress={() => setIsKitchenwareOpen(!isKitchenwareOpen)}
+                textStyle={styles.dropdownTitle}
+              >
+                <HStack mAll={{ l: 12 }} gap={theme.spacing.b + 2}>
+                  <Divider color={theme.colors.background2} />
+                  <VStack>
+                    {task.kitchenware.length > 0 ? (
+                      task.kitchenware.map((k, index) => (
+                        <HStack
+                          key={index}
+                          justifyContent="space-between"
+                          style={{ height: theme.spacing.xxl }}
+                        >
+                          <Text style={TextStyle.h4}>{k.name}</Text>
+                          <Text style={TextStyle.h4}>{`${k.quantity}x`}</Text>
+                        </HStack>
+                      ))
+                    ) : (
+                      <HStack
+                        justifyContent="space-between"
+                        style={{ height: theme.spacing.xxl }}
+                      >
+                        <Text style={TextStyle.h4}>None Required</Text>
+                      </HStack>
+                    )}
+                  </VStack>
+                </HStack>
+              </Dropdown>
+            </VStack>
+          </ScrollView>
           <IconButton
             title="FINISHED"
             icon="check-round"
-            iconColor="#fff"
+            color="#fff"
             onPress={handleTaskFinished}
             style={styles.completeBtn}
             textStyle={styles.btnText}
             iconStyle={styles.btnIcon}
           />
-          <IconButton
-            title="RE-ROLL"
-            icon="dice"
-            iconColor="#fff"
-            onPress={handleTaskReroll}
-            style={styles.rerollBtn}
-            textStyle={styles.btnText}
-            iconStyle={styles.btnIcon}
-          />
         </VStack>
       </VStack>
-    </SafeArea>
+    </ScrollView>
   );
 };
 
@@ -169,21 +204,18 @@ const makeStyles = (theme: Theme) =>
     },
     dropdownTitle: {
       ...TextStyle.h3,
-      fontWeight: "bold",
+      ...TextStyle.bold,
     },
     completeBtn: {
       ...ButtonStyle.primary,
-      alignSelf: "stretch",
       backgroundColor: theme.colors.primary,
-    },
-    rerollBtn: {
-      ...ButtonStyle.primary,
-      alignSelf: "stretch",
-      backgroundColor: theme.colors.highlight,
+      position: "absolute",
+      width: "100%",
+      bottom: 0,
     },
     btnIcon: {
       position: "absolute",
-      left: theme.spacing.m,
+      left: theme.spacing.s,
     },
     btnText: {
       ...TextStyle.h2,
@@ -192,7 +224,7 @@ const makeStyles = (theme: Theme) =>
     },
     timerText: {
       ...TextStyle.body,
-      fontWeight: "bold",
+      ...TextStyle.bold,
     },
   });
 

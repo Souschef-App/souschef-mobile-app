@@ -1,6 +1,6 @@
 import { SvgProps } from "react-native-svg";
 
-const Icons: Record<string, React.FC<SvgProps>> = {
+const Icons = {
   calendar: require("./calendar.svg").default,
   "check-round": require("./check-round.svg").default,
   check: require("./check.svg").default,
@@ -25,12 +25,14 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   "star-outline": require("./star-outline.svg").default,
   timer: require("./timer.svg").default,
   logo: require("./logo.svg").default,
+  "logo-shadow": require("./logo-shadow.svg").default,
   pencil: require("./pencil.svg").default,
   x: require("./x.svg").default,
   "arrow-up": require("./arrow-up.svg").default,
   "arrow-down": require("./arrow-down.svg").default,
   "arrow-left": require("./arrow-left.svg").default,
   "arrow-right": require("./arrow-right.svg").default,
+  "back-arrow": require("./back-arrow.svg").default,
   plus: require("./plus.svg").default,
   digit: require("./digit.svg").default,
   heart: require("./heart.svg").default,
@@ -38,7 +40,8 @@ const Icons: Record<string, React.FC<SvgProps>> = {
   graduationcap: require("./graduationcap.svg").default,
   brochette: require("./brochette.svg").default,
   cake: require("./cake.svg").default,
+  menu: require("./menu.svg").default,
   // Add more mappings for other SVGs
-};
+} as const satisfies Record<string, React.FC<SvgProps>>;
 
 export default Icons;

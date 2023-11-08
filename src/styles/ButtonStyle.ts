@@ -12,6 +12,15 @@ const buttonCore: { [key: string]: ViewStyle } = {
   rounded: {
     borderRadius: 1000,
   },
+  shadow: {
+    // Android shadow
+    elevation: 2,
+    // iOS shadow
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+  },
 };
 
 const padding = (v: number, h: number) => {
@@ -26,13 +35,6 @@ export const primary: ViewStyle = {
   ...buttonCore.rounded,
   ...padding(8, 16),
   height: theme.spacing.xxl,
-  // Android shadow
-  elevation: 1,
-  // iOS shadow
-  shadowOffset: {
-    width: 0,
-    height: -1,
-  },
 };
 
 export const account: ViewStyle = {

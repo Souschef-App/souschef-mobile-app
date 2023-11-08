@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { ActivityIndicator, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import {
   HStack,
   SafeArea,
   SecureInput,
+  SvgLocal,
   TextButton,
   VStack,
   ValidationInput,
@@ -108,9 +109,17 @@ const LoginScreen = ({
 
   return (
     <SafeArea backgroundColor={theme.colors.primary}>
-      <VStack>
-        <VStack>
-          <Text style={styles.header}>Welcome Back</Text>
+      <VStack justifyContent="flex-end">
+        <VStack justifyContent="flex-end">
+          <VStack>
+            <Text style={styles.header}>Welcome Back</Text>
+          </VStack>
+          <SvgLocal
+            name="curve"
+            color="white"
+            aspectRatio={2 / 1}
+            style={{ transform: [{ rotateZ: "180deg" }] }}
+          />
         </VStack>
         <VStack
           justifyContent="flex-end"

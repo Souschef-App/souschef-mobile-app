@@ -38,7 +38,7 @@ const initialState: SessionState = {
 
 type SessionActions = {
   resetSessionSlice: () => void;
-  joinSession: (code: number) => Promise<void>;
+  joinSession: (code: number) => Promise<boolean>;
   joinFakeSession: () => void;
   leaveSession: () => void;
   commands: {
@@ -74,7 +74,7 @@ export const createSessionSlice: StateCreator<
 
       if (error) {
         set({ sessionLoading: false, sessionError: error });
-        return;
+        return false;
       }
 
       const sessionUser: SessionUser | null = get().user;
@@ -84,11 +84,12 @@ export const createSessionSlice: StateCreator<
           sessionError:
             "You are not logged in. Please log in to access this feature.",
         });
-        return;
+        return false;
       }
 
       set({ session });
       client.connect(`ws://${session?.ip}/ws`, sessionUser);
+      return true;
     },
     joinFakeSession: () =>
       set({

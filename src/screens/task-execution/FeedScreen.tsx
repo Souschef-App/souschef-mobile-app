@@ -57,20 +57,22 @@ const FeedScreen = ({
         <HStack
           flexMain={false}
           justifyContent="space-between"
-          pVH={{ h: theme.spacing.m }}
-          style={{ height: theme.spacing.xxxl }}
+          style={styles.appBar}
         >
           <IconButton
-            icon="arrow-left"
-            iconSize={20}
+            icon="back-arrow"
+            color={theme.colors.text}
+            iconSize={24}
             onPress={navigation.goBack}
+            style={styles.appBarBtn}
           />
           <IconButton
             title={users.length.toString()}
+            color={theme.colors.text}
             icon="group"
             iconSize={24}
-            reverseOrder={true}
             onPress={() => {}}
+            style={{ ...styles.appBarBtn, flexDirection: "row-reverse" }}
           />
         </HStack>
         <VStack justifyContent="flex-start" p={16} gap={16}>
@@ -100,6 +102,14 @@ const FeedScreen = ({
   );
 };
 
-const makeStyles = (theme: Theme) => StyleSheet.create({});
+const makeStyles = (theme: Theme) =>
+  StyleSheet.create({
+    appBar: { height: theme.spacing.xxxl },
+    appBarBtn: {
+      paddingLeft: theme.spacing.m,
+      paddingRight: theme.spacing.m,
+      alignSelf: "stretch",
+    },
+  });
 
 export default FeedScreen;

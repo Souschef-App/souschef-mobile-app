@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Icon, SafeArea, TextButton, VStack } from "../components";
 import { ThemeContext } from "../contexts/AppContext";
 import { WelcomeScreenNavigationProp } from "../navigation/types";
 import { ButtonStyle, Theme, TextStyle } from "../styles";
+import { BlurView } from "expo-blur";
 
 // TODO:
 // 1. Floating QR Scan Button
@@ -24,7 +25,15 @@ const WelcomeScreen = ({
     <SafeArea backgroundColor={theme.colors.primary}>
       <VStack pVH={{ v: theme.spacing.l, h: theme.spacing.m }}>
         <VStack>
-          <Icon name="logo" size={256} />
+          <View style={{ position: "relative" }}>
+            <Icon
+              name="logo-shadow"
+              size={"66%"}
+              color={"#0004"}
+              style={{ position: "absolute", top: 2 }}
+            />
+            <Icon name="logo" size={"66%"} />
+          </View>
         </VStack>
         <VStack flexMain={false} rowGap={theme.spacing.l}>
           <VStack align="flex-start" rowGap={theme.spacing.s}>
@@ -62,8 +71,8 @@ const makeStyles = (theme: Theme) =>
     },
     message: { ...TextStyle.h3 },
     buttonText: {
+      ...TextStyle.h3,
       color: "#fff",
-      fontSize: 20,
     },
     login: {
       ...ButtonStyle.account,
