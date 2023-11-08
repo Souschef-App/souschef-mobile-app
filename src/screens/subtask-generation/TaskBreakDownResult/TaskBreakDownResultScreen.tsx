@@ -91,19 +91,45 @@ export const TaskBreakDownResultScreen = () => {
           }
           </VStack>
           <HStack>
-            <IconButton 
-              style={styles.arrowBTN}  
-              icon="arrow-left" 
-              iconStyle={styles.arrowIcon} 
-              onPress={()=>prevTask()}
-              iconColor="#fff" 
-              />
-            <IconButton 
-            style={styles.arrowBTN2} 
-            icon="arrow-right" 
-            onPress={()=>nextTask()}
-            iconColor="#fff" 
+          <Button
+            onPress={()=>prevTask()}
+            style={{
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "center",
+              columnGap: 8,
+              ...styles.arrowBTN,
+            }}
+          >
+            <Icon
+              name="arrow-left" 
+              color="#fff" 
+              size={30}
+              style={styles.arrowIcon}
             />
+            <Text style={TextStyle.h3}>Previous</Text>
+          </Button>
+          <VStack>
+              <Text style={TextStyle.h3}> {activeIndex + 1}/{brokenDownRecipe?.length}</Text>
+          </VStack>
+          <Button
+            onPress={()=>nextTask()}
+            style={{
+              position: "relative",
+              flexDirection: "row",
+              alignItems: "center",
+              columnGap: 8,
+              ...styles.arrowBTN2,
+            }}
+          >
+            <Text style={TextStyle.h3}>Next</Text>
+            <Icon
+              name="arrow-right" 
+              color="#fff" 
+              size={30}
+              style={styles.arrowIcon}
+            />
+          </Button>
           </HStack>
         </VStack>
       </SafeArea>
@@ -202,7 +228,7 @@ const makeStyles = (theme: Theme) =>
     },
     arrowBTN:{
       height: 56,
-      flexGrow: 1,
+      width: 160,
       padding: 10,
       justifyContent:"flex-start",
       backgroundColor: theme.colors.primary,
@@ -213,7 +239,7 @@ const makeStyles = (theme: Theme) =>
     },
     arrowBTN2:{
       height: 56,
-      flexGrow: 1,
+      width: 160,
       padding: 10,
       justifyContent:"flex-end",
       backgroundColor: theme.colors.primary,

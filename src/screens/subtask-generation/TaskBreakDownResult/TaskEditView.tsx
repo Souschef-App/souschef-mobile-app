@@ -11,20 +11,16 @@ import {
   TextButton,
   VStack,
 } from "../../../components";
-import useStore from "../../../data/store";
 import { DIFFICULTY, Task } from "../../../data/types";
 import { ButtonStyle, TextStyle, Theme } from "../../../styles";
-import { formatIngredientQuantity } from "../../../utils/format";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { Modal } from "../../../components/Modal";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+
 import { EditDropdownList } from "./EditDropDownList";
 
 export type TaskAvailaleProps = {
   task: Task;
 };
-
-
 
 const TaskEditView = (props: TaskAvailaleProps) => {
   // Theme
