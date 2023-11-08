@@ -7,76 +7,41 @@ import {
   HStack,
   Icon,
   IconButton,
+  Input,
   TextButton,
   VStack,
-} from "../../components";
-import useStore from "../../data/store";
-import { DIFFICULTY, Task } from "../../data/types";
-import { ButtonStyle, TextStyle, Theme } from "../../styles";
-import { formatIngredientQuantity } from "../../utils/format";
-import { ThemeContext } from "../../contexts/AppContext";
+} from "../../../components";
+import useStore from "../../../data/store";
+import { DIFFICULTY, Task } from "../../../data/types";
+import { ButtonStyle, TextStyle, Theme } from "../../../styles";
+import { formatIngredientQuantity } from "../../../utils/format";
+import { ThemeContext } from "../../../contexts/AppContext";
+import { Modal } from "../../../components/Modal";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import { EditDropdownList } from "./EditDropDownList";
 
 export type TaskAvailaleProps = {
   task: Task;
 };
 
-const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, styles, onEdit, isEditMode} : any) =>{
-  return(
-    <Button style={isEditMode ? styles.highlightEdit : null} onPress={() => onEdit()}>
-      <Dropdown 
-        title={title}
-        icon={icon}
-        iconColor={theme.colors.primary}
-        isOpen={isOpen}
-        onPress={() => setIsOpen(!setIsOpen)}
-        textStyle={styles.dropdownTitle}
-      >
-        <HStack
-          mAll={{ l: theme.spacing.s, r: theme.spacing.xs }}
-          gap={theme.spacing.b}
-        >
-          <Divider color={theme.colors.background2} />
-          <VStack
-            pVH={{ v: theme.spacing.s }}
-            align="flex-start"
-            gap={theme.spacing.b}
-          >
-            {items.map((i, index) => (
-              <HStack justifyContent="space-between" key={index}>
-                <Text style={TextStyle.h4}>{i.name}</Text>
-                <Text style={TextStyle.h4}>
-                  {formatIngredientQuantity(i)}
-                </Text>
-              </HStack>
-            ))}
-          </VStack>
-        </HStack>
-      </Dropdown>
-    </Button>
-  )
-}
 
-const TaskAvailable = (props: TaskAvailaleProps) => {
+
+const TaskEditView = (props: TaskAvailaleProps) => {
   // Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  // Props
   const task = props.task;
 
-  // State
   const [isIngredientOpen, setIsIngredientOpen] = useState<boolean>(false);
   const [isKitchenwareOpen, setIsKitchenwareOpen] = useState<boolean>(false);
-
   const [isDependenciesOpen, setIsDependenciesOpen] = useState<boolean>(false);
 
-  // Store
-  const commands = useStore((state) => state.commands);
-
-  const handleTaskFinished = () => commands.completeTask();
-  const handleTaskReroll = () => commands.rerollTask();
-
   const [canEdit, setCanEdit] = useState(false)
+
+  const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
+  const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
+
 
   return (
     <VStack style={styles.card} p={theme.spacing.m}>
@@ -87,7 +52,12 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
             <IconButton style={styles.retry} icon="retry" onPress={() => { }} iconColor="#fff" iconSize={30} />
           </HStack>
           {/* <Text style={styles.taskTitle}>{task.title}</Text> */}
-          <TextButton style={canEdit ? styles.highlightEdit : null} textStyle={styles.taskTitle} title={task.title} onPress={()=>{}} />
+          <TextButton 
+            style={canEdit ? styles.highlightEdit : null} 
+            textStyle={styles.taskTitle} 
+            title={task.title} 
+            onPress={canEdit ? ()=> setIsEditTitleVisible(true) : () => {}} />
+
           <HStack
             flexMain={false}
             gap={theme.spacing.m}
@@ -124,7 +94,7 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
             </Button>
           </HStack>
         </VStack>
-        <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>{}}>
+        <Button style={canEdit ? styles.highlightEdit : null} onPress={canEdit ? () => setIsEditDescriptionVisible(true) : () => {}}>
           <Text style={TextStyle.h3}>{task.description}</Text>
         </Button>
         <VStack
@@ -162,9 +132,37 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
             styles={styles}
             isEditMode={canEdit}/>
         </VStack>
-      </VStack>   
-    </VStack >
+      </VStack>  
 
+      <Modal isVisible={isEditTItleVisible}>
+        <Modal.Container>
+          <Modal.Header title="Edit Title" />
+          <Modal.Body>
+            <Input value={task.title} onChange={()=>{}}  />
+          </Modal.Body>
+          <Modal.Footer>
+            <HStack gap={15}>
+              <TextButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditTitleVisible(false)} />
+              <TextButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+            </HStack>
+          </Modal.Footer>
+        </Modal.Container>
+      </Modal>
+      <Modal isVisible={isEditDescriptionVisible}>
+        <Modal.Container>
+          <Modal.Header title="Edit Description" />
+          <Modal.Body>
+            <Input value={task.description} onChange={()=>{}}  />
+          </Modal.Body>
+          <Modal.Footer>
+            <HStack gap={15}>
+              <TextButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
+              <TextButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+            </HStack>
+          </Modal.Footer>
+        </Modal.Container>
+      </Modal>
+    </VStack >
   );
 };
 
@@ -214,7 +212,20 @@ const makeStyles = (theme: Theme) =>
       ...ButtonStyle.editable,
       // alignSelf: "stretch",
       backgroundColor: "#2F394A33",
+    },
+    cancelBTN:{
+      ...ButtonStyle.primary,
+      minWidth: 100,
+      backgroundColor: theme.colors.danger
+    },
+    saveBTN:{
+      ...ButtonStyle.primary,
+      minWidth: 100,
+      backgroundColor: theme.colors.primary
+    },
+    red:{
+      backgroundColor: "red"
     }
   });
 
-export default TaskAvailable;
+export default TaskEditView;

@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { CalendarScreen, MealplanScreen } from "../screens";
 import { EnterRecipeScreen } from "../screens/subtask-generation/EnterRecipeScreen";
-import { TaskBreakDownResultScreen } from "../screens/subtask-generation/TaskBreakDownResultScreen";
+import { TaskBreakDownResultScreen } from "../screens/subtask-generation/TaskBreakDownResult/TaskBreakDownResultScreen";
 import { MealPlanNavigatorParamList } from "./types";
 import DateScreen from "../screens/DateScreen";
 import TimeScreen from "../screens/TimeScreen";

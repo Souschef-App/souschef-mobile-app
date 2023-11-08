@@ -1,19 +1,13 @@
-import React, { useCallback, useContext, useMemo, useRef, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text } from "react-native";
-import { Button, HStack, Icon, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
-import { ThemeContext } from "../../contexts/AppContext";
+import { Button, HStack, Icon, IconButton, SafeArea, VStack } from "../../../components";
+import { ThemeContext } from "../../../contexts/AppContext";
 
-import { ButtonStyle, InputStyle, TextStyle } from "../../styles";
-import { Theme } from "../../styles";
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { ScrollView } from "react-native-gesture-handler";
-import useStore from "../../data/store";
-import { RecipeStep } from "../../data/types/recipeStep";
-import { DIFFICULTY, Task } from "../../data/types";
-import CustomBackdrop from "../../components/customBackdrop";
-import { TaskAvailable } from "../task-execution/task-components";
-import TaskEditScreen from "./TaskEditScreen";
+import { ButtonStyle, InputStyle, TextStyle } from "../../../styles";
+import { Theme } from "../../../styles";
 
+import useStore from "../../../data/store";
+import TaskEditScreen from "./TaskEditView";
 
 export const TaskBreakDownResultScreen = () => {
   const theme = useContext(ThemeContext);
@@ -22,10 +16,6 @@ export const TaskBreakDownResultScreen = () => {
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
   const updateRecipe = useStore((state) => state.updateRecipe);
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  const snapPoints = useMemo(() => ['50%'], []);
-
   const [activeIndex, setActiveIndex] = useState<number>(0)
 
   const [editID, setEditID] = useState<number>()
@@ -33,32 +23,7 @@ export const TaskBreakDownResultScreen = () => {
   // const [kitchenware, setKitchenware] = useState<string>("")
   // const [description, setDescription] = useState<string>("")
 
-  // callbacks
-  const handlePresentModalPress = useCallback((ID : number) => {
-    bottomSheetModalRef.current?.present();
 
-    if(brokenDownRecipe == null)
-      return
-
-    const step = brokenDownRecipe![ID]
-
-    const getString = (array : string[]) =>{
-      let string = ""
-      array?.map(item =>{
-        string += `${item},`
-      })
-      return string
-    }
-
-    // setIngredients(getString(step.ingredients));
-    // setKitchenware(getString(step.kitchenware));
-    // setDescription(step.description);
-    // setEditID(step.id)
-  }, []);
-
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
 
   const onAccept = () =>{
 
@@ -98,7 +63,6 @@ export const TaskBreakDownResultScreen = () => {
   // }
 
   return (
-    <BottomSheetModalProvider>
       <SafeArea>
         <VStack 
           align="flex-start" 
@@ -119,14 +83,13 @@ export const TaskBreakDownResultScreen = () => {
 
           <VStack>
           {
-            (brokenDownRecipe != null && brokenDownRecipe.length > 0) ?(
+            (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
               <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
             ) : (
               <VStack>
                 <Text>No Tasks To Edit</Text>
               </VStack>
             )
-
           }
           </VStack>
           <HStack>
@@ -144,46 +107,8 @@ export const TaskBreakDownResultScreen = () => {
             iconColor="#fff" 
             />
           </HStack>
-
-          {/* <VStack gap={10} >
-            <TextButton style={styles.acceptBtn} textStyle={styles.textButton} onPress={onAccept} title="Save"/>
-            <TextButton style={styles.cancelBtn} textStyle={styles.textButton} onPress={onCancel} title="Cancel" /> 
-          </VStack> */}
         </VStack>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={0}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-          backdropComponent={(props) =>{
-            return <CustomBackdrop animatedIndex={{
-            value: 1
-          }} animatedPosition={{
-            value: 1
-          }} />}
-        } 
-        >
-          <VStack  gap={20} style={styles.contentContainer}>
-            <VStack align="flex-start">
-              <Text style={styles.itemHeader}>Ingredients</Text>
-              {/* <Input style={styles.input} value={ingredients} onChange={setIngredients} /> */}
-            </VStack>
-            <VStack align="flex-start">
-              <Text style={styles.itemHeader}>Kitchenware</Text>
-              {/* <Input style={styles.input} value={kitchenware} onChange={setKitchenware} /> */}
-            </VStack>
-            <VStack align="flex-start">
-              <Text style={styles.itemHeader}>Task</Text>
-              {/* <Input style={styles.input} value={description} onChange={setDescription} /> */}
-            </VStack>
-            <HStack gap={10}>
-              {/* <TextButton style={styles.updateBtn} textStyle={styles.textButton} onPress={() => onUpdateRecipe(editID!)} title="Update" />  */}
-              <IconButton icon="retry" iconColor={theme.colors.background} onPress={()=>{}} style={styles.retry} />
-            </HStack>
-          </VStack>
-        </BottomSheetModal>
       </SafeArea>
-    </BottomSheetModalProvider>
   );
 };  
 
