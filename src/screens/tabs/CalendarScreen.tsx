@@ -23,6 +23,7 @@ interface Booking {
   date: string;
   time: string;
   mealPlanName: string;
+  session: any;
 }
 
 interface CalendarScreenProps {
@@ -37,8 +38,8 @@ interface CalendarScreenState {
   isTimePickerVisible: boolean;
 }
 
-const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
-  const {date, time, mealName} = route.params ? route.params : {date: null, time: null, mealName: null};
+const CalendarScreen: React.FC<CalendarScreenProps> = ({route, navigation}) => {
+  const {date, time, mealName} = route.params ? route.params : {};
 
   const [mealPlans, setMealPlans] = useState<any[]>([])
 
@@ -62,15 +63,16 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
   };
 
   const refreshSessions = () => {
-    getMealSessions().then((res: any) => {  
+    getMealSessions().then(res => {  
       console.log(res.data);
       setState((prevState) => ({
         ...prevState,
         confirmedBookings: res.data.map((session: any) => ({
           id: session.id,
           date: session.dateTime.substring(0, 10),
-          time: session.dateTime.substring(11, 5),
-          mealPlanName: session.plan ? session.plan.name : "Test Meal Plan"
+          time: session.dateTime.substring(11, 16),
+          mealPlanName: session.plan ? session.plan.name : "Test Meal Plan",
+          session: session
         })),
         selectedDate: null,
         selectedTime: null, 
@@ -80,7 +82,7 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
   }
 
   useEffect(() => {
-    getMealPlans().then((res: any) => {
+    getMealPlans().then(res => {
       console.log(res.data);
       setMealPlans(res.data);
         
@@ -90,7 +92,7 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
         createMealSession({
           DateTime: date + "T" + time,
           PlanId: res.data.find((plan: any) => plan.name === mealName).id
-        }).then((res: any) => {
+        }).then(res => {
           refreshSessions()
         })
       }
@@ -128,21 +130,13 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
 
   const handleBookingConfirmation = () => {
     const { selectedDate, selectedTime, mealNameInput, confirmedBookings } = state;
-    
-    console.log ({
-      DateTime: selectedDate + "T" + selectedTime,
-      PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
-    });
+    console.log("booking confirmation")
 
     if (selectedDate && selectedTime && mealNameInput) {
-      console.log ({
-        DateTime: selectedDate + "T" + selectedTime,
-        PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
-      });
       createMealSession({
         DateTime: selectedDate + "T" + selectedTime,
         PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
-      }).then((res: any) => {
+      }).then(res => {
         refreshSessions()
       })
     } else {
@@ -167,32 +161,33 @@ const isPastDate = (date: string) => {
 
   return (
     <ScrollView style={styles.container}>
-  <Text style={TextStyle.h2}>Create a Cook Session!</Text>      
-  <Calendar
-  onDayPress={(day) => {
-    if (!isPastDate(day.dateString)) {
-      handleDateSelect(day.dateString);
-    } else {
-      Alert.alert('Please select a future date.');
-    }
-  }}
-  markedDates={{
-    [state.selectedDate || '']: {
-      selected: true,
-      selectedColor: '#4CAF50',
-    },
-    ...state.confirmedBookings.reduce((marked, booking) => {
-      if (isPastDate(booking.date)) {
-        marked[booking.date] = {
-          disabled: true,
-          disableTouchEvent: true,
-          customStyles: { container: { backgroundColor: '#E0E0E0' } },
-        };
-      }
-      return marked;
-    }, {} as { [date: string]: object }), 
-  }}
-/>
+      <Text style={TextStyle.h2}>Create a Cook Session!</Text>      
+      <Calendar
+        minDate={(new Date()).toISOString().substring(0, 10)}
+        onDayPress={(day) => {
+          if (!isPastDate(day.dateString)) {
+            handleDateSelect(day.dateString);
+          } else {
+            Alert.alert('Please select a future date.');
+          }
+        }}
+        markedDates={{
+          [state.selectedDate || '']: {
+            selected: true,
+            selectedColor: '#4CAF50',
+          },
+          ...state.confirmedBookings.reduce((marked, booking) => {
+            if (isPastDate(booking.date)) {
+              marked[booking.date] = {
+                disabled: true,
+                disableTouchEvent: true,
+                customStyles: { container: { backgroundColor: '#E0E0E0' } },
+              };
+            }
+            return marked;
+          }, {} as { [date: string]: object }), 
+        }}
+      />
       {state.selectedDate && (
         <View style={styles.confirmationContainer}>
           <Text style={TextStyle.body}>Selected Date:</Text>
@@ -218,10 +213,10 @@ const isPastDate = (date: string) => {
 <Text style={[TextStyle.h3, { color: 'green', textAlign: 'center' }]}>Active Cooking Sessions</Text>
         <ScrollView> 
           <FlatList
-            data={state.confirmedBookings}
+            data={state.confirmedBookings.filter(booking => getDaysLeft(booking.date) >= 0)}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <View style={styles.sessionItem}>
+              <TouchableOpacity onPress={() => navigation.navigate('SessionStartScreen', { session: item.session })} style={styles.sessionItem}>
                 <View style={styles.checkIcon}>
                   <Icon name="check" color="green" />
                 </View>
@@ -229,14 +224,14 @@ const isPastDate = (date: string) => {
                   <Text style={styles.bookingDate}>Date: {item.date}</Text>
                   <Text style={styles.mealPlan}>
                     Meal Plan: <Text style={TextStyle.body}>{item.mealPlanName}</Text>
-                    <Text style={TextStyle.body}> - {item.time}</Text> 
+                    <Text style={{...TextStyle.body, fontWeight: 'bold'}}> - {item.time}</Text> 
                   </Text>
                   <View style={styles.daysLeftContainer}>
                     <Icon name="timer" />
                     <Text style={styles.daysLeft}>{getDaysLeft(item.date)} days left</Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             )}
           />
         </ScrollView>
