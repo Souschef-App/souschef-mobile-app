@@ -1,7 +1,7 @@
 // create a server connection;
 import axios, {AxiosInstance} from 'axios';
 
-const API_BASE_URL = 'http://192.168.2.86:8082/api'; 
+const API_BASE_URL = 'http://192.168.2.86:8082/api';
 
 let axiosInst: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -48,14 +48,15 @@ export const sessionapi = {
   deleteRecipeFromMealPlan: (id: string, recipeId: string) => axiosInst.delete(`/mealplans/${id}/recipes/${recipeId}`),
 
   getMealSessions: () => axiosInst.get('/mealsessions'),
-  getMealSession: (id: string) => axiosInst.get('/mealsessions'),
+  getMealSession: (id: string) => axiosInst.get(`/mealsessions/${id}`),
+  joinMealSession: (code: string) => axiosInst.get(`/mealsessions/join/${code}`),
   createMealSession: (data: any) => axiosInst.post('/mealsessions', data),
   updateMealSession: (id: string, data: any) =>
     axiosInst.put(`/mealsessions/${id}`, data),
   deleteMealSession: (id: string) =>
     axiosInst.delete(`/mealsessions/${id}`),
 
-  getMealSessionUsers: (id: string) => axiosInst.get(`/mealsessions/${id}`),
+  getMealSessionUsers: (id: string) => axiosInst.get(`/mealsessions/${id}/users`),
   addUserToMealSession: (id: string, userId: string) => axiosInst.post(`/mealsessions/${id}/users/${userId}`),
   deleteUserFromMealSession: (id: string, userId: string) => axiosInst.delete(`/mealsessions/${id}/users/${userId}`)
 };
