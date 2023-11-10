@@ -1,4 +1,4 @@
 import fakeTask from "./fakeTaskData";
-import fakeUser from "./fakeUserData";
+import guestUser from "./guestUserData";
 
-export { fakeTask, fakeUser };
+export { fakeTask, guestUser };

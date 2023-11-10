@@ -1,11 +1,17 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
-import { HStack, Icon, IconButton, SafeArea, VStack } from "../../components";
-import { ThemeContext } from "../../contexts/AppContext";
-import useStore from "../../data/store";
-import { TASK_STATUS } from "../../data/types/session/enum";
-import { FeedScreenNavigationProp } from "../../navigation/types";
-import { TextStyle, Theme } from "../../styles";
+import {
+  HStack,
+  Icon,
+  IconButton,
+  SafeArea,
+  VStack,
+} from "../../../components";
+import { ThemeContext } from "../../../contexts/AppContext";
+import useStore from "../../../data/store";
+import { TASK_STATUS } from "../../../data/types/session/enum";
+import { FeedScreenNavigationProp } from "../../../navigation/types";
+import { TextStyle, Theme } from "../../../styles";
 import { ScrollView } from "react-native-gesture-handler";
 
 const formatRelativeTime = (timestamp: Date): string => {

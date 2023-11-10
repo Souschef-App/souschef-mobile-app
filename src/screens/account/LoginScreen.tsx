@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import {
   HStack,
@@ -28,10 +28,10 @@ const LoginScreen = ({
 }: {
   navigation: LoginScreenNavigationProp;
 }) => {
-  const appConfig = useContext(AppContext);
+  const appConfig = React.useContext(AppContext);
 
   // Theme
-  const theme = useContext(ThemeContext);
+  const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   // State

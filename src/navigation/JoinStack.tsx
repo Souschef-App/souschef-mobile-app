@@ -11,7 +11,6 @@ const JoinNavigator = () => {
       screenOptions={{ headerShown: false, animation: "fade" }}
     >
       <JoinStack.Screen name="JoinSelection" component={JoinScreen} />
-      <JoinStack.Screen name="QRCode" component={QRCodeScreen} />
       <JoinStack.Screen name="SessionCode" component={SessionCodeScreen} />
     </JoinStack.Navigator>
   );

@@ -1,13 +1,13 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text } from "react-native";
-import { OtpInput, SafeArea, VStack } from "../../components";
-import { AppContext, ThemeContext } from "../../contexts/AppContext";
-import useStore from "../../data/store";
+import { OtpInput, SafeArea, VStack } from "../../../components";
+import { AppContext, ThemeContext } from "../../../contexts/AppContext";
+import useStore from "../../../data/store";
 import {
   SessionCodeScreenNavigationProp,
-  defaultTaskDrawerNavigatorParamList,
-} from "../../navigation/types";
-import { TextStyle, Theme } from "../../styles";
+  defaultLiveSessionNavigatorParamList,
+} from "../../../navigation/types";
+import { TextStyle, Theme } from "../../../styles";
 
 const fiveDigitRegex = /^\d{5}$/;
 
@@ -26,18 +26,12 @@ const SessionCodeScreen = ({
   const [errorMsg, setErrorMsg] = React.useState<string>("");
 
   // Store
-  const socketConnected = useStore((state) => state.clientConnected);
+  const user = useStore((state) => state.user);
   const loading = useStore((state) => state.sessionLoading);
   const error = useStore((state) => state.sessionError);
   const joinSession = useStore((state) => state.joinSession);
   const joinFakeSession = useStore((state) => state.joinFakeSession);
   const cleanup = useStore((state) => state.resetSessionSlice);
-
-  React.useEffect(() => {
-    if (socketConnected) {
-      navigation.push("TaskDrawer", defaultTaskDrawerNavigatorParamList);
-    }
-  }, [socketConnected]);
 
   React.useEffect(() => {
     setErrorMsg(error || "");
@@ -50,6 +44,7 @@ const SessionCodeScreen = ({
   const handleInputFilled = (otp: string) => {
     if (appConfig.useFakeData) {
       joinFakeSession();
+      navigation.navigate("LiveSession", defaultLiveSessionNavigatorParamList);
       return;
     }
 
@@ -58,8 +53,9 @@ const SessionCodeScreen = ({
       return;
     }
 
-    if (!loading) {
-      joinSession(parseInt(otp));
+    if (!loading && user) {
+      joinSession(otp, user);
+      navigation.navigate("LiveSession", defaultLiveSessionNavigatorParamList);
     }
   };
 

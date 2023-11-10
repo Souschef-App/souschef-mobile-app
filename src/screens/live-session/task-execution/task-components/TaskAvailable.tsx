@@ -7,12 +7,12 @@ import {
   Icon,
   IconButton,
   VStack,
-} from "../../../components";
-import { ThemeContext } from "../../../contexts/AppContext";
-import useStore from "../../../data/store";
-import { DIFFICULTY, Task } from "../../../data/types";
-import { ButtonStyle, TextStyle, Theme } from "../../../styles";
-import { formatIngredientQuantity } from "../../../utils/format";
+} from "../../../../components";
+import { ThemeContext } from "../../../../contexts/AppContext";
+import useStore from "../../../../data/store";
+import { DIFFICULTY, Task } from "../../../../data/types";
+import { ButtonStyle, TextStyle, Theme } from "../../../../styles";
+import { formatIngredientQuantity } from "../../../../utils/format";
 
 export type TaskAvailaleProps = {
   task: Task;

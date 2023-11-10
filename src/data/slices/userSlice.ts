@@ -3,7 +3,7 @@ import { ApiUrls } from "../../api/constants";
 import { User } from "../types";
 import jsonRequest from "../../api/requests";
 import { StoreState } from "../store";
-import { fakeUser } from "../__mocks__";
+import { guestUser } from "../__mocks__";
 
 type UserState = {
   user: User | null;
@@ -50,7 +50,7 @@ export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
     });
   },
   fakeLogin: () => {
-    set({ user: fakeUser });
+    set({ user: guestUser });
   },
   register: async (data) => {
     set({ userLoading: true, userError: null });

@@ -1,6 +1,6 @@
 import React from "react";
-import { HStack, Skeleton, VStack } from "../../../components";
-import { ThemeContext } from "../../../contexts/AppContext";
+import { HStack, Skeleton, VStack } from "../../../../components";
+import { ThemeContext } from "../../../../contexts/AppContext";
 
 const TaskSkeleton = () => {
   // Theme

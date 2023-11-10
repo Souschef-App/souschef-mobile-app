@@ -1,10 +1,17 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { HStack, Icon, IconButton, SafeArea, VStack } from "../../components";
-import { ThemeContext } from "../../contexts/AppContext";
-import { InviteScreenNavigationProp } from "../../navigation/types";
-import { TextStyle, Theme } from "../../styles";
-import useStore from "../../data/store";
+import {
+  HStack,
+  Icon,
+  IconButton,
+  Logo,
+  SafeArea,
+  VStack,
+} from "../../../components";
+import { ThemeContext } from "../../../contexts/AppContext";
+import { InviteScreenNavigationProp } from "../../../navigation/types";
+import { TextStyle, Theme } from "../../../styles";
+import useStore from "../../../data/store";
 import QRCode from "react-native-qrcode-svg";
 
 // TODO: Convert code to string for leading zero cases
@@ -39,15 +46,7 @@ const InviteScreen = ({
         gap={theme.spacing.l}
         p={theme.spacing.m}
       >
-        <View style={{ position: "relative" }}>
-          <Icon
-            name="logo-shadow"
-            size={"50%"}
-            color={"#0004"}
-            style={{ position: "absolute", top: 2 }}
-          />
-          <Icon name="logo" size={"50%"} />
-        </View>
+        <Logo size={"50%"} />
         <VStack flexMain={false}>
           <Text style={styles.title}>Invite Your Friends!</Text>
           <Text style={styles.instruction}>

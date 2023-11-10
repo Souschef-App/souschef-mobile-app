@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { HStack, IconButton, SafeArea } from "../../components";
-import { ThemeContext } from "../../contexts/AppContext";
-import useStore from "../../data/store";
-import { TaskScreenNavigationProp } from "../../navigation/types";
-import { Theme } from "../../styles";
+import { HStack, IconButton, SafeArea } from "../../../components";
+import { ThemeContext } from "../../../contexts/AppContext";
+import useStore from "../../../data/store";
+import { TaskScreenNavigationProp } from "../../../navigation/types";
+import { Theme } from "../../../styles";
 import {
   MealCompleted,
   TaskAvailable,

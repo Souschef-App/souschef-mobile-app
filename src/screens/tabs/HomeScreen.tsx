@@ -15,9 +15,6 @@ const HomeScreen = ({
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  const user = useStore((state) => state.user);
-  console.log("User:", user);
-
   return (
     <SafeArea>
       <View style={styles.container}>

@@ -1,7 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { LoginScreen, RegisterScreen, WelcomeScreen } from "../screens";
+import {
+  LoginScreen,
+  QRCodeScreen,
+  RegisterScreen,
+  WelcomeScreen,
+} from "../screens";
 import HomeStackNavigator from "./HomeStack";
+import LiveSessionNavigator from "./LiveSessionStack";
 import { WelcomeStackNavigatorParamList } from "./types";
 
 const WelcomeStack =

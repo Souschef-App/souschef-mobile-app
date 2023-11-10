@@ -1,4 +1,6 @@
 import IconButton from "./IconButton";
+import Logo from "./Logo";
+import QRScan from "./QRScan";
 import SecureInput from "./SecureInput";
 import TextButton from "./TextButton";
 import ValidationInput from "./ValidationInput";
@@ -21,7 +23,9 @@ export {
   Icon,
   IconButton,
   Input,
+  Logo,
   OtpInput,
+  QRScan,
   SafeArea,
   SecureInput,
   Skeleton,

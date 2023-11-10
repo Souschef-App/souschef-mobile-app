@@ -16,6 +16,7 @@ const BottomTabsNavigator = () => {
   return (
     <BottomTabs.Navigator
       screenOptions={() => ({
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: theme.colors.highlight,
@@ -37,7 +38,6 @@ const BottomTabsNavigator = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerShown: false,
           tabBarIcon: makeTabBarIcon("home"),
         }}
       />
@@ -45,7 +45,6 @@ const BottomTabsNavigator = () => {
         name="Mealplan"
         component={MealPlanNavigator}
         options={{
-          headerShown: false,
           tabBarIcon: makeTabBarIcon("meal"),
         }}
       />
@@ -53,7 +52,6 @@ const BottomTabsNavigator = () => {
         name="Join"
         component={JoinNavigator}
         options={{
-          headerShown: false,
           tabBarIcon: makeTabBarIcon("qr"),
           unmountOnBlur: true,
         }}
@@ -62,7 +60,6 @@ const BottomTabsNavigator = () => {
         name="Calendar"
         component={CalendarScreen}
         options={{
-          headerShown: false,
           tabBarIcon: makeTabBarIcon("calendar"),
         }}
       />

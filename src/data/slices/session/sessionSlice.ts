@@ -12,7 +12,7 @@ import {
   SessionUser,
 } from "../../types";
 import { Client } from "./client";
-import { fakeTask, fakeUser } from "../../__mocks__";
+import { fakeTask, guestUser } from "../../__mocks__";
 
 type SessionState = {
   assignedTask: Task | null;
@@ -40,7 +40,7 @@ const initialState: SessionState = {
 
 type SessionActions = {
   resetSessionSlice: () => void;
-  joinSession: (code: number) => Promise<boolean>;
+  joinSession: (code: string, user: SessionUser) => Promise<boolean>;
   joinFakeSession: () => void;
   leaveSession: () => void;
   commands: {
@@ -65,10 +65,10 @@ export const createSessionSlice: StateCreator<
   return {
     ...initialState,
     resetSessionSlice: () => set(initialState),
-    joinSession: async (code: number) => {
+    joinSession: async (code: string, user: SessionUser) => {
       set({ sessionLoading: true, sessionError: null });
 
-      const query = { code };
+      const query = { code }; // TODO: Convert API to string
       const [session, error] = await jsonRequest.get<LiveSession>(
         ApiUrls.getLiveSession,
         query
@@ -79,25 +79,15 @@ export const createSessionSlice: StateCreator<
         return false;
       }
 
-      const sessionUser: SessionUser | null = get().user;
-      if (!sessionUser) {
-        set({
-          sessionLoading: false,
-          sessionError:
-            "You are not logged in. Please log in to access this feature.",
-        });
-        return false;
-      }
-
       set({ session });
-      client.connect(`ws://${session?.ip}/ws`, sessionUser);
+      client.connect(`ws://${session?.ip}/ws`, user);
       return true;
     },
     joinFakeSession: () => {
       set({
         clientConnected: true,
         taskLoading: true,
-        connectedUsers: [fakeUser],
+        connectedUsers: [guestUser],
         session: {
           code: 12345,
           ip: "localhost",
@@ -109,7 +99,7 @@ export const createSessionSlice: StateCreator<
           taskLoading: false,
           livefeed: [
             {
-              user: fakeUser,
+              user: guestUser,
               task: fakeTask,
               status: TASK_STATUS.Assigned,
               timestamp: new Date(),

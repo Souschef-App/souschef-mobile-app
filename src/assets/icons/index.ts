@@ -41,6 +41,7 @@ const Icons = {
   brochette: require("./brochette.svg").default,
   cake: require("./cake.svg").default,
   menu: require("./menu.svg").default,
+  cancel: require("./cancel.svg").default,
   // Add more mappings for other SVGs
 } as const satisfies Record<string, React.FC<SvgProps>>;
 
