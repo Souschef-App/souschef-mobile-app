@@ -48,6 +48,10 @@ export function useSessionApi() {
     return sessionapi.getMealSessions();
   }
 
+  const joinMealSession = (code: string) => {
+    return sessionapi.joinMealSession(code);
+  }
+
   return {
     fetchFavoriteRecipes,
     fetchAllRecipes,
@@ -55,7 +59,8 @@ export function useSessionApi() {
     addRecipeToMealPlan,
     createMealSession,
     getMealPlans,
-    getMealSessions
+    getMealSessions,
+    joinMealSession
     // Add other functions here as needed
   };
 }
