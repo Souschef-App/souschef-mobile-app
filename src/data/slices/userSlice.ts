@@ -19,6 +19,7 @@ const initialState: UserState = {
 
 type UserActions = {
   resetUserSlice: () => void;
+  resetUserError: () => void;
   login: ({}: { email: string; password: string }) => Promise<void>;
   fakeLogin: () => void;
   register: ({}: {
@@ -37,6 +38,7 @@ export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
 ) => ({
   ...initialState,
   resetUserSlice: () => set(initialState),
+  resetUserError: () => set({ userError: null }),
   login: async (data) => {
     set({ userLoading: true, userError: null });
     const [user, error] = await jsonRequest.post<User>(ApiUrls.login, {

@@ -49,7 +49,7 @@ const LoginScreen = ({
   const error = useStore((state) => state.userError);
   const login = useStore((state) => state.login);
   const fakeLogin = useStore((state) => state.fakeLogin);
-  const cleanup = useStore((state) => state.resetUserSlice);
+  const cleanup = useStore((state) => state.resetUserError);
 
   React.useEffect(() => {
     // Show status ONLY if valid
@@ -79,9 +79,9 @@ const LoginScreen = ({
     }
   }, [user]);
 
-  // React.useEffect(() => {
-  //   return () => cleanup();
-  // }, []);
+  React.useEffect(() => {
+    return () => cleanup();
+  }, []);
 
   // Methods
   const tryLogin = () => {

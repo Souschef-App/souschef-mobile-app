@@ -44,7 +44,7 @@ const RegisterScreen = ({
   const loading = useStore((state) => state.userLoading);
   const error = useStore((state) => state.userError);
   const register = useStore((state) => state.register);
-  const cleanup = useStore((state) => state.resetUserSlice);
+  const cleanup = useStore((state) => state.resetUserError);
 
   const handleEmailFocus = () => {
     setFocusedInput("email");
