@@ -79,9 +79,9 @@ const LoginScreen = ({
     }
   }, [user]);
 
-  React.useEffect(() => {
-    return () => cleanup();
-  }, []);
+  // React.useEffect(() => {
+  //   return () => cleanup();
+  // }, []);
 
   // Methods
   const tryLogin = () => {
@@ -111,9 +111,7 @@ const LoginScreen = ({
     <SafeArea backgroundColor={theme.colors.primary}>
       <VStack justifyContent="flex-end">
         <VStack justifyContent="flex-end">
-          <VStack>
-            <Text style={styles.header}>Welcome Back</Text>
-          </VStack>
+          <Text style={styles.header}>Welcome Back</Text>
           <SvgLocal
             name="curve"
             color="white"
@@ -123,9 +121,8 @@ const LoginScreen = ({
         </VStack>
         <VStack
           justifyContent="flex-end"
-          flexMain={false}
           pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
-          gap={32}
+          gap={theme.spacing.l}
           style={styles.card}
         >
           <VStack flexMain={false} gap={theme.spacing.m}>

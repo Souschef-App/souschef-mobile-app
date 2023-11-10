@@ -16,6 +16,7 @@ import { fakeTask, fakeUser } from "../../__mocks__";
 
 type SessionState = {
   assignedTask: Task | null;
+  taskLoading: boolean;
   connectedUsers: User[];
   livefeed: FeedSnapshot[];
   session: LiveSession | null;
@@ -27,6 +28,7 @@ type SessionState = {
 
 const initialState: SessionState = {
   assignedTask: null,
+  taskLoading: true,
   connectedUsers: [],
   livefeed: [],
   session: null,
@@ -91,24 +93,31 @@ export const createSessionSlice: StateCreator<
       client.connect(`ws://${session?.ip}/ws`, sessionUser);
       return true;
     },
-    joinFakeSession: () =>
+    joinFakeSession: () => {
       set({
         clientConnected: true,
-        assignedTask: fakeTask,
+        taskLoading: true,
         connectedUsers: [fakeUser],
         session: {
           code: 12345,
           ip: "localhost",
         },
-        livefeed: [
-          {
-            user: fakeUser,
-            task: fakeTask,
-            status: TASK_STATUS.Assigned,
-            timestamp: new Date(),
-          },
-        ],
-      }),
+      });
+      setTimeout(() => {
+        set({
+          assignedTask: fakeTask,
+          taskLoading: false,
+          livefeed: [
+            {
+              user: fakeUser,
+              task: fakeTask,
+              status: TASK_STATUS.Assigned,
+              timestamp: new Date(),
+            },
+          ],
+        });
+      }, 500);
+    },
     leaveSession: () => {
       client.leave();
       set({
@@ -121,7 +130,10 @@ export const createSessionSlice: StateCreator<
       startSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStart),
       stopSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStop),
       completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskComplete),
-      rerollTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskReroll),
+      rerollTask: () => {
+        set({ taskLoading: true });
+        client.sendCommand(SESSION_CLIENT_CMD.TaskReroll);
+      },
     },
   };
 };

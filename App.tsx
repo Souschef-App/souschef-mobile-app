@@ -28,7 +28,7 @@ const App = () => {
   }
 
   const appConfig: AppConfig = {
-    useFakeData: true,
+    useFakeData: false,
   };
 
   return (

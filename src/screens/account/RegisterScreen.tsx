@@ -5,6 +5,7 @@ import {
   Input,
   SafeArea,
   SecureInput,
+  SvgLocal,
   TextButton,
   VStack,
   ValidationInput,
@@ -117,13 +118,19 @@ const RegisterScreen = ({
 
   return (
     <SafeArea backgroundColor={theme.colors.primary}>
-      <VStack>
-        <VStack>
+      <VStack justifyContent="flex-end">
+        <VStack justifyContent="flex-end">
           <Text style={styles.header}>Create Account</Text>
+          <SvgLocal
+            name="curve"
+            color="white"
+            aspectRatio={2 / 1}
+            style={{ transform: [{ rotateX: "180deg" }] }}
+          />
         </VStack>
         <VStack
-          justifyContent="flex-end"
           flexMain={false}
+          justifyContent="flex-end"
           pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
           gap={theme.spacing.l}
           style={styles.card}

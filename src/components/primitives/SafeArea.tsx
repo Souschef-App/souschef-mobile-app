@@ -1,7 +1,14 @@
-import React, { type PropsWithChildren } from "react";
-import { SafeAreaView } from "react-native";
+import React, { useContext, type PropsWithChildren } from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
+
+import { StatusBar } from "expo-status-bar";
+import { ColorValue } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemeContext } from "../../contexts/AppContext";
 
 export interface ISafeAreaProps {
+  backgroundColor?: ColorValue;
+  statusStyle?: "dark" | "light";
   children?: React.ReactNode;
 }
 
@@ -10,15 +17,25 @@ export type SafeAreaProps = ISafeAreaProps;
 const SafeArea: React.FC<PropsWithChildren<SafeAreaProps>> = (
   props: ISafeAreaProps
 ) => {
+  const theme = useContext(ThemeContext);
+
   return (
-    <SafeAreaView
+    <KeyboardAvoidingView
       style={{
         flex: 1,
-        backgroundColor: "#fff",
       }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      {props.children}
-    </SafeAreaView>
+      <StatusBar style={props.statusStyle || "dark"} />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: props.backgroundColor || theme.colors.background,
+        }}
+      >
+        {props.children}
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

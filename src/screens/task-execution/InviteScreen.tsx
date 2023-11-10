@@ -7,6 +7,7 @@ import { TextStyle, Theme } from "../../styles";
 import useStore from "../../data/store";
 import QRCode from "react-native-qrcode-svg";
 
+// TODO: Convert code to string for leading zero cases
 const InviteScreen = ({
   navigation,
 }: {
@@ -61,7 +62,7 @@ const InviteScreen = ({
             pVH={{ h: 16, v: 8 }}
             style={styles.codeContainer}
           >
-            <Text style={styles.code}>{session?.code}</Text>
+            <Text style={styles.code}>{session?.code ?? "00000"}</Text>
           </VStack>
           <Text style={TextStyle.body}>OR</Text>
           <View style={styles.qrContainer}>

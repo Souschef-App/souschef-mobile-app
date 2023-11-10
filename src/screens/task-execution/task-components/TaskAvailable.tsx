@@ -27,31 +27,31 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
   const task = props.task;
 
   // State
-  const [refresh, setRefresh] = React.useState(false);
+  // const [refresh, setRefresh] = React.useState(false);
   const [isIngredientOpen, setIsIngredientOpen] =
     React.useState<boolean>(false);
   const [isKitchenwareOpen, setIsKitchenwareOpen] =
     React.useState<boolean>(false);
 
   // Store
+  const loading = useStore((state) => state.taskLoading);
   const commands = useStore((state) => state.commands);
 
-  const handleTaskFinished = () => commands.completeTask();
-  const handleTaskReroll = () => {
-    setRefresh(true);
-    commands.rerollTask();
+  const handleTaskFinished = () => {
+    useStore.setState({ taskLoading: true });
+    commands.completeTask();
+  };
 
-    // TODO: Wait for WebSocket reply
-    setTimeout(() => {
-      setRefresh(false);
-    }, 500);
+  const handleTaskReroll = () => {
+    useStore.setState({ taskLoading: true });
+    commands.rerollTask();
   };
 
   return (
     <ScrollView
       contentContainerStyle={{ flex: 1 }}
       refreshControl={
-        <RefreshControl refreshing={refresh} onRefresh={handleTaskReroll} />
+        <RefreshControl refreshing={loading} onRefresh={handleTaskReroll} />
       }
     >
       <VStack gap={theme.spacing.xl} p={theme.spacing.m}>

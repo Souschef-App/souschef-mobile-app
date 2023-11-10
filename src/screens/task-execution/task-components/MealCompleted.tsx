@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "react-native";
-import { SafeArea, VStack } from "../../../components";
+import { VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { TextStyle } from "../../../styles";
 
@@ -12,12 +12,14 @@ const MealCompleted = () => {
   const messageDesc = "Thanks for your hard work!";
 
   return (
-    <SafeArea>
-      <VStack gap={theme.spacing.s}>
-        <Text style={TextStyle.h2}>{messageTitle}</Text>
-        <Text style={TextStyle.h4}>{messageDesc}</Text>
-      </VStack>
-    </SafeArea>
+    <VStack
+      mAll={{ b: theme.spacing.xxxl }} // Offset AppBar
+      pVH={{ h: theme.spacing.m }}
+      gap={theme.spacing.s}
+    >
+      <Text style={TextStyle.h2}>{messageTitle}</Text>
+      <Text style={TextStyle.h4}>{messageDesc}</Text>
+    </VStack>
   );
 };
 

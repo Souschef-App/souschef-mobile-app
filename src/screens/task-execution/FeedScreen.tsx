@@ -5,7 +5,8 @@ import { ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
 import { TASK_STATUS } from "../../data/types/session/enum";
 import { FeedScreenNavigationProp } from "../../navigation/types";
-import { Theme } from "../../styles";
+import { TextStyle, Theme } from "../../styles";
+import { ScrollView } from "react-native-gesture-handler";
 
 const formatRelativeTime = (timestamp: Date): string => {
   const now = new Date();
@@ -25,18 +26,6 @@ const formatRelativeTime = (timestamp: Date): string => {
     return "just now";
   }
 };
-
-const formatIcon = (status: TASK_STATUS) => {
-  switch (status) {
-    case TASK_STATUS.Assigned:
-      return "clipboard";
-    case TASK_STATUS.Completed:
-      return "check-round";
-    case TASK_STATUS.Rerolled:
-      return "dice";
-  }
-};
-
 const FeedScreen = ({
   navigation,
 }: {
@@ -50,6 +39,17 @@ const FeedScreen = ({
   const user = useStore((state) => state.user);
   const users = useStore((state) => state.connectedUsers);
   const livefeed = useStore((state) => state.livefeed);
+
+  const renderActionType = (status: TASK_STATUS) => {
+    switch (status) {
+      case TASK_STATUS.Assigned:
+        return <Icon name="clipboard" color={theme.colors.text} />;
+      case TASK_STATUS.Completed:
+        return <Icon name="check-round" color={theme.colors.success} />;
+      case TASK_STATUS.Rerolled:
+        return <Icon name="dice" color={theme.colors.text} />;
+    }
+  };
 
   return (
     <SafeArea>
@@ -75,27 +75,51 @@ const FeedScreen = ({
             style={{ ...styles.appBarBtn, flexDirection: "row-reverse" }}
           />
         </HStack>
-        <VStack justifyContent="flex-start" p={16} gap={16}>
-          {livefeed.map((snapshot, i) => (
-            <HStack
-              key={i}
-              flexMain={false}
-              pVH={{ h: 8 }}
-              gap={16}
-              justifyContent="space-between"
-            >
-              <Icon name={formatIcon(snapshot.status)} />
-              <VStack align="flex-start">
-                <Text>
-                  {user?.name === snapshot.user.name
-                    ? "You"
-                    : snapshot.user.name}
-                </Text>
-                <Text>{snapshot.task.title}</Text>
-              </VStack>
-              <Text>{formatRelativeTime(snapshot.timestamp)}</Text>
-            </HStack>
-          ))}
+        <VStack justifyContent="flex-start">
+          <HStack
+            flexMain={false}
+            justifyContent="space-between"
+            pVH={{ h: theme.spacing.m, v: theme.spacing.s }}
+            style={styles.feedHeader}
+          >
+            <Text style={styles.feedHeaderTitle}>Live Feed</Text>
+          </HStack>
+          <ScrollView style={styles.scrollView}>
+            {livefeed.length > 0 ? (
+              livefeed.map((snapshot, i) => (
+                <HStack
+                  key={i}
+                  flexMain={false}
+                  pVH={{ h: 16 }}
+                  gap={16}
+                  justifyContent="space-between"
+                  style={styles.feedItem}
+                >
+                  {renderActionType(snapshot.status)}
+                  <VStack align="flex-start">
+                    <Text style={styles.feedItemUser}>
+                      {user?.name === snapshot.user.name
+                        ? "You"
+                        : snapshot.user.name}
+                    </Text>
+                    <Text style={styles.feedItemDetails}>
+                      {snapshot.task.title}
+                    </Text>
+                  </VStack>
+                  <Text style={styles.feedItemDetails}>
+                    {formatRelativeTime(snapshot.timestamp)}
+                  </Text>
+                </HStack>
+              ))
+            ) : (
+              <HStack
+                flexMain={false}
+                style={{ ...styles.feedItem, borderBottomWidth: 0 }}
+              >
+                <Text style={styles.feedItemEmpty}>No Activity Yet</Text>
+              </HStack>
+            )}
+          </ScrollView>
         </VStack>
       </VStack>
     </SafeArea>
@@ -109,6 +133,36 @@ const makeStyles = (theme: Theme) =>
       paddingLeft: theme.spacing.m,
       paddingRight: theme.spacing.m,
       alignSelf: "stretch",
+    },
+    scrollView: {
+      flex: 1,
+      alignSelf: "stretch",
+    },
+    feedHeader: {
+      height: theme.spacing.xxl,
+      backgroundColor: theme.colors.highlight,
+    },
+    feedHeaderTitle: {
+      ...TextStyle.body,
+      ...TextStyle.bold,
+      color: "#fff",
+    },
+    feedItem: {
+      height: theme.spacing.xxl,
+      borderBottomWidth: 1,
+      borderColor: theme.colors.textDisabled,
+    },
+    feedItemUser: {
+      ...TextStyle.body,
+      ...TextStyle.bold,
+    },
+    feedItemDetails: {
+      ...TextStyle.body,
+      fontSize: 14,
+    },
+    feedItemEmpty: {
+      ...TextStyle.body,
+      color: theme.colors.textDisabled,
     },
   });
 

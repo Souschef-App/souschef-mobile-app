@@ -1,19 +1,17 @@
-import { ThemeContext } from "../../contexts/AppContext";
 import React from "react";
-import { RefreshControl, ScrollView, StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { HStack, IconButton, SafeArea } from "../../components";
+import { ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
 import { TaskScreenNavigationProp } from "../../navigation/types";
+import { Theme } from "../../styles";
 import {
   MealCompleted,
   TaskAvailable,
+  TaskSkeleton,
   TaskUnavailable,
 } from "./task-components";
-import { Theme } from "../../styles";
 
-// TODO:
-// 1. Prevent dropdowns from moving other components
-// 3. Handle empty ingredients or kitchenware
 const TaskScreen = ({
   navigation,
 }: {
@@ -25,6 +23,7 @@ const TaskScreen = ({
 
   // Store
   const task = useStore((state) => state.assignedTask);
+  const loading = useStore((state) => state.taskLoading);
   const completed = useStore((state) => state.sessionCompleted);
   const leaveSession = useStore((state) => state.leaveSession);
 
@@ -35,10 +34,10 @@ const TaskScreen = ({
   const render = () => {
     if (completed) {
       return <MealCompleted />;
-    }
-
-    if (task) {
-      return <TaskAvailable task={task} />;
+    } else if (loading) {
+      return <TaskSkeleton />;
+    } else if (task) {
+      return <TaskAvailable task={task!} />;
     }
 
     return <TaskUnavailable />;
@@ -55,7 +54,7 @@ const TaskScreen = ({
           icon="menu"
           color={theme.colors.text}
           iconSize={24}
-          onPress={() => navigation.openDrawer()}
+          onPress={navigation.openDrawer}
           style={styles.appBarBtn}
         />
       </HStack>

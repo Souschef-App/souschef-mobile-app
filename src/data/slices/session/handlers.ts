@@ -47,7 +47,7 @@ const handleMealCompleted = (set: SessionSetState, _: any) => {
 };
 
 const handleTaskNew = (set: SessionSetState, payload: Task) => {
-  set({ assignedTask: payload });
+  set({ assignedTask: payload, taskLoading: false });
 };
 
 const handleFeedSnapshot = (set: SessionSetState, payload: FeedSnapshot) => {
