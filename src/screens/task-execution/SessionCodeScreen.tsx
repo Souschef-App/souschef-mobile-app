@@ -1,10 +1,11 @@
-import React from "react";
-import { ActivityIndicator, StyleSheet, Text } from "react-native";
-import { Input, SafeArea, TextButton, VStack } from "../../components";
+import React, { useRef } from "react";
+import { ActivityIndicator, StyleSheet, Text, TextInput } from "react-native";
+import { HStack, Input, SafeArea, TextButton, VStack } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
 import { SessionCodeScreenNavigationProp } from "../../navigation/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
+import { useSessionApi } from "../../hooks/useSessionApi";
 
 const SessionCodeScreen = ({
   navigation,
@@ -14,6 +15,8 @@ const SessionCodeScreen = ({
   // Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
+  const inputRefs = useRef<(TextInput | null)[]>([])
+  const { joinMealSession } = useSessionApi()
 
   // State
   const [sessionCode, setSessionCode] = React.useState<string>("");
@@ -22,24 +25,35 @@ const SessionCodeScreen = ({
   const socket = useStore((state) => state.socket);
   const loading = useStore((state) => state.sessionLoading);
   const error = useStore((state) => state.sessionError);
-  const joinSession = useStore((state) => state.joinSession);
+  // const joinSession = useStore((state) => state.joinSession);
 
-  React.useEffect(() => {
-    if (socket) {
-      navigation.push("Task");
+  // React.useEffect(() => {
+  //   if (socket) {
+  //     navigation.push("Task");
+  //   }
+  // }, [socket]);
+
+  const handleInputOnChange = (num: number, text: string) => {
+    if (num >= sessionCode.length) {
+      setSessionCode(sessionCode + text);
     }
-  }, [socket]);
-
-  const handleInputOnChange = (text: string) => {
-    const cleanedText = text.replace(/[^0-9]/g, "");
-    setSessionCode(cleanedText);
+    else {
+      const cleanedText = sessionCode.split('').map((code, i) => num === i ? text : code).join('')
+      setSessionCode(cleanedText);
+    }
+    if (text.length == 1 && num < 4)
+      inputRefs.current[num + 1]?.focus()
+    if (text.length == 0 && num > 0)
+        inputRefs.current[num - 1]?.focus()
   };
 
   const handleSubmit = () => {
     // navigation.push("Task");
     if (!loading) {
       console.log("Requesting WebSocket IP from REST Server!");
-      joinSession(sessionCode);
+      joinMealSession(sessionCode).then(res => {
+        navigation.push("SessionStartScreen", { session: res.data } );
+      });
     }
   };
 
@@ -60,15 +74,20 @@ const SessionCodeScreen = ({
               error && <Text style={styles.errorText}>{error}</Text>
             )}
           </VStack>
-          <Input
-            value={sessionCode}
-            onChange={handleInputOnChange}
-            placeholder="Enter session code"
-            keyboardType="number-pad"
-            maxLength={5}
-            style={styles.input}
-            textStyle={styles.inputText}
-          />
+          <HStack gap={theme.spacing.m}>
+            {[0, 1, 2, 3, 4].map(code => 
+            <Input
+              key={code}
+              ref={(input) => (inputRefs.current.length <= code ? inputRefs.current.push(input) : inputRefs.current[code] = input)}
+              value={sessionCode.length > code ? sessionCode.split('')[code] : ""}
+              onChange={(text) => handleInputOnChange(code, text)}
+              placeholder="0"
+              keyboardType="number-pad"
+              maxLength={1}
+              style={styles.input}
+              textStyle={styles.inputText}
+            />)}
+          </HStack>
         </VStack>
         <VStack flexMain={false} p={theme.spacing.m}>
           <TextButton
@@ -87,7 +106,7 @@ const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     input: {
       ...InputStyle.outline,
-      width: "75%",
+      width: "10%",
       //   backgroundColor: "red",
     },
     inputText: {
