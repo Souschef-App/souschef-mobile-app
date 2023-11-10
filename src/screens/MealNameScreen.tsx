@@ -90,70 +90,7 @@ const MealPlanScreen: React.FC<{
                 </View>) : ""
               }
             </View>
-
-            <View style={styles.titleContainer}>
-              <View style={styles.bellConcierge}>
-                <Text style={[TextStyle.h2,styles.title]}>Entree{' '}</Text>
-                <Icon
-                  name="meal"
-                />
-                <Button onPress={() => goToRecipeSelectorScreen('Entree')}>
-                  <View style={styles.plusIconContainer}>
-                    <Icon
-                      name="plus"
-                    />
-                  </View>
-                </Button>
-              </View>
-            </View>
-            <View style={styles.sectionContainer}>
-              {recipes ? recipes.filter(recipe => recipe.type == 'Entree').map(recipe => <View>
-                  <TouchableOpacity style={styles.touchableContainer}>
-                    <View style={styles.item}>
-                      <Text style={[TextStyle.h3,styles.itemText]}>
-                        {recipe.name + " "}
-                      </Text>
-                      <Icon
-                        name="pencil"
-                      />
-                    </View>
-                  </TouchableOpacity>
-                  <View style={{ height: 5 }} />
-                </View>) : ""
-              }
-            </View>
-
-            <View style={styles.titleContainer}>  
-              <View style={styles.bellConcierge}>
-                <Text style={[TextStyle.h2,styles.title]}>Dessert{' '}</Text>
-                <Icon name= "cake" />
-                <Button onPress={() => goToRecipeSelectorScreen('Dessert')}>
-                  <View style={styles.plusIconContainer}>
-                    <Icon
-                      name="plus"
-                    />
-                  </View>
-                </Button>
-              </View>
-            </View>
-
-            <View style={styles.sectionContainer}>
-              {recipes ? recipes.filter(recipe => recipe.type == 'Dessert').map(recipe => <View>
-                  <TouchableOpacity style={styles.touchableContainer}>
-                    <View style={styles.item}>
-                      <Text style={[TextStyle.h3,styles.itemText]}>
-                        {`${recipe.name} `}
-                      </Text>
-                      <Icon
-                        name="pencil"
-                      />
-                    </View>
-                  </TouchableOpacity>
-                  <View style={{ height: 5 }} />
-                </View>) : ""
-              }
-            </View>
-
+            
             <View style={styles.whiteSpace}></View> 
             
             <View style={styles.confirmButtonContainer}>
