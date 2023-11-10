@@ -5,6 +5,7 @@ import FeedScreen from "../screens/task-execution/FeedScreen";
 import ParticipantsScreen from "../screens/task-execution/ParticipantsScreen";
 import BottomTabsNavigator from "./BottomTabs";
 import { HomeStackNavigatorParamList } from "./types";
+import SessionStartScreen from "../screens/task-execution/SessionStartScreen";
 
 const HomeStack = createNativeStackNavigator<HomeStackNavigatorParamList>();
 
@@ -19,6 +20,11 @@ const HomeStackNavigator = () => {
       <HomeStack.Screen
         name="Task"
         component={TaskScreen}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="SessionStartScreen"
+        component={SessionStartScreen}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen

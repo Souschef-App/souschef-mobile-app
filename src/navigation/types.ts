@@ -20,6 +20,9 @@ export type HomeStackNavigatorParamList = {
   Task: undefined;
   Feed: undefined;
   Participants: undefined;
+  SessionStartScreen: {
+    session: any;
+  };
 };
 
 export type BottomTabNavigatorParamList = {
@@ -110,7 +113,8 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   },
   CalendarScreen: {
     date: null,
-    time: null
+    time: null,
+    mealName: ""
   }
 };
 
@@ -132,6 +136,9 @@ export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
   Task: undefined,
   Feed: undefined,
   Participants: undefined,
+  SessionStartScreen: {
+    session: null,
+  }
 };
 
 export type WelcomeScreenNavigationProp = NativeStackNavigationProp<
@@ -183,6 +190,12 @@ export type TaskScreenNavigationProp = NativeStackNavigationProp<
   HomeStackNavigatorParamList,
   "Task"
 >;
+
+export type SessionStartScreenRouteProp = RouteProp<
+HomeStackNavigatorParamList,
+'SessionStartScreen'
+>
+
 
 export type FeedScreenNavigationProp = NativeStackNavigationProp<
   HomeStackNavigatorParamList,
@@ -239,7 +252,6 @@ export type MealNameScreenRouteProp = RouteProp<
 MealPlanNavigatorParamList,
 'MealNameScreen'
 >
-
 
 export type FavoriteScreenRouteProp = RouteProp<
 MealPlanNavigatorParamList,
