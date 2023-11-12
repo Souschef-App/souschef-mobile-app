@@ -9,6 +9,7 @@ import {
   defaultTaskDrawerNavigatorParamList,
 } from "../../navigation/types";
 import { TextStyle, Theme } from "../../styles";
+import { nameRegex } from "../../utils/regex";
 
 const ConnectedScreen = ({
   navigation,
@@ -49,13 +50,13 @@ const ConnectedScreen = ({
       <VStack p={theme.spacing.xxxl} gap={16}>
         <Text style={styles.label}>Your name is...</Text>
         <ValidationInput
-          isValid={isNameValid}
-          isStatusVisible={isNameStatusVisible}
+          validationRegex={nameRegex}
           value={name}
-          onChange={setName}
+          onChangeText={setName}
           placeholder="Guest Name"
-          style={styles.input}
-          textStyle={styles.inputText}
+          maxLength={16}
+          style={styles.inputText}
+          containerStyle={styles.input}
         />
         <Button onPress={handleSubmit} style={styles.button}>
           <Text style={styles.label}>OK!</Text>
@@ -72,6 +73,7 @@ const makeStyles = (theme: Theme) =>
       color: "#fff",
     },
     input: {
+      width: "100%",
       height: theme.spacing.xl,
       backgroundColor: "#fff",
       borderRadius: 8,

@@ -2,6 +2,7 @@ import React from "react";
 import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import {
   HStack,
+  Icon,
   Input,
   SafeArea,
   SecureInput,
@@ -17,7 +18,7 @@ import {
   defaultHomeStackNavigatorParamList,
 } from "../../navigation/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
-import { emailRegex } from "../../utils/regex";
+import { emailRegex, nameRegex } from "../../utils/regex";
 
 const RegisterScreen = ({
   navigation,
@@ -31,9 +32,6 @@ const RegisterScreen = ({
   // State
   const [name, setName] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
-  const [isEmailValid, setIsEmailValid] = React.useState<boolean>(false);
-  const [isEmailStatusVisible, setIsEmailStatusVisible] =
-    React.useState<boolean>(false);
   const [password, setPassword] = React.useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = React.useState<string>("");
   const [errorMsg, setErrorMsg] = React.useState<string>("");
@@ -45,22 +43,6 @@ const RegisterScreen = ({
   const error = useStore((state) => state.userError);
   const register = useStore((state) => state.register);
   const cleanup = useStore((state) => state.resetUserError);
-
-  const handleEmailFocus = () => {
-    setFocusedInput("email");
-  };
-
-  const handleEmailBlur = () => {
-    // Show email status IF non-empty
-    setIsEmailStatusVisible(email.length > 0);
-  };
-
-  React.useEffect(() => {
-    // Show status ONLY if valid
-    const isValid = emailRegex.test(email);
-    setIsEmailStatusVisible(isValid);
-    setIsEmailValid(isValid);
-  }, [email]);
 
   React.useEffect(() => {
     if (errorMsg !== "" && !error) {
@@ -101,7 +83,6 @@ const RegisterScreen = ({
 
     if (!emailRegex.test(email)) {
       setErrorMsg("Please enter a valid email address.");
-      setIsEmailStatusVisible(true);
       return;
     }
 
@@ -143,64 +124,84 @@ const RegisterScreen = ({
                 <Text style={styles.errorMsg}>{errorMsg}</Text>
               )}
             </HStack>
-            <Input
-              value={name}
-              onChange={setName}
-              onFocus={() => setFocusedInput("name")}
-              placeholder="Name"
-              icon="person"
-              iconColor={isFocusedColor("name")}
-              textStyle={TextStyle.body}
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("name"),
               }}
-            />
-            <ValidationInput
-              value={email}
-              onChange={setEmail}
-              onFocus={handleEmailFocus}
-              onBlur={handleEmailBlur}
-              placeholder="Email"
-              keyboardType="email-address"
-              isValid={isEmailValid}
-              isStatusVisible={isEmailStatusVisible}
-              icon="mail"
-              iconColor={isFocusedColor("email")}
-              textStyle={TextStyle.body}
+            >
+              <Icon name="person" color={isFocusedColor("name")} />
+              <ValidationInput
+                value={name}
+                validationRegex={nameRegex}
+                onChangeText={setName}
+                onFocus={() => setFocusedInput("name")}
+                placeholder="Name"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("email"),
               }}
-            />
-            <SecureInput
-              value={password}
-              onChange={setPassword}
-              onFocus={() => setFocusedInput("password")}
-              icon="lock"
-              iconColor={isFocusedColor("password")}
-              placeholder="Password"
-              placeholderColor={theme.colors.textDisabled}
+            >
+              <Icon name="mail" color={isFocusedColor("email")} />
+              <ValidationInput
+                value={email}
+                validationRegex={emailRegex}
+                onChangeText={setEmail}
+                onFocus={() => setFocusedInput("email")}
+                placeholder="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("password"),
               }}
-              textStyle={TextStyle.body}
-            />
-            <SecureInput
-              value={passwordConfirm}
-              onChange={setPasswordConfirm}
-              onFocus={() => setFocusedInput("confirm_password")}
-              icon="lock"
-              iconColor={isFocusedColor("confirm_password")}
-              placeholder="Confirm Password"
-              placeholderColor={theme.colors.textDisabled}
+            >
+              <Icon name="lock" color={isFocusedColor("password")} />
+              <SecureInput
+                value={password}
+                onChangeText={setPassword}
+                onFocus={() => setFocusedInput("password")}
+                iconColor={isFocusedColor("password")}
+                placeholder="Password"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("confirm_password"),
               }}
-              textStyle={TextStyle.body}
-            />
+            >
+              <Icon name="lock" color={isFocusedColor("confirm_password")} />
+              <SecureInput
+                value={passwordConfirm}
+                onChangeText={setPasswordConfirm}
+                onFocus={() => setFocusedInput("confirm_password")}
+                iconColor={isFocusedColor("confirm_password")}
+                placeholder="Confirm Password"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
           </VStack>
           <VStack flexMain={false} gap={theme.spacing.m}>
             <TextButton
@@ -234,7 +235,6 @@ const makeStyles = (theme: Theme) =>
       color: "#fff",
     },
     errorBox: {
-      // backgroundColor: theme.colors.background2,
       borderRadius: 8,
     },
     errorMsg: {

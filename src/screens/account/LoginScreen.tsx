@@ -1,7 +1,8 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import {
   HStack,
+  Icon,
   SafeArea,
   SecureInput,
   SvgLocal,
@@ -36,9 +37,6 @@ const LoginScreen = ({
 
   // State
   const [email, setEmail] = React.useState<string>("");
-  const [isEmailValid, setIsEmailValid] = React.useState<boolean>(false);
-  const [isEmailStatusVisible, setIsEmailStatusVisible] =
-    React.useState<boolean>(false);
   const [password, setPassword] = React.useState<string>("");
   const [errorMsg, setErrorMsg] = React.useState<string>("");
   const [focusedInput, setFocusedInput] = React.useState<string>();
@@ -50,13 +48,6 @@ const LoginScreen = ({
   const login = useStore((state) => state.login);
   const fakeLogin = useStore((state) => state.fakeLogin);
   const cleanup = useStore((state) => state.resetUserError);
-
-  React.useEffect(() => {
-    // Show status ONLY if valid
-    const isValid = emailRegex.test(email);
-    setIsEmailStatusVisible(isValid);
-    setIsEmailValid(isValid);
-  }, [email]);
 
   React.useEffect(() => {
     if (!error && errorMsg !== "") {
@@ -97,7 +88,6 @@ const LoginScreen = ({
 
     if (!emailRegex.test(email)) {
       setErrorMsg("Please enter a valid email address.");
-      setIsEmailStatusVisible(true);
       return;
     }
 
@@ -133,43 +123,52 @@ const LoginScreen = ({
                 <Text style={styles.errorMsg}>{errorMsg}</Text>
               )}
             </HStack>
-            <ValidationInput
-              value={email}
-              onChange={setEmail}
-              onFocus={() => setFocusedInput("email")}
-              onBlur={() => setIsEmailStatusVisible(email.length > 0)}
-              placeholder="Email"
-              keyboardType="email-address"
-              isValid={isEmailValid}
-              isStatusVisible={isEmailStatusVisible}
-              icon="mail"
-              iconColor={isFocusedColor("email")}
-              textStyle={TextStyle.body}
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("email"),
               }}
-            />
-            <SecureInput
-              value={password}
-              onChange={setPassword}
-              onFocus={() => setFocusedInput("password")}
-              icon="lock"
-              iconColor={isFocusedColor("password")}
-              placeholder="Password"
-              placeholderColor={theme.colors.textDisabled}
+            >
+              <Icon name="mail" color={isFocusedColor("email")} />
+              <ValidationInput
+                value={email}
+                validationRegex={emailRegex}
+                onChangeText={setEmail}
+                onFocus={() => setFocusedInput("email")}
+                placeholder="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("password"),
               }}
-              textStyle={TextStyle.body}
-            />
-            <TextButton
+            >
+              <Icon name="lock" color={isFocusedColor("password")} />
+              <SecureInput
+                value={password}
+                onChangeText={setPassword}
+                onFocus={() => setFocusedInput("password")}
+                iconColor={isFocusedColor("password")}
+                placeholder="Password"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
+            {/* <TextButton
               title="Forgot password?"
               onPress={() => {}}
               style={styles.forgotPassContainer}
               textStyle={[TextStyle.body, styles.link]}
-            />
+            /> */}
           </VStack>
           <VStack flexMain={false} gap={theme.spacing.m}>
             <TextButton
@@ -203,7 +202,6 @@ const makeStyles = (theme: Theme) =>
       color: "#fff",
     },
     errorBox: {
-      // backgroundColor: theme.colors.background2,
       borderRadius: 8,
     },
     errorMsg: {
