@@ -42,6 +42,9 @@ const Icons = {
   cake: require("./cake.svg").default,
   menu: require("./menu.svg").default,
   cancel: require("./cancel.svg").default,
+  easy: require("./easy.svg").default,
+  medium: require("./medium.svg").default,
+  hard: require("./hard.svg").default,
   // Add more mappings for other SVGs
 } as const satisfies Record<string, React.FC<SvgProps>>;
 

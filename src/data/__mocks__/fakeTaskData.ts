@@ -22,6 +22,12 @@ const fakeTask: Task = {
       quantity: 1,
       unit: COOKING_UNIT.None,
     },
+    {
+      id: "ingredient-124",
+      name: "Water",
+      quantity: 0.33,
+      unit: COOKING_UNIT.Cups,
+    },
   ],
   kitchenware: [
     {

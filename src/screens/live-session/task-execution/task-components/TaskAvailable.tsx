@@ -10,9 +10,13 @@ import {
 } from "../../../../components";
 import { ThemeContext } from "../../../../contexts/AppContext";
 import useStore from "../../../../data/store";
-import { DIFFICULTY, Task } from "../../../../data/types";
+import { Task } from "../../../../data/types";
 import { ButtonStyle, TextStyle, Theme } from "../../../../styles";
-import { formatIngredientQuantity } from "../../../../utils/format";
+import {
+  formatDifficultyToHex,
+  formatDifficultyToString,
+  formatIngredientQuantity,
+} from "../../../../utils/format";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -64,35 +68,30 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
             <Text style={styles.taskTitle}>{task.title}</Text>
             <HStack
               flexMain={false}
-              gap={theme.spacing.l}
+              gap={theme.spacing.xl}
               style={{ height: theme.spacing.l }}
             >
               <HStack flexMain={false} gap={theme.spacing.s}>
                 <Icon name="timer" color={theme.colors.text} size={24} />
-                <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
+                <Text style={styles.infoText}>{`~${task.duration} min`}</Text>
               </HStack>
               <HStack flexMain={false} gap={theme.spacing.s}>
-                <Icon name="star" color={theme.colors.highlight2} size={24} />
                 <Icon
-                  name={
-                    task.difficulty > DIFFICULTY.Easy ? "star" : "star-outline"
-                  }
-                  color={theme.colors.highlight2}
+                  name={formatDifficultyToString(task.difficulty)}
+                  color={formatDifficultyToHex(task.difficulty)}
                   size={24}
                 />
-                <Icon
-                  name={
-                    task.difficulty > DIFFICULTY.Medium
-                      ? "star"
-                      : "star-outline"
-                  }
-                  color={theme.colors.highlight2}
-                  size={24}
-                />
+                <Text
+                  style={[styles.infoText, { textTransform: "capitalize" }]}
+                >
+                  {formatDifficultyToString(task.difficulty)}
+                </Text>
               </HStack>
             </HStack>
           </VStack>
-          <Text style={TextStyle.h3}>{task.description}</Text>
+          <Text numberOfLines={5} style={styles.taskDesc}>
+            {task.description}
+          </Text>
         </VStack>
         <VStack style={{ flex: 1 }}>
           <ScrollView
@@ -202,6 +201,13 @@ const makeStyles = (theme: Theme) =>
       ...TextStyle.h1,
       fontSize: 40,
     },
+    infoText: {
+      ...TextStyle.body,
+      ...TextStyle.bold,
+    },
+    taskDesc: {
+      ...TextStyle.h3,
+    },
     dropdownTitle: {
       ...TextStyle.h3,
       ...TextStyle.bold,
@@ -221,10 +227,6 @@ const makeStyles = (theme: Theme) =>
       ...TextStyle.h2,
       fontWeight: "normal",
       color: "#fff",
-    },
-    timerText: {
-      ...TextStyle.body,
-      ...TextStyle.bold,
     },
   });
 
