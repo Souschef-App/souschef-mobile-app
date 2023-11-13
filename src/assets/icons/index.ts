@@ -45,6 +45,9 @@ const Icons = {
   easy: require("./easy.svg").default,
   medium: require("./medium.svg").default,
   hard: require("./hard.svg").default,
+  camera: require("./camera.svg").default,
+  frame: require("./frame.svg").default,
+  "frame-thin": require("./frame-thin.svg").default,
   // Add more mappings for other SVGs
 } as const satisfies Record<string, React.FC<SvgProps>>;
 

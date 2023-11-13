@@ -1,5 +1,5 @@
-import { BarCodeEvent } from "expo-barcode-scanner";
-import { Camera, CameraType } from "expo-camera";
+import { BarCodeEvent, BarCodeScanner } from "expo-barcode-scanner";
+import { Camera, CameraType, PermissionResponse } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text } from "react-native";
@@ -7,9 +7,12 @@ import { TextStyle, Theme } from "../styles";
 import { ThemeContext } from "../contexts/AppContext";
 import IconButton from "./IconButton";
 import { HStack, VStack } from "./primitives/Stack";
+import Button from "./primitives/Button";
+import TextButton from "./TextButton";
+import Icon from "./primitives/Icon";
 
 export type QRScanProps = {
-  scanned: boolean;
+  permission: PermissionResponse | null;
   onScanned: (e: BarCodeEvent) => void;
   onCancel: () => void;
 };
@@ -19,55 +22,55 @@ const QRScan = (props: QRScanProps) => {
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  const [hasPermission, setHasPermission] = React.useState<boolean | null>(
-    null
-  );
+  // State
+  const [scanned, setScanned] = React.useState(false);
 
-  React.useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    };
-
-    getBarCodeScannerPermissions();
-  }, []);
-
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+  if (!props.permission || !props.permission.granted) {
+    return null;
   }
 
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  const handleQRScanned = (e: BarCodeEvent) => {
+    setScanned(true);
+    props.onScanned(e);
+  };
 
   return (
     <>
       <StatusBar hidden={true} />
       <Camera
-        onBarCodeScanned={props.scanned ? undefined : props.onScanned}
+        barCodeScannerSettings={{
+          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+        }}
+        onBarCodeScanned={scanned ? undefined : handleQRScanned}
         type={CameraType.back}
         ratio="16:9"
         style={[StyleSheet.absoluteFillObject]}
       >
-        <VStack justifyContent="flex-end">
-          <VStack p={theme.spacing.l} justifyContent="flex-start">
-            <VStack
-              p={theme.spacing.m}
-              flexMain={false}
-              flexCross={false}
-              style={styles.card}
-            >
-              <Text style={styles.cardText}>Scan a Sous Chef QR code</Text>
-            </VStack>
+        <VStack p={theme.spacing.m} justifyContent="space-between">
+          <VStack
+            p={theme.spacing.m}
+            flexMain={false}
+            flexCross={false}
+            style={styles.card}
+          >
+            <Text style={styles.text}>Scan a Sous Chef QR code</Text>
           </VStack>
-          <HStack p={theme.spacing.l} flexMain={false}>
-            <IconButton
-              icon="cancel"
-              color="#fff"
-              onPress={props.onCancel}
-              style={styles.floatingBtn}
+          {scanned ? (
+            <TextButton
+              title="Try Again?"
+              onPress={() => setScanned(false)}
+              textStyle={styles.text}
+              style={styles.btn}
             />
-          </HStack>
+          ) : (
+            <Icon name="frame-thin" color="#fff" size={"100%"} />
+          )}
+          <IconButton
+            icon="cancel"
+            color="#fff"
+            onPress={props.onCancel}
+            style={styles.floatingBtn}
+          />
         </VStack>
       </Camera>
     </>
@@ -80,9 +83,15 @@ const makeStyles = (theme: Theme) =>
       backgroundColor: "#0009",
       borderRadius: 8,
     },
-    cardText: {
+    text: {
       ...TextStyle.body,
       color: "#fff",
+    },
+    btn: {
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      backgroundColor: "#2e9dfb",
+      borderRadius: 8,
     },
     floatingBtn: {
       width: 64,
