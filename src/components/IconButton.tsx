@@ -7,16 +7,14 @@ import {
   ViewStyle,
 } from "react-native";
 import Icons from "../assets/icons";
-import Button from "./primitives/Button";
+import Button, { ButtonProps } from "./primitives/Button";
 import Icon from "./primitives/Icon";
 
-export type IconButtonProps = {
-  onPress: (event: GestureResponderEvent) => void;
+export type IconButtonProps = ButtonProps & {
   icon: keyof typeof Icons;
+  title?: string;
   color?: ColorValue;
   iconSize?: number;
-  title?: string;
-  style?: ViewStyle;
   iconStyle?: ViewStyle;
   textStyle?: TextStyle;
 };
@@ -36,15 +34,17 @@ const IconButton = (propsIn: IconButtonProps) => {
 
   return (
     <Button
-      onPress={props.onPress}
-      style={{
-        position: "relative",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        columnGap: 8,
-        ...props.style,
-      }}
+      {...props}
+      style={[
+        {
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          columnGap: 8,
+        },
+        props.style,
+      ]}
     >
       <Icon
         name={props.icon}
