@@ -43,13 +43,13 @@ const QRCodeScreen = ({
   const joinFakeSession = useStore((state) => state.joinFakeSession);
 
   const handleQRScanned = (e: BarCodeEvent) => {
-    // if (appConfig.useFakeData) {
-    //   joinFakeSession();
-    //   navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
-    // } else if (typeof e.data === "string" && fiveDigitRegex.test(e.data)) {
-    //   joinSession(e.data, user ?? guestUser);
-    //   navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
-    // }
+    if (appConfig.useFakeData) {
+      joinFakeSession();
+      navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
+    } else if (typeof e.data === "string" && fiveDigitRegex.test(e.data)) {
+      joinSession(e.data, user ?? guestUser);
+      navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
+    }
   };
 
   React.useEffect(() => {

@@ -7,6 +7,7 @@ import JoinNavigator from "./JoinStack";
 import MealPlanNavigator from "./MealPlanStack";
 import { BottomTabNavigatorParamList } from "./types";
 import { ThemeContext } from "../contexts/AppContext";
+import { IconNames } from "components/primitives/Icon";
 
 const BottomTabs = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -45,7 +46,7 @@ const BottomTabsNavigator = () => {
         name="Mealplan"
         component={MealPlanNavigator}
         options={{
-          tabBarIcon: makeTabBarIcon("meal"),
+          tabBarIcon: makeTabBarIcon("meal", 32),
         }}
       />
       <BottomTabs.Screen
@@ -60,18 +61,18 @@ const BottomTabsNavigator = () => {
         name="Calendar"
         component={CalendarScreen}
         options={{
-          tabBarIcon: makeTabBarIcon("calendar"),
+          tabBarIcon: makeTabBarIcon("calendar", 32),
         }}
       />
     </BottomTabs.Navigator>
   );
 };
 
-const makeTabBarIcon = (iconName: string) => {
+const makeTabBarIcon = (iconName: IconNames, size: number = 24) => {
   return ({
     focused,
     color,
-    size,
+    size: s,
   }: {
     focused: boolean;
     color: string;

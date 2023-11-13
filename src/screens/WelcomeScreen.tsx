@@ -7,7 +7,6 @@ import {
   defaultHomeStackNavigatorParamList,
 } from "../navigation/types";
 import { ButtonStyle, TextStyle, Theme } from "../styles";
-import { StackActions } from "@react-navigation/native";
 
 const WelcomeScreen = ({
   navigation,
@@ -26,7 +25,6 @@ const WelcomeScreen = ({
     <SafeArea backgroundColor={theme.colors.primary}>
       <IconButton
         icon="qr"
-        iconSize={48}
         onPress={() =>
           navigation.push("HomeStack", {
             screen: "QRCode",

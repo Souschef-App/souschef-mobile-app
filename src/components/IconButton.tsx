@@ -41,7 +41,7 @@ const IconButton = (propsIn: IconButtonProps) => {
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          columnGap: 8,
+          gap: 8,
         },
         props.style,
       ]}

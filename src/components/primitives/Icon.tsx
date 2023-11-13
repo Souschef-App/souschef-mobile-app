@@ -8,8 +8,10 @@ import {
 } from "react-native";
 import Icons from "../../assets/icons";
 
+export type IconNames = keyof typeof Icons;
+
 export type IconProps = {
-  name: keyof typeof Icons;
+  name: IconNames;
   color?: ColorValue;
   size?: DimensionValue | undefined;
   style?: ViewStyle;

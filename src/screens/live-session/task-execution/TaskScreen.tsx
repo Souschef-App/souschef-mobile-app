@@ -3,7 +3,10 @@ import { StyleSheet } from "react-native";
 import { HStack, IconButton, SafeArea } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 import useStore from "../../../data/store";
-import { TaskScreenNavigationProp } from "../../../navigation/types";
+import {
+  TaskScreenNavigationProp,
+  defaultBottomTabNavigatorParamList,
+} from "../../../navigation/types";
 import { Theme } from "../../../styles";
 import {
   MealCompleted,
@@ -25,11 +28,18 @@ const TaskScreen = ({
   const task = useStore((state) => state.assignedTask);
   const loading = useStore((state) => state.taskLoading);
   const completed = useStore((state) => state.sessionCompleted);
+  const connected = useStore((state) => state.clientConnected);
   const leaveSession = useStore((state) => state.leaveSession);
 
   React.useEffect(() => {
     return () => leaveSession();
   }, []);
+
+  React.useEffect(() => {
+    if (!connected) {
+      navigation.navigate("Tabs", defaultBottomTabNavigatorParamList);
+    }
+  }, [connected]);
 
   const render = () => {
     if (completed) {

@@ -29,8 +29,9 @@ export class Client extends ZustandStoreAccess {
     if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
       this.socket.close();
       this.socket = null;
-      this.set({ clientConnected: false });
     }
+
+    this.set({ clientConnected: false });
   }
 
   sendCommand(commandType: string) {

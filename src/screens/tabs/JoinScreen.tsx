@@ -61,10 +61,15 @@ const JoinScreen = ({
               <VStack
                 flexMain={false}
                 flexCross={false}
+                gap={theme.spacing.s}
                 style={{ ...styles.card, ...styles.qrCard }}
               >
                 <Icon name="qr" size={48} color="#fff" />
-                <Text style={{ ...TextStyle.h4, color: "#fff" }}>QR-Code</Text>
+                <Text
+                  style={{ ...TextStyle.h4, ...TextStyle.bold, color: "#fff" }}
+                >
+                  QR-Code
+                </Text>
               </VStack>
             </Button>
             <Button onPress={handleSessionCode}>
@@ -77,6 +82,7 @@ const JoinScreen = ({
                 <Text
                   style={{
                     ...TextStyle.h4,
+                    ...TextStyle.bold,
                     color: theme.colors.background,
                     textAlign: "center",
                   }}

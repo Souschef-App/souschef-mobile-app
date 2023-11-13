@@ -1,12 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { StyleProp, ViewStyle } from "react-native";
-import {
-  Gesture,
-  GestureDetector,
-  GestureStateChangeEvent,
-  GestureTouchEvent,
-  TapGestureHandlerEventPayload,
-} from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -15,7 +9,7 @@ import Animated, {
 
 export type ButtonProps = {
   onPress: () => void;
-  animation?: "shrink";
+  animation?: "shrink" | "opacity";
   style?: StyleProp<ViewStyle>;
 };
 
@@ -34,6 +28,10 @@ const Button = (props: PropsWithChildren<ButtonProps>) => {
 
   const animatedStyles = useAnimatedStyle(() => {
     switch (props.animation) {
+      case "opacity":
+        return {
+          opacity: withTiming(pressed.value ? 0.5 : 1, { duration: 100 }),
+        };
       default: // Shrink
         return {
           transform: [
