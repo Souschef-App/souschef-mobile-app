@@ -18,6 +18,7 @@ export const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, 
           <HStack
             mAll={{ l: theme.spacing.s, r: theme.spacing.xs }}
             gap={theme.spacing.b}
+            flexMain={false}
           >
             <Divider color={theme.colors.background2} />
             <VStack
@@ -25,18 +26,18 @@ export const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, 
               align="flex-start"
               gap={theme.spacing.b}
             >
-            {items.map((item : any, index : number) => (
-                <HStack justifyContent="space-between" key={index}>
-                  <Text style={TextStyle.h4}>{item.name}</Text>
-                  <Text style={TextStyle.h4}>
-                    item
-                  </Text>
-                </HStack>
-              ))
-            }
+              <HStack justifyContent="space-between">
+              {
+                items.map((item : any, index : number) => (
+                  <Text style={TextStyle.h4}>{`${item.name} ${item.quantity}`}</Text>
+                ))
+              }
+              </HStack>
             </VStack>
           </HStack>
         </Dropdown>
       </Button>
     )
   }
+
+  

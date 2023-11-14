@@ -81,9 +81,9 @@ export const TaskBreakDownResultScreen = () => {
               <Text style={styles.title}>Steps</Text>
 
               <Button style={styles.reGenerateBTN} onPress={()=>{}}>
-                <HStack gap={10}>
+                <HStack gap={10} align="center" justifyContent="center">
                   <Text style={styles.reGenerateBTNText}>Regenerate All</Text>
-                  <Icon name="retry" style={styles.retry} color={theme.colors.background} />
+                  <Icon name="retry"  color={theme.colors.background} />
                 </HStack>
               </Button>
             </HStack>
@@ -272,6 +272,7 @@ const makeStyles = (theme: Theme) =>
       padding: 10,
       height: 56,
       borderRadius: 1000,
+      width: 220
     },
     reGenerateBTNText:{
       ...TextStyle.h3,

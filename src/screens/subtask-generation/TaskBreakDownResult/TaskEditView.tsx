@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import {
   Button,
   Divider,
@@ -46,7 +46,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         <VStack flexMain={false} gap={theme.spacing.s}>
           <HStack justifyContent="space-between">
             <IconButton icon="pencil" onPress={()=> setCanEdit(!canEdit)} />
-            <IconButton style={styles.retry} icon="retry" onPress={() => { }} iconColor="#fff" iconSize={30} />
+            <IconButton style={styles.retry} icon="retry" onPress={() => { }} color="#fff" iconSize={30} />
           </HStack>
           {/* <Text style={styles.taskTitle}>{task.title}</Text> */}
           <TextButton 
@@ -139,8 +139,12 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <TextButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditTitleVisible(false)} />
-              <TextButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+              <Pressable style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} >
+                <Text>Cancel</Text>
+              </Pressable>
+              <Pressable style={styles.saveBTN} onPress={()=>{}} >
+                <Text>Save</Text>
+              </Pressable>
             </HStack>
           </Modal.Footer>
         </Modal.Container>
