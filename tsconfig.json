@@ -4,6 +4,7 @@
     "strict": true,
     "baseUrl": ".", // this must be specified if "paths" is specified.
     "paths": {
+      "*": ["src/*"],
       "@env": ["node_modules/react-native-dotenv"] // this mapping is relative to "baseUrl"
     }
   }

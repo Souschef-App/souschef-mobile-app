@@ -1,42 +1,62 @@
 import { StateCreator } from "zustand";
 import { ApiUrls } from "../../api/constants";
 import { User } from "../types";
-import { usePost } from "../../api/usePost";
+import jsonRequest from "../../api/requests";
 import { StoreState } from "../store";
+import { guestUser } from "../__mocks__";
 
-export interface UserSlice {
+type UserState = {
   user: User | null;
   userLoading: boolean;
   userError: string | null;
-  clearUserError: () => void;
+};
+
+const initialState: UserState = {
+  user: null,
+  userLoading: false,
+  userError: null,
+};
+
+type UserActions = {
+  resetUserSlice: () => void;
+  resetUserError: () => void;
   login: ({}: { email: string; password: string }) => Promise<void>;
+  fakeLogin: () => void;
   register: ({}: {
     username: string;
     email: string;
     password: string;
     passwordConfirm: string;
   }) => Promise<void>;
-}
+};
+
+export type UserSlice = UserState & UserActions;
 
 export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
   set,
   get
 ) => ({
-  user: null,
-  userLoading: false,
-  userError: null,
-  clearUserError: () => set({ userError: null }),
+  ...initialState,
+  resetUserSlice: () => set(initialState),
+  resetUserError: () => set({ userError: null }),
   login: async (data) => {
     set({ userLoading: true, userError: null });
-    const [user, error] = await usePost<User>(ApiUrls.login, { json: data });
+    const [user, error] = await jsonRequest.post<User>(ApiUrls.login, {
+      json: data,
+    });
     set({
       userLoading: false,
       ...(user ? { user } : { userError: error }),
     });
   },
+  fakeLogin: () => {
+    set({ user: guestUser });
+  },
   register: async (data) => {
     set({ userLoading: true, userError: null });
-    const [user, error] = await usePost<User>(ApiUrls.register, { json: data });
+    const [user, error] = await jsonRequest.post<User>(ApiUrls.register, {
+      json: data,
+    });
     set({
       userLoading: false,
       ...(user ? { user } : { userError: error }),

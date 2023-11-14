@@ -3,15 +3,14 @@ import {
   ColorValue,
   KeyboardTypeOptions,
   NativeSyntheticEvent,
-  StyleProp,
   TextInput,
   TextInputChangeEventData,
   TextInputSubmitEditingEventData,
   TextStyle,
   ViewStyle,
 } from "react-native";
-import { HStack } from "./Stack";
 import Icon from "./Icon";
+import { HStack } from "./Stack";
 
 export type InputProps = {
   value: string;
@@ -62,7 +61,12 @@ const Input = forwardRef<TextInput, PropsWithChildren<InputProps>>(
           maxLength={props.maxLength}
           autoCapitalize={props.autoCapitalize}
           multiline={props.multiline}
-          style={{ flexGrow: 1, flexShrink: 1, ...props.textStyle }}
+          style={{
+            flexGrow: 1,
+            flexShrink: 1,
+            width: "100%",
+            ...props.textStyle,
+          }}
         />
         {props.children}
       </HStack>

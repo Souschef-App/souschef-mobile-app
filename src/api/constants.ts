@@ -4,7 +4,7 @@ const baseUrl = `http://${API_BASE}:5000/api`;
 const user = `${baseUrl}/user`;
 const recipe = `${baseUrl}/recipe`;
 const cookingSession = `${baseUrl}/cookingsession`;
-const liveCookingSession = `${baseUrl}/live-cookingsession`;
+const liveSession = `${baseUrl}/live-session`;
 const subTaskGeneration = `${baseUrl}/subtask`;
 
 export const ApiUrls = {
@@ -12,7 +12,7 @@ export const ApiUrls = {
   register: `${user}/register`,
   publicRecipes: `${recipe}/public-recipes`,
   getTodaysMealPlans: `${cookingSession}/get-todays-cooking-session-by-user`,
-  getLiveSessionIP: `${liveCookingSession}/get-ip`,
+  getLiveSession: `${liveSession}/get-session`,
   startSubTaskSession: `${subTaskGeneration}/session`,
   subtaskBreakDown: `${subTaskGeneration}/request`,
 };

@@ -1,9 +1,8 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 import type {
-  RouteProp,
   CompositeNavigationProp,
-  NavigatorScreenParams,
-  Route,
+  RouteProp,
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -11,18 +10,31 @@ export type WelcomeStackNavigatorParamList = {
   Welcome: undefined;
   Login: undefined;
   Register: undefined;
-  HomeStack: HomeStackNavigatorParamList;
+  HomeStack: {
+    screen: string;
+    params: HomeStackNavigatorParamList;
+  };
 };
-
 
 export type HomeStackNavigatorParamList = {
   Tabs: BottomTabNavigatorParamList;
-  Task: undefined;
-  Feed: undefined;
-  Participants: undefined;
+  QRCode: undefined;
+  LiveSession: LiveSessionNavigatorParamList;
   SessionStartScreen: {
     session: any;
   };
+};
+
+export type LiveSessionNavigatorParamList = {
+  Connecting: undefined;
+  Connected: undefined;
+  Running: TaskDrawerNavigatorParamList;
+};
+
+export type TaskDrawerNavigatorParamList = {
+  Task: undefined;
+  Feed: undefined;
+  Invite: undefined;
 };
 
 export type BottomTabNavigatorParamList = {
@@ -34,7 +46,6 @@ export type BottomTabNavigatorParamList = {
 
 export type JoinNavigatorParamList = {
   JoinSelection: undefined;
-  QRCode: undefined;
   SessionCode: undefined;
 };
 
@@ -43,7 +54,7 @@ export type MealPlanNavigatorParamList = {
   EnterDescriptionScreen: undefined;
   TaskBreakDownResultScreen: undefined;
   DateScreen: undefined;
-  TimeScreen: {date: string | null};
+  TimeScreen: { date: string | null };
   MealNameScreen: {
     date: string | null;
     time: string | null;
@@ -76,14 +87,14 @@ export type MealPlanNavigatorParamList = {
     time: string | null;
     mealName: string;
   };
-}
+};
 
 export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealPlan: undefined,
   EnterDescriptionScreen: undefined,
   TaskBreakDownResultScreen: undefined,
   DateScreen: undefined,
-  TimeScreen: { date : null},
+  TimeScreen: { date: null },
   MealNameScreen: {
     date: null,
     time: null,
@@ -101,7 +112,7 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   },
   OccasionScreen: {
     date: null,
-    time: null
+    time: null,
   },
   FavoriteScreen: {
     date: null,
@@ -120,7 +131,6 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
 
 export const defaultJoinNavigatorParamList: JoinNavigatorParamList = {
   JoinSelection: undefined,
-  QRCode: undefined,
   SessionCode: undefined,
 };
 
@@ -131,11 +141,24 @@ export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
   Calendar: undefined,
 };
 
+export const defaultTaskDrawerNavigatorParamList: TaskDrawerNavigatorParamList =
+  {
+    Task: undefined,
+    Feed: undefined,
+    Invite: undefined,
+  };
+
+export const defaultLiveSessionNavigatorParamList: LiveSessionNavigatorParamList =
+  {
+    Connecting: undefined,
+    Connected: undefined,
+    Running: defaultTaskDrawerNavigatorParamList,
+  };
+
 export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
   Tabs: defaultBottomTabNavigatorParamList,
-  Task: undefined,
-  Feed: undefined,
-  Participants: undefined,
+  QRCode: undefined,
+  LiveSession: defaultLiveSessionNavigatorParamList,
   SessionStartScreen: {
     session: null,
   }
@@ -171,14 +194,14 @@ export type EnterDescriptionScreenNavigationProp = NativeStackNavigationProp<
   "EnterDescriptionScreen"
 >;
 
-export type JoinScreenNavigationProp = NativeStackNavigationProp<
-  JoinNavigatorParamList,
-  "JoinSelection"
+export type JoinScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<JoinNavigatorParamList, "JoinSelection">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
 >;
 
-export type QRCodeScreenNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<JoinNavigatorParamList, "QRCode">,
-  NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
+export type QRCodeScreenNavigationProp = NativeStackNavigationProp<
+  HomeStackNavigatorParamList,
+  "QRCode"
 >;
 
 export type SessionCodeScreenNavigationProp = CompositeNavigationProp<
@@ -186,9 +209,9 @@ export type SessionCodeScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
 >;
 
-export type TaskScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  "Task"
+export type ConnectingScreenNavigationProp = NativeStackNavigationProp<
+  LiveSessionNavigatorParamList,
+  "Connecting"
 >;
 
 export type SessionStartScreenRouteProp = RouteProp<
@@ -197,14 +220,24 @@ HomeStackNavigatorParamList,
 >
 
 
-export type FeedScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  "Feed"
+export type ConnectedScreenNavigationProp = NativeStackNavigationProp<
+  LiveSessionNavigatorParamList,
+  "Connected"
 >;
 
-export type ParticipantsScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigatorParamList,
-  "Participants"
+export type TaskScreenNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<TaskDrawerNavigatorParamList, "Task">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "LiveSession">
+>;
+
+export type FeedScreenNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<TaskDrawerNavigatorParamList, "Feed">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "LiveSession">
+>;
+
+export type InviteScreenNavigationProp = DrawerNavigationProp<
+  TaskDrawerNavigatorParamList,
+  "Invite"
 >;
 
 export type CalendarScreenNavigationProp = BottomTabNavigationProp<
@@ -214,29 +247,33 @@ export type CalendarScreenNavigationProp = BottomTabNavigationProp<
 
 export type DateScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "DateScreen">;
+  "DateScreen"
+>;
 
 export type TimeScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "TimeScreen">;
+  "TimeScreen"
+>;
 
-  export type MealNameScreenNavigationProp = NativeStackNavigationProp<
+export type MealNameScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "MealNameScreen">;
+  "MealNameScreen"
+>;
 
-  export type RecipeSelectorScreenNavigationProp = NativeStackNavigationProp<
+export type RecipeSelectorScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "CalendarScreen"> 
+  "CalendarScreen"
+>;
 
-  export type OccasionScreenNavigationProp = NativeStackNavigationProp<
+export type OccasionScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "OccasionScreen">;
+  "OccasionScreen"
+>;
 
-  export type FavoriteScreenNavigationProp = NativeStackNavigationProp<
+export type FavoriteScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "FavoriteScreen">;
-
-
+  "FavoriteScreen"
+>;
 
 export type TimeScreenRouteProp = RouteProp<
   MealPlanNavigatorParamList,
@@ -244,9 +281,9 @@ export type TimeScreenRouteProp = RouteProp<
 >;
 
 export type OccasionScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'OccasionScreen'
->
+  MealPlanNavigatorParamList,
+  "OccasionScreen"
+>;
 
 export type MealNameScreenRouteProp = RouteProp<
 MealPlanNavigatorParamList,
@@ -264,11 +301,9 @@ MealPlanNavigatorParamList,
 >
 
 export type CalendarScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'CalendarScreen'
->
-
-//i am running out of time 
+  MealPlanNavigatorParamList,
+  "CalendarScreen"
+>;
 
 // Type definition for route prop to a specific screen
 // E.g: Describe the type of "route" when accessing it in LoginScreen

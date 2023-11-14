@@ -1,14 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import {
   HStack,
+  Icon,
   SafeArea,
   SecureInput,
+  SvgLocal,
   TextButton,
   VStack,
   ValidationInput,
 } from "../../components";
-import { ThemeContext } from "../../contexts/AppContext";
+import { AppContext, ThemeContext } from "../../contexts/AppContext";
 import useStore from "../../data/store";
 import {
   LoginScreenNavigationProp,
@@ -21,21 +23,20 @@ import { emailRegex } from "../../utils/regex";
 // 1. Find solution for keyboard pushing UI
 // 2. Implement "forgot password" functionality
 // 3. Dynamically change screen animation between Login & Register
-// 4. (Optional) Diagonal line UI
+// 4. Curve line UI
 const LoginScreen = ({
   navigation,
 }: {
   navigation: LoginScreenNavigationProp;
 }) => {
+  const appConfig = React.useContext(AppContext);
+
   // Theme
-  const theme = useContext(ThemeContext);
+  const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   // State
   const [email, setEmail] = React.useState<string>("");
-  const [isEmailValid, setIsEmailValid] = React.useState<boolean>(false);
-  const [isEmailStatusVisible, setIsEmailStatusVisible] =
-    React.useState<boolean>(false);
   const [password, setPassword] = React.useState<string>("");
   const [errorMsg, setErrorMsg] = React.useState<string>("");
   const [focusedInput, setFocusedInput] = React.useState<string>();
@@ -43,45 +44,22 @@ const LoginScreen = ({
   // Store
   const user = useStore((state) => state.user);
   const loading = useStore((state) => state.userLoading);
-  const loginError = useStore((state) => state.userError);
-  const clearError = useStore((state) => state.clearUserError);
+  const error = useStore((state) => state.userError);
   const login = useStore((state) => state.login);
+  const fakeLogin = useStore((state) => state.fakeLogin);
+  const cleanup = useStore((state) => state.resetUserError);
 
   React.useEffect(() => {
-    if (!loginError && errorMsg !== "") {
+    if (!error && errorMsg !== "") {
       setErrorMsg("");
     }
-
-    // Show status ONLY if valid
-    const isValid = emailRegex.test(email);
-    setIsEmailStatusVisible(isValid);
-    setIsEmailValid(isValid);
-  }, [email]);
+  }, [email, password]);
 
   React.useEffect(() => {
-    if (errorMsg !== "" && !loginError) {
-      setErrorMsg("");
-    }
-  }, [password]);
-
-  // Methods
-  const tryLogin = () => {
-    if (email.length === 0 || password.length === 0) {
-      setErrorMsg("Please make sure all fields are filled.");
-      return;
-    }
-
-    if (!emailRegex.test(email)) {
-      setErrorMsg("Please enter a valid email address.");
-      setIsEmailStatusVisible(true);
-      return;
-    }
-
-    login({ email, password });
-  };
+    setErrorMsg(error || "");
+  }, [error]);
 
   React.useEffect(() => {
-    setErrorMsg(loginError || "");
     if (user) {
       navigation.reset({
         index: 0,
@@ -90,27 +68,51 @@ const LoginScreen = ({
         ],
       });
     }
-  }, [loginError, user]);
+  }, [user]);
 
   React.useEffect(() => {
-    // Clear zustand error when onMount
-    clearError();
+    return () => cleanup();
   }, []);
+
+  // Methods
+  const tryLogin = () => {
+    if (appConfig.useFakeData) {
+      fakeLogin();
+      return;
+    }
+
+    if (email.length === 0 || password.length === 0) {
+      setErrorMsg("Please make sure all fields are filled.");
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
+
+    login({ email, password });
+  };
 
   const isFocusedColor = (id: string) =>
     id === focusedInput ? theme.colors.text : theme.colors.textDisabled;
 
   return (
     <SafeArea backgroundColor={theme.colors.primary}>
-      <VStack>
-        <VStack>
+      <VStack justifyContent="flex-end">
+        <VStack justifyContent="flex-end">
           <Text style={styles.header}>Welcome Back</Text>
+          <SvgLocal
+            name="curve"
+            color="white"
+            aspectRatio={2 / 1}
+            style={{ transform: [{ rotateZ: "180deg" }] }}
+          />
         </VStack>
         <VStack
           justifyContent="flex-end"
-          flexMain={false}
           pVH={{ v: theme.spacing.l, h: theme.spacing.m }}
-          gap={32}
+          gap={theme.spacing.l}
           style={styles.card}
         >
           <VStack flexMain={false} gap={theme.spacing.m}>
@@ -121,47 +123,56 @@ const LoginScreen = ({
                 <Text style={styles.errorMsg}>{errorMsg}</Text>
               )}
             </HStack>
-            <ValidationInput
-              value={email}
-              onChange={setEmail}
-              onFocus={() => setFocusedInput("email")}
-              onBlur={() => setIsEmailStatusVisible(email.length > 0)}
-              placeholder="Email"
-              keyboardType="email-address"
-              isValid={isEmailValid}
-              isStatusVisible={isEmailStatusVisible}
-              icon="mail"
-              iconColor={isFocusedColor("email")}
-              textStyle={TextStyle.body}
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("email"),
               }}
-            />
-            <SecureInput
-              value={password}
-              onChange={setPassword}
-              onFocus={() => setFocusedInput("password")}
-              icon="lock"
-              iconColor={isFocusedColor("password")}
-              placeholder="Password"
-              placeholderColor={theme.colors.textDisabled}
+            >
+              <Icon name="mail" color={isFocusedColor("email")} />
+              <ValidationInput
+                value={email}
+                validationRegex={emailRegex}
+                onChangeText={setEmail}
+                onFocus={() => setFocusedInput("email")}
+                placeholder="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
+            <HStack
+              flexMain={false}
+              gap={16}
               style={{
                 ...InputStyle.underline,
                 borderBottomColor: isFocusedColor("password"),
               }}
-              textStyle={TextStyle.body}
-            />
-            <TextButton
+            >
+              <Icon name="lock" color={isFocusedColor("password")} />
+              <SecureInput
+                value={password}
+                onChangeText={setPassword}
+                onFocus={() => setFocusedInput("password")}
+                iconColor={isFocusedColor("password")}
+                placeholder="Password"
+                style={TextStyle.body}
+                containerStyle={{ flex: 1 }}
+              />
+            </HStack>
+            {/* <TextButton
               title="Forgot password?"
               onPress={() => {}}
               style={styles.forgotPassContainer}
               textStyle={[TextStyle.body, styles.link]}
-            />
+            /> */}
           </VStack>
           <VStack flexMain={false} gap={theme.spacing.m}>
             <TextButton
-              title="Login"
+              title="Log In"
               onPress={tryLogin}
               style={styles.login}
               textStyle={styles.loginText}
@@ -188,9 +199,9 @@ const makeStyles = (theme: Theme) =>
     },
     header: {
       ...TextStyle.h1,
+      color: "#fff",
     },
     errorBox: {
-      // backgroundColor: theme.colors.background2,
       borderRadius: 8,
     },
     errorMsg: {

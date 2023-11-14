@@ -19,7 +19,7 @@ export type DividerProps = {
 const defaultDividerProps: DividerProps = {
   vertical: true,
   rounded: true,
-  thickness: 6,
+  thickness: 2,
   color: "#000",
 };
 

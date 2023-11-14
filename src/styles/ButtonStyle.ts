@@ -21,23 +21,34 @@ const padding = (v: number, h: number) => {
   };
 };
 
+const shadow = (height: number) => ({
+  elevation: height,
+  // iOS shadow
+  shadowOffset: {
+    width: 0,
+    height: -height,
+  },
+});
+
 export const primary: ViewStyle = {
   ...buttonCore.center,
   ...buttonCore.rounded,
   ...padding(8, 16),
   height: theme.spacing.xxl,
-  // Android shadow
-  elevation: 1,
-  // iOS shadow
-  shadowOffset: {
-    width: 0,
-    height: -1,
-  },
 };
 
 export const account: ViewStyle = {
   ...buttonCore.center,
   ...padding(0, 16),
   ...buttonCore.curved,
-  height: 56,
+  height: theme.spacing.xl,
+};
+
+export const floating: ViewStyle = {
+  ...buttonCore.rounded,
+  ...shadow(8),
+  position: "absolute",
+  borderRadius: 64,
+  width: theme.spacing.xxl,
+  height: theme.spacing.xxl,
 };

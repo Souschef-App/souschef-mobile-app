@@ -1,37 +1,73 @@
-import { SERVER_MESSAGE, Task } from "../../types";
+import {
+  FeedSnapshot,
+  SESSION_SERVER_MSG,
+  Task,
+  User,
+  WelcomeSnapshot,
+} from "../../types";
 import { SessionSetState } from "./sessionSlice";
 
-type CommandHandlerMap = {
-  [key in SERVER_MESSAGE]: (set: SessionSetState, payload: any) => void;
+type MessageHandlerMap = {
+  [key in SESSION_SERVER_MSG]: (set: SessionSetState, payload: any) => void;
 };
 
-const handleServerError = (set: SessionSetState, payload: any) => {
+const handleError = (set: SessionSetState, payload: any) => {
   const str: string = payload;
-  const error = str.charAt(0).toUpperCase() + str.slice(1);
+  const error =
+    str.length > 1
+      ? str.charAt(0).toUpperCase() + str.slice(1) // Uppercase first letter
+      : "Unknown error";
   set({ sessionError: error });
 };
 
-const handleServerTaskCompleted = (set: SessionSetState, payload: any) => {
-  const task: Task = payload;
-  if (task) {
-    console.log("Someone completed:", task.title);
+const handleHandshake = (set: SessionSetState, payload: WelcomeSnapshot) => {
+  if (!payload) return;
+
+  for (let i = 0; i < payload.livefeed.length; i++) {
+    payload.livefeed[i].timestamp = new Date(payload.livefeed[i].timestamp);
   }
+
+  set({ connectedUsers: payload.users, livefeed: payload.livefeed });
 };
 
-const handleServerTaskNew = (set: SessionSetState, payload: any) => {
-  const task: Task | null = payload;
-  set({ assignedTask: task });
+const handleClientConnected = (set: SessionSetState, payload: User) => {
+  if (!payload) return;
+  set((state) => ({ connectedUsers: [...state.connectedUsers, payload] }));
 };
 
-const handleServerMealCompleted = (set: SessionSetState, _: any) => {
+const handleClientDisconnected = (set: SessionSetState, payload: User) => {
+  if (!payload) return;
+  set((state) => ({
+    connectedUsers: state.connectedUsers.filter((u) => u.id !== payload.id),
+  }));
+};
+
+const handleMealCompleted = (set: SessionSetState, _: any) => {
   set({ assignedTask: null, sessionCompleted: true });
 };
 
-const commandHandlerMap: CommandHandlerMap = {
-  [SERVER_MESSAGE.Error]: handleServerError,
-  [SERVER_MESSAGE.TaskCompleted]: handleServerTaskCompleted,
-  [SERVER_MESSAGE.TaskNew]: handleServerTaskNew,
-  [SERVER_MESSAGE.MealCompleted]: handleServerMealCompleted,
+const handleTaskNew = (set: SessionSetState, payload: Task) => {
+  set({ assignedTask: payload, taskLoading: false });
 };
 
-export default commandHandlerMap;
+const handleFeedSnapshot = (set: SessionSetState, payload: FeedSnapshot) => {
+  if (!payload) {
+    // Force re-render
+    set((state) => ({ livefeed: [...state.livefeed] }));
+  } else {
+    payload.timestamp = new Date(payload.timestamp);
+    set((state) => ({ livefeed: [payload, ...state.livefeed] }));
+  }
+};
+
+const messageHandlerMap: MessageHandlerMap = {
+  [SESSION_SERVER_MSG.Error]: handleError,
+  [SESSION_SERVER_MSG.Handshake]: handleHandshake,
+  [SESSION_SERVER_MSG.ClientConnected]: handleClientConnected,
+  [SESSION_SERVER_MSG.ClientDisconnected]: handleClientDisconnected,
+  [SESSION_SERVER_MSG.MealCompleted]: handleMealCompleted,
+  [SESSION_SERVER_MSG.TaskNew]: handleTaskNew,
+  [SESSION_SERVER_MSG.FeedSnapshot]: handleFeedSnapshot,
+};
+
+export default messageHandlerMap;

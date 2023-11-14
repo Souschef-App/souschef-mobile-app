@@ -3,21 +3,28 @@ import { theme } from "./theme";
 
 const textCore: { [key: string]: TextStyle } = {
   defaultFont: {
-    // fontFamily: "Inter",
+    fontFamily: "RobotoSlab",
     color: theme.colors.text,
   },
+  bold: {
+    fontFamily: "RobotoSlab-Bold",
+  },
+};
+
+export const bold: TextStyle = {
+  ...textCore.bold,
 };
 
 export const h1: TextStyle = {
   ...textCore.defaultFont,
-  fontSize: 32,
-  fontWeight: "bold",
+  ...textCore.bold,
+  fontSize: 36,
 };
 
 export const h2: TextStyle = {
   ...textCore.defaultFont,
+  ...textCore.bold,
   fontSize: 24,
-  fontWeight: "bold",
 };
 
 export const h3: TextStyle = {
