@@ -204,7 +204,6 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
             <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Add a Recipe</Text>
       </TouchableOpacity>
       </View>
-      <ScrollView>
       <FlatList
         data={displayedYourRecipes}
         keyExtractor={item => item.id.toString()}
@@ -228,7 +227,6 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
           </TouchableOpacity>
         )}
       />
-      </ScrollView>
       <Button
           style={[primary, styles.confirmButton]}
           onPress={goToDateScreen}

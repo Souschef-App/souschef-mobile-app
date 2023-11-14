@@ -42,7 +42,7 @@ const MealPlanScreen: React.FC<{
       <ScrollView>
         <View style={styles.container}>
         <View style={styles.mealContainer}>
-          <Text style={[TextStyle.h1]}>Meal Name{' '}</Text> 
+          <Text style={[TextStyle.h1]}>Meal Plan</Text> 
         <View>
             <Icon name="kitchenware" size={30} color="black" />
              </View>
@@ -65,7 +65,7 @@ const MealPlanScreen: React.FC<{
                 <Icon
                   name="brochette"                  
                 />
-                <Button onPress={() => goToRecipeSelectorScreen('Appetizer')}>
+                <Button onPress={() => goToRecipeSelectorScreen('Recipes')}>
                   <View style={styles.plusIconContainer}>
                     <Icon
                       name="plus"
@@ -75,7 +75,7 @@ const MealPlanScreen: React.FC<{
               </View>
             </View>
             <View style={styles.sectionContainer}>
-              {recipes ? recipes.filter(recipe => recipe.type == 'Appetizer').map(recipe => <View>
+              {recipes ? recipes.filter(recipe => recipe.type == 'Recipes').map((recipe,i) => <View key={i}>
                   <TouchableOpacity style={styles.touchableContainer}>
                     <View style={styles.item}>
                       <Text style={[TextStyle.h3,styles.itemText]}>
