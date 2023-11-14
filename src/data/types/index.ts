@@ -3,11 +3,15 @@ import Ingredient from "./ingredient";
 import Kitchenware from "./kitchenware";
 import MealPlan from "./mealplan";
 import Recipe from "./recipe";
-import { SESSION_CLIENT_CMD, SESSION_SERVER_MSG } from "./session/enum";
+import {
+  SESSION_CLIENT_CMD,
+  SESSION_SERVER_MSG,
+  TASK_STATUS,
+} from "./session/enum";
 import { ServerMessage } from "./session/message";
-import LiveSession from "./session/session";
+import { LiveSession } from "./session/session";
 import { FeedSnapshot, WelcomeSnapshot } from "./session/snapshot";
-import SessionUser from "./session/user";
+import { SessionUser } from "./session/user";
 import Task from "./task";
 import User from "./user";
 
@@ -26,6 +30,7 @@ export {
   SKILL_LEVEL,
   ServerMessage,
   SessionUser,
+  TASK_STATUS,
   Task,
   User,
   WelcomeSnapshot,

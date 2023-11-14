@@ -1,30 +1,63 @@
-import React, { PropsWithChildren } from "react";
+import React, { LegacyRef } from "react";
+import {
+  ColorValue,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TextInputProps,
+  View,
+  ViewStyle,
+} from "react-native";
 import Button from "./primitives/Button";
 import Icon from "./primitives/Icon";
-import Input, { InputProps } from "./primitives/Input";
-import { TextInput } from "react-native";
 
-export type SecureInputProps = Omit<InputProps, "password">;
+export type SecureInputProps = Omit<TextInputProps, "secureTextEntry"> & {
+  iconColor?: ColorValue;
+  containerStyle?: StyleProp<ViewStyle>;
+};
 
-const SecureInput = (props: PropsWithChildren<SecureInputProps>) => {
-  const inputRef: React.ForwardedRef<TextInput> = React.useRef(null);
+const iconSize = 18;
+
+const SecureInput = (props: SecureInputProps) => {
+  const inputRef: LegacyRef<TextInput> = React.useRef(null);
   const [isShown, setIsShown] = React.useState(false);
-  const passwordIconName = isShown ? "hide" : "show";
 
   const handleButtonClick = () => {
-    setIsShown(!isShown);
-    if (!inputRef.current?.isFocused()) {
-      inputRef.current?.focus();
+    if (inputRef.current && !inputRef.current.isFocused()) {
+      inputRef.current.focus();
     }
+
+    setIsShown(!isShown);
   };
 
   return (
-    <Input ref={inputRef} {...props} password={!isShown}>
+    <View style={[props.containerStyle, styles.row]}>
+      <TextInput
+        {...props}
+        ref={inputRef}
+        secureTextEntry={!isShown}
+        style={[props.style, styles.input]}
+      />
       <Button onPress={handleButtonClick}>
-        <Icon name={passwordIconName} color={props.iconColor} size={18} />
+        <Icon
+          name={isShown ? "hide" : "show"}
+          color={props.iconColor ?? "#000"}
+          size={iconSize}
+        />
       </Button>
-    </Input>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  input: {
+    flex: 1,
+  },
+});
 
 export default SecureInput;

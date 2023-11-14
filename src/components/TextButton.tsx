@@ -1,23 +1,15 @@
 import React from "react";
-import {
-  GestureResponderEvent,
-  StyleProp,
-  Text,
-  TextStyle,
-  ViewStyle,
-} from "react-native";
-import Button from "./primitives/Button";
+import { StyleProp, Text, TextStyle } from "react-native";
+import Button, { ButtonProps } from "./primitives/Button";
 
-export type TextButtonProps = {
+export type TextButtonProps = ButtonProps & {
   title: string;
-  onPress: (event: GestureResponderEvent) => void;
-  style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
 };
 
 const TextButton = (props: TextButtonProps) => {
   return (
-    <Button onPress={props.onPress} style={props.style}>
+    <Button {...props}>
       <Text style={props.textStyle}>{props.title}</Text>
     </Button>
   );

@@ -1,19 +1,43 @@
 import React from "react";
-import { ThemeContext } from "./src/contexts/AppContext";
+import { AppConfig, AppContext, ThemeContext } from "./src/contexts/AppContext";
 import RootNavigator from "./src/navigation";
 import { theme } from "./src/styles/theme";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const App = () => {
+  const [appIsReady, setAppIsReady] = React.useState(false);
   const [darkMode, setDarkMode] = React.useState(false);
 
-  // TODO: Validate token/userID to avoid logging in
+  const [fontsLoaded, fontError] = useFonts({
+    RobotoSlab: require("./src/assets/fonts/RobotoSlab/RobotoSlab-Regular.ttf"),
+    "RobotoSlab-Bold": require("./src/assets/fonts/RobotoSlab/RobotoSlab-Bold.ttf"),
+  });
+
+  const onLayoutRootView = React.useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  const appConfig: AppConfig = {
+    useFakeData: false,
+  };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeContext.Provider value={theme}>
+    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <AppContext.Provider value={appConfig}>
+        <ThemeContext.Provider value={theme}>
           <RootNavigator />
-      </ThemeContext.Provider>
+        </ThemeContext.Provider>
+      </AppContext.Provider>
     </GestureHandlerRootView>
   );
 };

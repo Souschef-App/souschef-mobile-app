@@ -1,47 +1,79 @@
 import { SESSION_CLIENT_CMD, ServerMessage, SessionUser } from "../../types";
-import commandHandlerMap from "./handlers";
+import messageHandlerMap from "./handlers";
 import { SessionSetState } from "./sessionSlice";
 
-const connect = (url: string, identity: SessionUser, set: SessionSetState) => {
-  set({ sessionLoading: true, sessionError: null });
+abstract class ZustandStoreAccess {
+  protected set: SessionSetState;
 
-  const socket = new WebSocket(url);
+  constructor(set: SessionSetState) {
+    this.set = set;
+  }
+}
 
-  socket.onopen = () => {
-    set({ socket, sessionLoading: false });
+export class Client extends ZustandStoreAccess {
+  private socket: WebSocket | null;
 
-    const msg = { type: SESSION_CLIENT_CMD.Handshake, payload: identity };
-    socket.send(JSON.stringify(msg));
-  };
+  constructor(set: SessionSetState) {
+    super(set);
+    this.socket = null;
+  }
 
-  socket.onmessage = (e) => {
-    const message: ServerMessage = JSON.parse(e.data);
-    if (message) {
-      const handler = commandHandlerMap[message.type];
-      handler(set, message.payload);
+  connect(url: string, identity: SessionUser) {
+    this.leave(); // Severe any ongoing connection
+    this.set({ sessionLoading: true, sessionError: null });
+    this.socket = new WebSocket(url);
+    this.configureSocket(this.socket, identity);
+  }
+
+  leave() {
+    if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
+      this.socket.close();
+      this.socket = null;
     }
-  };
 
-  socket.onerror = (e) => {
-    console.log("WebSocket error", e);
-    set({
-      sessionLoading: false,
-      sessionError: "Failed to join session: Please try again",
-    });
-  };
+    this.set({ clientConnected: false });
+  }
 
-  socket.onclose = (e) => {
-    if (e.code === 1000) {
-      console.log("WebSocket closed cleanly");
-    } else {
-      console.log("WebSocket connection closed:", e);
+  sendCommand(commandType: string) {
+    if (this.socket?.OPEN) {
+      const command = { type: commandType };
+      this.socket.send(JSON.stringify(command));
     }
-    set({ socket: null });
-  };
-};
+  }
 
-const client = {
-  connect,
-};
+  private configureSocket(socket: WebSocket, identity: SessionUser) {
+    socket.onopen = () => {
+      this.set({ clientConnected: true, sessionLoading: false });
+      const handshakeMessage = {
+        type: SESSION_CLIENT_CMD.Handshake,
+        payload: identity,
+      };
+      socket.send(JSON.stringify(handshakeMessage));
+    };
 
-export default client;
+    socket.onmessage = (e) => {
+      const message: ServerMessage = JSON.parse(e.data);
+      if (message) {
+        const handler = messageHandlerMap[message.type];
+        handler(this.set, message.payload);
+      }
+    };
+
+    socket.onerror = (e) => {
+      console.log("WebSocket error", e);
+      this.set({
+        sessionLoading: false,
+        sessionError: "Failed to join session: Please try again",
+      });
+    };
+
+    socket.onclose = (e) => {
+      if (e.code === 1000) {
+        console.log("WebSocket closed cleanly");
+      } else {
+        console.log("WebSocket connection closed:", e);
+      }
+      this.set({ clientConnected: false });
+    };
+  }
+}

@@ -4,24 +4,44 @@ import { StateCreator, StoreApi } from "zustand";
 import { StoreState } from "../../store";
 import {
   FeedSnapshot,
-  LiveSession,
   SESSION_CLIENT_CMD,
-  SessionUser,
   Task,
   User,
+  LiveSession,
+  TASK_STATUS,
+  SessionUser,
 } from "../../types";
-import client from "./client";
+import { Client } from "./client";
+import { fakeTask, guestUser } from "../../__mocks__";
 
-export interface SessionSlice {
+type SessionState = {
   assignedTask: Task | null;
+  taskLoading: boolean;
   connectedUsers: User[];
   livefeed: FeedSnapshot[];
-  socket: WebSocket | null;
+  session: LiveSession | null;
   sessionCompleted: boolean;
   sessionError: string | null;
   sessionLoading: boolean;
-  clearSessionError: () => void;
-  joinSession: (code: string) => Promise<void>;
+  clientConnected: boolean;
+};
+
+const initialState: SessionState = {
+  assignedTask: null,
+  taskLoading: true,
+  connectedUsers: [],
+  livefeed: [],
+  session: null,
+  sessionCompleted: false,
+  sessionLoading: false,
+  sessionError: null,
+  clientConnected: false,
+};
+
+type SessionActions = {
+  resetSessionSlice: () => void;
+  joinSession: (code: string, user: SessionUser) => Promise<boolean>;
+  joinFakeSession: () => void;
   leaveSession: () => void;
   commands: {
     startSession: () => void;
@@ -29,8 +49,9 @@ export interface SessionSlice {
     completeTask: () => void;
     rerollTask: () => void;
   };
-}
+};
 
+export type SessionSlice = SessionState & SessionActions;
 export type SessionSetState = StoreApi<SessionSlice>["setState"];
 
 export const createSessionSlice: StateCreator<
@@ -39,62 +60,70 @@ export const createSessionSlice: StateCreator<
   [],
   SessionSlice
 > = (set, get) => {
-  const sendCommand = (commandType: string) => {
-    const socket = get().socket;
-    if (socket && socket.OPEN) {
-      const command = { type: commandType };
-      socket.send(JSON.stringify(command));
-    }
-  };
+  const client = new Client(set);
 
   return {
-    assignedTask: null,
-    connectedUsers: [],
-    livefeed: [],
-    socket: null,
-    sessionCompleted: false,
-    sessionLoading: false,
-    sessionError: null,
-    clearSessionError: () => set({ sessionError: null }),
-    joinSession: async (code: string) => {
+    ...initialState,
+    resetSessionSlice: () => set(initialState),
+    joinSession: async (code: string, user: SessionUser) => {
       set({ sessionLoading: true, sessionError: null });
 
-      const query = { code: parseInt(code) };
+      const query = { code }; // TODO: Convert API to string
       const [session, error] = await jsonRequest.get<LiveSession>(
         ApiUrls.getLiveSession,
         query
       );
 
-      if (error != null) {
+      if (error) {
         set({ sessionLoading: false, sessionError: error });
-        return;
+        return false;
       }
 
-      const sessionUser = get().user as SessionUser;
-      if (sessionUser == null) {
+      set({ session });
+      client.connect(`ws://${session?.ip}/ws`, user);
+      return true;
+    },
+    joinFakeSession: () => {
+      set({
+        clientConnected: true,
+        taskLoading: true,
+        connectedUsers: [guestUser],
+        session: {
+          code: 12345,
+          ip: "localhost",
+        },
+      });
+      setTimeout(() => {
         set({
-          sessionLoading: false,
-          sessionError:
-            "You are not logged in. Please log in to access this feature.",
+          assignedTask: fakeTask,
+          taskLoading: false,
+          livefeed: [
+            {
+              user: guestUser,
+              task: fakeTask,
+              status: TASK_STATUS.Assigned,
+              timestamp: new Date(),
+            },
+          ],
         });
-        return;
-      }
-
-      get().leaveSession();
-      client.connect(`ws://${session?.ip}/ws`, sessionUser, set);
+      }, 500);
     },
     leaveSession: () => {
-      const socket = get().socket;
-      if (socket && socket.OPEN) {
-        socket.close();
-        set({ socket: null, sessionError: null, sessionCompleted: false });
-      }
+      client.leave();
+      set({
+        session: null,
+        sessionError: null,
+        sessionCompleted: false,
+      });
     },
     commands: {
-      startSession: () => sendCommand(SESSION_CLIENT_CMD.SessionStart),
-      stopSession: () => sendCommand(SESSION_CLIENT_CMD.SessionStop),
-      completeTask: () => sendCommand(SESSION_CLIENT_CMD.TaskComplete),
-      rerollTask: () => sendCommand(SESSION_CLIENT_CMD.TaskReroll),
+      startSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStart),
+      stopSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStop),
+      completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskComplete),
+      rerollTask: () => {
+        set({ taskLoading: true });
+        client.sendCommand(SESSION_CLIENT_CMD.TaskReroll);
+      },
     },
   };
 };

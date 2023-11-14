@@ -7,22 +7,11 @@ const JoinStack = createNativeStackNavigator<JoinNavigatorParamList>();
 
 const JoinNavigator = () => {
   return (
-    <JoinStack.Navigator>
-      <JoinStack.Screen
-        name="JoinSelection"
-        component={JoinScreen}
-        options={{ headerShown: false }}
-      />
-      <JoinStack.Screen
-        name="QRCode"
-        component={QRCodeScreen}
-        options={{ headerShown: false }}
-      />
-      <JoinStack.Screen
-        name="SessionCode"
-        component={SessionCodeScreen}
-        options={{ headerShown: false }}
-      />
+    <JoinStack.Navigator
+      screenOptions={{ headerShown: false, animation: "fade" }}
+    >
+      <JoinStack.Screen name="JoinSelection" component={JoinScreen} />
+      <JoinStack.Screen name="SessionCode" component={SessionCodeScreen} />
     </JoinStack.Navigator>
   );
 };

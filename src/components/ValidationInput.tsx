@@ -1,22 +1,63 @@
-import React, { PropsWithChildren } from "react";
+import React from "react";
+import {
+  NativeSyntheticEvent,
+  StyleProp,
+  TextInput,
+  TextInputFocusEventData,
+  TextInputProps,
+  View,
+  ViewStyle,
+} from "react-native";
 import { theme } from "../styles/theme";
 import Icon from "./primitives/Icon";
-import Input, { InputProps } from "./primitives/Input";
 
-export type ValidationInputProps = InputProps & {
-  isValid: boolean;
-  isStatusVisible: boolean;
+export type ValidationInputProps = TextInputProps & {
+  validationRegex: RegExp;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
-const ValidationInput = (props: PropsWithChildren<ValidationInputProps>) => {
-  const iconName = props.isValid ? "check" : "x";
-  const iconColor = props.isValid ? theme.colors.success : theme.colors.danger;
+const iconSize = 18;
+
+const ValidationInput = (props: ValidationInputProps) => {
+  const [isValid, setIsValid] = React.useState<boolean>(false);
+  const [isVisible, setIsVisible] = React.useState<boolean>(false);
+
+  const handleTextChange = (value: string) => {
+    props.onChangeText?.(value);
+
+    const valid = props.validationRegex.test(value);
+    setIsValid(valid);
+    setIsVisible(valid);
+  };
+
+  const handleBlur = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    props.onBlur?.(e);
+    if (props.value) {
+      setIsVisible(props.value!.length > 0);
+    }
+  };
+
   return (
-    <Input {...props} autoCapitalize="none">
-      {props.isStatusVisible && (
-        <Icon name={iconName} color={iconColor} size={18} />
-      )}
-    </Input>
+    <View style={[props.containerStyle, { justifyContent: "center" }]}>
+      <View style={{ justifyContent: "center" }}>
+        <TextInput
+          {...props}
+          onChangeText={handleTextChange}
+          onBlur={handleBlur}
+        />
+        {isVisible && (
+          <Icon
+            name={isValid ? "check" : "x"}
+            color={isValid ? theme.colors.success : theme.colors.danger}
+            size={iconSize}
+            style={{
+              position: "absolute",
+              right: 0,
+            }}
+          />
+        )}
+      </View>
+    </View>
   );
 };
 

@@ -2,22 +2,26 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 
 import { Icon } from "../components";
-import { CalendarScreen, HomeScreen, JoinScreen } from "../screens";
-import HomeStackNavigator from "./HomeStack";
+import { CalendarScreen, HomeScreen } from "../screens";
+import JoinNavigator from "./JoinStack";
 import MealPlanNavigator from "./MealPlanStack";
 import { BottomTabNavigatorParamList } from "./types";
-import JoinNavigator from "./JoinStack";
+import { ThemeContext } from "../contexts/AppContext";
+import { IconNames } from "components/primitives/Icon";
 
 const BottomTabs = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
 const BottomTabsNavigator = () => {
+  const theme = React.useContext(ThemeContext);
+
   return (
     <BottomTabs.Navigator
       screenOptions={() => ({
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: "#2e9dfb",
-        tabBarInactiveTintColor: "#b3bac0",
+        tabBarActiveTintColor: theme.colors.highlight,
+        tabBarInactiveTintColor: theme.colors.textDisabled,
         tabBarStyle: {
           // Seamless transition (color)
           borderTopWidth: 0,
@@ -35,7 +39,6 @@ const BottomTabsNavigator = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerShown: false,
           tabBarIcon: makeTabBarIcon("home"),
         }}
       />
@@ -43,15 +46,13 @@ const BottomTabsNavigator = () => {
         name="Mealplan"
         component={MealPlanNavigator}
         options={{
-          headerShown: false,
-          tabBarIcon: makeTabBarIcon("meal"),
+          tabBarIcon: makeTabBarIcon("meal", 32),
         }}
       />
       <BottomTabs.Screen
         name="Join"
         component={JoinNavigator}
         options={{
-          headerShown: false,
           tabBarIcon: makeTabBarIcon("qr"),
           unmountOnBlur: true,
         }}
@@ -60,19 +61,18 @@ const BottomTabsNavigator = () => {
         name="Calendar"
         component={CalendarScreen}
         options={{
-          headerShown: false,
-          tabBarIcon: makeTabBarIcon("calendar"),
+          tabBarIcon: makeTabBarIcon("calendar", 32),
         }}
       />
     </BottomTabs.Navigator>
   );
 };
 
-const makeTabBarIcon = (iconName: string) => {
+const makeTabBarIcon = (iconName: IconNames, size: number = 24) => {
   return ({
     focused,
     color,
-    size,
+    size: s,
   }: {
     focused: boolean;
     color: string;

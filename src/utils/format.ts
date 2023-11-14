@@ -1,4 +1,4 @@
-import { Ingredient, COOKING_UNIT } from "../data/types";
+import { Ingredient, COOKING_UNIT, DIFFICULTY } from "../data/types";
 import { unitToString } from "./conversion";
 
 export const formatIngredientQuantity = (ingredient: Ingredient): string => {
@@ -27,9 +27,10 @@ const convertToFraction = (x: number): string => {
     return wholePart.toString();
   }
 
-  const commonDivisor = gcd(Math.round(fractionalPart * 100), 100);
-  const numerator = Math.round(fractionalPart * 100) / commonDivisor;
-  const denominator = 100 / commonDivisor;
+  const precision = 100; // Higher precision for accurate calculation
+  const commonDivisor = gcd(Math.round(fractionalPart * precision), precision);
+  const numerator = Math.round(fractionalPart * precision) / commonDivisor;
+  const denominator = precision / commonDivisor;
 
   if (wholePart === 0) {
     return `${numerator}/${denominator}`;
@@ -48,4 +49,26 @@ type FRACTIONAL_UNITS =
 
 const isFractionalUnit = (unit: COOKING_UNIT): unit is FRACTIONAL_UNITS => {
   return (unit as FRACTIONAL_UNITS) !== undefined;
+};
+
+export const formatDifficultyToString = (value: DIFFICULTY) => {
+  switch (value) {
+    case DIFFICULTY.Easy:
+      return "easy";
+    case DIFFICULTY.Medium:
+      return "medium";
+    case DIFFICULTY.Hard:
+      return "hard";
+  }
+};
+
+export const formatDifficultyToHex = (value: DIFFICULTY) => {
+  switch (value) {
+    case DIFFICULTY.Easy:
+      return "#3ddc84";
+    case DIFFICULTY.Medium:
+      return "#ffcd3c";
+    case DIFFICULTY.Hard:
+      return "#fb6a69";
+  }
 };

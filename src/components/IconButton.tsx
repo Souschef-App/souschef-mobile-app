@@ -6,16 +6,15 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native";
-import Button from "./primitives/Button";
+import Icons from "../assets/icons";
+import Button, { ButtonProps } from "./primitives/Button";
 import Icon from "./primitives/Icon";
 
-export type IconButtonProps = {
-  onPress: (event: GestureResponderEvent) => void;
-  icon: string;
-  iconColor?: ColorValue;
-  iconSize?: number;
+export type IconButtonProps = ButtonProps & {
+  icon: keyof typeof Icons;
   title?: string;
-  style?: ViewStyle;
+  color?: ColorValue;
+  iconSize?: number;
   iconStyle?: ViewStyle;
   textStyle?: TextStyle;
 };
@@ -23,7 +22,7 @@ export type IconButtonProps = {
 const iconButtonDefaultProps: IconButtonProps = {
   onPress: () => {},
   icon: "home",
-  iconColor: "black",
+  color: "black",
   iconSize: 32,
 };
 
@@ -35,23 +34,29 @@ const IconButton = (propsIn: IconButtonProps) => {
 
   return (
     <Button
-      onPress={props.onPress}
-      style={{
-        position: "relative",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        columnGap: 8,
-        ...props.style,
-      }}
+      {...props}
+      style={[
+        {
+          position: "relative",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 8,
+        },
+        props.style,
+      ]}
     >
       <Icon
         name={props.icon}
-        color={props.iconColor}
+        color={props.color}
         size={props.iconSize}
         style={props.iconStyle}
       />
-      {props.title && <Text style={props.textStyle}>{props.title}</Text>}
+      {props.title && (
+        <Text style={{ color: props.color, ...props.textStyle }}>
+          {props.title}
+        </Text>
+      )}
     </Button>
   );
 };

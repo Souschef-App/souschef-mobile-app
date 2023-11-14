@@ -1,12 +1,13 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
-import { Icon, SafeArea, TextButton, VStack } from "../components";
+import { IconButton, Logo, SafeArea, TextButton, VStack } from "../components";
 import { ThemeContext } from "../contexts/AppContext";
-import { WelcomeScreenNavigationProp } from "../navigation/types";
-import { ButtonStyle, Theme, TextStyle } from "../styles";
+import {
+  WelcomeScreenNavigationProp,
+  defaultHomeStackNavigatorParamList,
+} from "../navigation/types";
+import { ButtonStyle, TextStyle, Theme } from "../styles";
 
-// TODO:
-// 1. Floating QR Scan Button
 const WelcomeScreen = ({
   navigation,
 }: {
@@ -22,9 +23,19 @@ const WelcomeScreen = ({
 
   return (
     <SafeArea backgroundColor={theme.colors.primary}>
+      <IconButton
+        icon="qr"
+        onPress={() =>
+          navigation.push("HomeStack", {
+            screen: "QRCode",
+            params: defaultHomeStackNavigatorParamList,
+          })
+        }
+        style={styles.floatingBtn}
+      />
       <VStack pVH={{ v: theme.spacing.l, h: theme.spacing.m }}>
         <VStack>
-          <Icon name="logo" size={256} />
+          <Logo size={"66%"} />
         </VStack>
         <VStack flexMain={false} rowGap={theme.spacing.l}>
           <VStack align="flex-start" rowGap={theme.spacing.s}>
@@ -62,8 +73,8 @@ const makeStyles = (theme: Theme) =>
     },
     message: { ...TextStyle.h3 },
     buttonText: {
+      ...TextStyle.h3,
       color: "#fff",
-      fontSize: 20,
     },
     login: {
       ...ButtonStyle.account,
@@ -74,6 +85,12 @@ const makeStyles = (theme: Theme) =>
       ...ButtonStyle.account,
       backgroundColor: theme.colors.text,
       alignSelf: "stretch",
+    },
+    floatingBtn: {
+      ...ButtonStyle.floating,
+      backgroundColor: "#fff",
+      top: 32,
+      right: 16,
     },
   });
 
