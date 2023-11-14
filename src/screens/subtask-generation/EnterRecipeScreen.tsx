@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
-import { Modal, StyleSheet, Text } from "react-native";
+import { Modal, Pressable, StyleSheet, Text } from "react-native";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
 import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
@@ -25,12 +25,20 @@ export const EnterRecipeScreen = ({
 
 
   const getSuggestions = () => {
-    setEnteredRecipe(taskList)
-    submitForBreakDown();
-    navigation.navigate("TaskBreakDownResultScreen");
+    console.log("pressed")
+    if(taskList.length <= 0)
+    {
+      console.log("Add tasks first")
+    }
+    else{
+      setEnteredRecipe(taskList)
+      submitForBreakDown();
+      navigation.navigate("TaskBreakDownResultScreen");
+    }
   };
 
   const addTaskToList = () => {
+    console.log("adding task to list")
     taskList.push(text)
     setText("")
     setModalVisible(!modalVisible)
@@ -79,12 +87,11 @@ export const EnterRecipeScreen = ({
           <VStack style={styles.container} gap={20} p={50}>
             <Text style={styles.title}>Enter a Task</Text>
             <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
-            <TextButton
+            <Pressable
               style={styles.button}
-              textStyle={styles.buttonText}
-              onPress={addTaskToList}
-              title="Add Task To Recipe"
-            />
+              onPress={addTaskToList}>
+                <Text style={styles.buttonText}>Add Task To Recipe</Text>
+            </Pressable>
           </VStack>
 
         </Modal>

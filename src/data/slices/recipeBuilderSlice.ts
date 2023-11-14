@@ -2,9 +2,7 @@ import { StateCreator } from "zustand";
 import { StoreState } from "../store";
 import jsonRequest from "../../api/requests";
 import { ApiUrls } from "../../api/constants";
-import { RecipeStep } from "../types/recipeStep";
-import { RecipeStepDTO } from "../types/recipeStepDTO";
-import { Task } from "../types";
+import { Recipe, Task } from "../types";
 
 export interface RecipeBuilderSlice {
   loading: boolean;
@@ -15,32 +13,6 @@ export interface RecipeBuilderSlice {
   updateRecipe: (ID: string, updatedRecipe: Task) => void;
 }
 
-const defaultRecipeStep: Task = {
-  id: "0",
-  title: "HII",
-  description:
-    "asdfsfasdfasfsf sasfasd asdfasd asd asdfasdf asd fasdfsadf sadfdsaf",
-  ingredients: [],
-  kitchenware: [],
-  duration: 10,
-  difficulty: 1,
-  dependencies: [],
-  priority: 0,
-};
-
-const defaultRecipeStep2: Task = {
-  id: "0",
-  title: "Chicken",
-  description:
-    "asdfsfasdfasfsf sasfasd asdfasd asd asdfasdf asd fasdfsadf sadfdsaf",
-  ingredients: [],
-  kitchenware: [],
-  duration: 10,
-  difficulty: 1,
-  dependencies: [],
-  priority: 0,
-};
-
 export const createRecipeBuilderSlice: StateCreator<
   StoreState,
   [],
@@ -49,7 +21,7 @@ export const createRecipeBuilderSlice: StateCreator<
 > = (set, get) => ({
   loading: false,
   enteredRecipe: null,
-  brokenDownRecipe: [defaultRecipeStep, defaultRecipeStep2],
+  brokenDownRecipe: [],
   setEnteredRecipe: (recipe: string[]) => {
     set({ enteredRecipe: recipe });
   },
@@ -61,7 +33,7 @@ export const createRecipeBuilderSlice: StateCreator<
 
     console.log(result);
 
-    const [breakdownResult, error] = await jsonRequest.post<string>(
+    const [breakdownResult, error] = await jsonRequest.post<Task[]>(
       ApiUrls.subtaskBreakDown,
       {
         json: { recipe: result },
@@ -70,23 +42,10 @@ export const createRecipeBuilderSlice: StateCreator<
 
     if (error !== null || breakdownResult == null) return;
 
-    console.log(breakdownResult);
+    console.log("BREAKDOWN RESULT" + JSON.stringify(breakdownResult));
 
-    const removedExtraText = breakdownResult.slice(
-      breakdownResult.indexOf("{"),
-      breakdownResult.lastIndexOf("}") + 1
-    );
-    console.log(removedExtraText);
-    try {
-      const response = JSON.parse(removedExtraText);
-      const tasks: Task[] = response.recipe;
-
-      console.log(JSON.stringify(tasks));
-
-      set({ brokenDownRecipe: tasks });
-    } catch (error) {
-      console.log(error);
-    }
+    // console.log(JSON.stringify(breakdownResult.tasks));
+    set({ brokenDownRecipe: breakdownResult });
   },
   updateRecipe: (ID: string, updatedRecipe: Task) => {
     const list = get().brokenDownRecipe;

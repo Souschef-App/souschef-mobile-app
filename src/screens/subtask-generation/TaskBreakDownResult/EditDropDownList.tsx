@@ -29,7 +29,7 @@ export const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, 
                 <HStack justifyContent="space-between" key={index}>
                   <Text style={TextStyle.h4}>{item.name}</Text>
                   <Text style={TextStyle.h4}>
-                    {formatIngredientQuantity(item)}
+                    item
                   </Text>
                 </HStack>
               ))

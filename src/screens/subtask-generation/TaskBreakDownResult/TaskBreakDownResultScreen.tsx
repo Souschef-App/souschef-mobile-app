@@ -62,76 +62,87 @@ export const TaskBreakDownResultScreen = () => {
 
   return (
       <SafeArea>
-        <VStack 
-          align="flex-start" 
-          justifyContent="flex-start" 
-          style={styles.container} 
-          pVH={{v: 20, h : 20}} 
-          gap={0}>
-          <HStack justifyContent="space-between" >
-            <Text style={styles.title}>Steps</Text>
+      {
+        brokenDownRecipe == null || brokenDownRecipe?.length <= 0 ? 
+        (
+          <VStack>
+            <Text>No Tasks yet! Waiting for Response...</Text>
+          </VStack>
+        )
+        :
+        (
+          <VStack 
+            align="flex-start" 
+            justifyContent="flex-start" 
+            style={styles.container} 
+            pVH={{v: 20, h : 20}} 
+            gap={0}>
+            <HStack justifyContent="space-between" >
+              <Text style={styles.title}>Steps</Text>
 
-            <Button style={styles.reGenerateBTN} onPress={()=>{}}>
-              <HStack gap={10}>
-                <Text style={styles.reGenerateBTNText}>Regenerate All</Text>
-                <Icon name="retry" style={styles.retry} color={theme.colors.background} />
-              </HStack>
+              <Button style={styles.reGenerateBTN} onPress={()=>{}}>
+                <HStack gap={10}>
+                  <Text style={styles.reGenerateBTNText}>Regenerate All</Text>
+                  <Icon name="retry" style={styles.retry} color={theme.colors.background} />
+                </HStack>
+              </Button>
+            </HStack>
+
+            <VStack>
+            {
+              (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
+                <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
+              ) : (
+                <VStack>
+                  <Text>No Tasks To Edit</Text>
+                </VStack>
+              )
+            }
+            </VStack>
+            <HStack>
+            <Button
+              onPress={()=>prevTask()}
+              style={{
+                position: "relative",
+                flexDirection: "row",
+                alignItems: "center",
+                columnGap: 8,
+                ...styles.arrowBTN,
+              }}
+            >
+              <Icon
+                name="arrow-left" 
+                color="#fff" 
+                size={30}
+                style={styles.arrowIcon}
+              />
+              <Text style={TextStyle.h3}>Previous</Text>
             </Button>
-          </HStack>
-
-          <VStack>
-          {
-            (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
-              <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
-            ) : (
-              <VStack>
-                <Text>No Tasks To Edit</Text>
-              </VStack>
-            )
-          }
+            <VStack>
+                <Text style={TextStyle.h3}> {activeIndex + 1}/{brokenDownRecipe?.length}</Text>
+            </VStack>
+            <Button
+              onPress={()=>nextTask()}
+              style={{
+                position: "relative",
+                flexDirection: "row",
+                alignItems: "center",
+                columnGap: 8,
+                ...styles.arrowBTN2,
+              }}
+            >
+              <Text style={TextStyle.h3}>Next</Text>
+              <Icon
+                name="arrow-right" 
+                color="#fff" 
+                size={30}
+                style={styles.arrowIcon}
+              />
+            </Button>
+            </HStack>
           </VStack>
-          <HStack>
-          <Button
-            onPress={()=>prevTask()}
-            style={{
-              position: "relative",
-              flexDirection: "row",
-              alignItems: "center",
-              columnGap: 8,
-              ...styles.arrowBTN,
-            }}
-          >
-            <Icon
-              name="arrow-left" 
-              color="#fff" 
-              size={30}
-              style={styles.arrowIcon}
-            />
-            <Text style={TextStyle.h3}>Previous</Text>
-          </Button>
-          <VStack>
-              <Text style={TextStyle.h3}> {activeIndex + 1}/{brokenDownRecipe?.length}</Text>
-          </VStack>
-          <Button
-            onPress={()=>nextTask()}
-            style={{
-              position: "relative",
-              flexDirection: "row",
-              alignItems: "center",
-              columnGap: 8,
-              ...styles.arrowBTN2,
-            }}
-          >
-            <Text style={TextStyle.h3}>Next</Text>
-            <Icon
-              name="arrow-right" 
-              color="#fff" 
-              size={30}
-              style={styles.arrowIcon}
-            />
-          </Button>
-          </HStack>
-        </VStack>
+        )
+      }
       </SafeArea>
   );
 };  

@@ -113,7 +113,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             title="Kitchenware"
             icon="kitchenware"
             theme={theme} 
-            isOpen={isIngredientOpen}
+            isOpen={isKitchenwareOpen}
             setIsOpen={() => setIsKitchenwareOpen(!isKitchenwareOpen)} 
             items={task.kitchenware}
             styles={styles}
