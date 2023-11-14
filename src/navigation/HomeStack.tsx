@@ -1,29 +1,24 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import * as React from 'react';
-import {RecipeScreen, TaskScreen} from '../screens';
-import BottomTabs from './BottomTabs';
-import {HomeStackNavigatorParamList} from './types';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from "react";
+import { QRCodeScreen } from "../screens";
+import BottomTabsNavigator from "./BottomTabs";
+import LiveSessionNavigator from "./LiveSessionStack";
+import { HomeStackNavigatorParamList } from "./types";
+import SessionStartScreen from "../screens/task-execution/SessionStartScreen";
 
 const HomeStack = createNativeStackNavigator<HomeStackNavigatorParamList>();
 
 const HomeStackNavigator = () => {
   return (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="Tabs" component={BottomTabsNavigator} />
       <HomeStack.Screen
-        name="BottomTabs"
-        component={BottomTabs}
-        options={{headerShown: false}}
+        name="SessionStartScreen"
+        component={SessionStartScreen}
+        options={{ headerShown: false }}
       />
-      <HomeStack.Screen
-        name="Recipe"
-        component={RecipeScreen}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="Task"
-        component={TaskScreen}
-        options={{headerShown: false}}
-      />
+      <HomeStack.Screen name="QRCode" component={QRCodeScreen} />
+      <HomeStack.Screen name="LiveSession" component={LiveSessionNavigator} />
     </HomeStack.Navigator>
   );
 };

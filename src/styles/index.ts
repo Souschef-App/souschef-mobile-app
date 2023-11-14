@@ -1,3 +1,6 @@
-import * as ButtonStyle from './ButtonStyle';
+import * as ButtonStyle from "./ButtonStyle";
+import * as InputStyle from "./InputStyle";
+import * as TextStyle from "./TextStyle";
+import { Color, Theme } from "./types";
 
-export {ButtonStyle};
+export { ButtonStyle, Color, InputStyle, TextStyle, Theme };

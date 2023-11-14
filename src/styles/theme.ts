@@ -1,57 +1,42 @@
-import {Color, Theme} from './type';
+import { Color, Theme } from "./types";
 
-const palette: {[key: string]: Color} = {
-  white: '#ffffff',
-  lightgrey: '#f5f7fb',
-  blue: '#2E9DFB',
-  green: '#3ddc84',
-  red: '#fb6a69',
-  grey: '#2F394A',
-};
-
-const pastel: {[key: string]: Color} = {
-  bluegray: '#809bce',
-  iceblue: '#95b8d1',
-  aqua: '#b8e0d2',
-  lightorange: '#f0d5ba',
-  pink: '#eac4d5',
+const palette: { [key: string]: Color } = {
+  white: "#ffffff",
+  lightgray: "#e4e4e4",
+  blue: "#2E9DFB",
+  green: "#3ddc84",
+  darkred: "#e44f49",
+  red: "#fb6a69",
+  bluegray: "#2F394A",
+  iceblue: "#B3BAC0",
+  gold: "#ffcd3c",
 };
 
 export const theme: Theme = {
   colors: {
+    primary: palette.green,
+    secondary: palette.darkred,
     background: palette.white,
-    foreground: palette.lightgrey,
-    primary: palette.blue,
+    background2: palette.lightgray,
     success: palette.green,
     danger: palette.red,
-    text: palette.grey,
-    pastel: pastel,
+    highlight: palette.blue,
+    highlight2: palette.gold,
+    text: palette.bluegray,
+    textDisabled: palette.iceblue,
   },
   spacing: {
+    xs: 4,
     s: 8,
     m: 16,
-    l: 24,
+    b: 24,
+    l: 32,
     xl: 48,
-    xxl: 64,
-  },
-  textVariants: {
-    header: {
-      fontFamily: 'Raleway',
-      fontSize: 36,
-      fontWeight: 'bold',
-    },
-    body: {
-      fontFamily: 'Merriweather',
-      fontSize: 16,
-    },
+    xxl: 56,
+    xxxl: 64,
   },
 };
 
 export const darkTheme: Theme = {
   ...theme,
-  colors: {
-    ...theme.colors,
-    background: palette.grey,
-    text: palette.white,
-  },
 };

@@ -1,21 +1,58 @@
-import React, {FC} from 'react';
-import {Text} from 'react-native';
-import Icons from '../../res/icon';
+import React, { FC } from "react";
+import {
+  ColorValue,
+  DimensionValue,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
+import Icons from "../../assets/icons";
 
-type IconProps = {
-  name: string;
-  color?: string;
-  size?: number;
+export type IconNames = keyof typeof Icons;
+
+export type IconProps = {
+  name: IconNames;
+  color?: ColorValue;
+  size?: DimensionValue | undefined;
+  style?: ViewStyle;
 };
 
-const Icon: FC<IconProps> = ({name, color = 'black', size = 24}) => {
-  const SvgComponent = Icons[name];
+const iconDefaultProps: IconProps = {
+  name: "home",
+  color: "black",
+  size: 24,
+};
+
+const Icon: FC<IconProps> = (propsIn: IconProps) => {
+  const props = {
+    ...iconDefaultProps,
+    ...propsIn,
+  };
+
+  const SvgComponent = Icons[props.name];
 
   if (!SvgComponent) {
     return <Text>Icon not found</Text>;
   }
 
-  return <SvgComponent color={color} width={size} height={size} />;
+  return (
+    <View
+      style={[
+        props.style,
+        {
+          width: props.size,
+          aspectRatio: 1,
+        },
+      ]}
+    >
+      <SvgComponent
+        color={props.color}
+        width={"100%"}
+        height={"100%"}
+        style={props.style}
+      />
+    </View>
+  );
 };
 
 export default Icon;

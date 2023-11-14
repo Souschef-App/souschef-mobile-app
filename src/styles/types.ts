@@ -6,30 +6,25 @@ export type Color = RGB | RGBA | HEX;
 
 export type Theme = {
   colors: {
-    background: Color;
-    foreground: Color;
     primary: Color;
+    secondary: Color;
+    background: Color;
+    background2: Color;
     success: Color;
     danger: Color;
+    highlight: Color;
+    highlight2: Color;
     text: Color;
-    pastel: { [key: string]: Color };
+    textDisabled: Color;
   };
   spacing: {
+    xs: number;
     s: number;
     m: number;
+    b: number;
     l: number;
     xl: number;
     xxl: number;
-  };
-  textVariants: {
-    header: {
-      fontFamily: string;
-      fontSize: number;
-      fontWeight: string;
-    };
-    body: {
-      fontFamily: string;
-      fontSize: number;
-    };
+    xxxl: number;
   };
 };
