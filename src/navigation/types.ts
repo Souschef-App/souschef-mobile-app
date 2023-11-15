@@ -48,7 +48,8 @@ export type JoinNavigatorParamList = {
 
 export type MealPlanNavigatorParamList = {
   MealPlan: undefined;
-  EnterDescriptionScreen: undefined;
+  EnterRecipeStepsScreen: undefined;
+  EnterRecipeIngredientsScreen: undefined;
   TaskBreakDownResultScreen: undefined;
   DateScreen: undefined;
   TimeScreen: { date: string | null };
@@ -75,7 +76,8 @@ export type MealPlanNavigatorParamList = {
 
 export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealPlan: undefined,
-  EnterDescriptionScreen: undefined,
+  EnterRecipeStepsScreen: undefined,
+  EnterRecipeIngredientsScreen: undefined,
   TaskBreakDownResultScreen: undefined,
   DateScreen: undefined,
   TimeScreen: { date: null },
@@ -157,10 +159,16 @@ export type MealPlanNavigationProp = NativeStackNavigationProp<
   "MealPlan"
 >;
 
-export type EnterDescriptionScreenNavigationProp = NativeStackNavigationProp<
+export type EnterRecipeStepsScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "EnterDescriptionScreen"
+  "EnterRecipeStepsScreen"
 >;
+
+export type EnterRecipeIngredientsScreenNavigationProp =
+  NativeStackNavigationProp<
+    MealPlanNavigatorParamList,
+    "EnterRecipeIngredientsScreen"
+  >;
 
 export type JoinScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<JoinNavigatorParamList, "JoinSelection">,

@@ -1,17 +1,18 @@
 import React, { useContext, useState } from "react";
 import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
-import { Modal, Pressable, StyleSheet, Text } from "react-native";
+import {  Pressable, StyleSheet, Text } from "react-native";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
-import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
+import { EnterRecipeIngredientsScreenNavigationProp } from "../../navigation/types";
 import { ScrollView } from "react-native-gesture-handler";
 import useStore from "../../data/store";
+import { Modal } from "../../components/Modal";
 
 
 export const EnterRecipeIngredientsScreen = ({
   navigation,
 }: {
-  navigation: EnterDescriptionScreenNavigationProp;
+  navigation: EnterRecipeIngredientsScreenNavigationProp;
 }) => {
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -31,9 +32,9 @@ export const EnterRecipeIngredientsScreen = ({
       console.log("Add tasks first")
     }
     else{
-      setEnteredRecipe(recipeIngredientsList)
+      // setEnteredRecipe(recipeIngredientsList) //TODO:Change!!
       submitForBreakDown();
-      navigation.navigate("TaskBreakDownResultScreen");
+      navigation.navigate("EnterRecipeStepsScreen");
     }
   };
 
@@ -80,12 +81,12 @@ export const EnterRecipeIngredientsScreen = ({
         <Modal
          animationType="slide"
          transparent={true}
-         visible={modalVisible}
+         isVisible={modalVisible}
          onRequestClose={() => {
            setModalVisible(!modalVisible);
          }}>
-          <VStack style={styles.container} gap={20} p={50}>
-            <Text style={styles.title}>Enter a Task</Text>
+          <VStack style={styles.container} gap={20} p={50} flexMain={false}>
+            <Text style={styles.title}>Enter a Ingredient</Text>
             <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
             <Pressable
               style={styles.button}

@@ -1,17 +1,18 @@
 import React, { useContext, useState } from "react";
 import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
-import { Modal, Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
-import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
+import { EnterRecipeStepsScreenNavigationProp } from "../../navigation/types";
 import { ScrollView } from "react-native-gesture-handler";
 import useStore from "../../data/store";
+import { Modal } from "../../components/Modal";
 
 
 export const EnterRecipeStepsScreen = ({
   navigation,
 }: {
-  navigation: EnterDescriptionScreenNavigationProp;
+  navigation: EnterRecipeStepsScreenNavigationProp;
 }) => {
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -22,7 +23,6 @@ export const EnterRecipeStepsScreen = ({
 
   const setEnteredRecipe = useStore((state) => state.setEnteredRecipe);
   const submitForBreakDown = useStore((state) => state.submitForBreakDown);
-
 
   const getSuggestions = () => {
     console.log("pressed")
@@ -80,11 +80,11 @@ export const EnterRecipeStepsScreen = ({
         <Modal
          animationType="slide"
          transparent={true}
-         visible={modalVisible}
+         isVisible={modalVisible}
          onRequestClose={() => {
            setModalVisible(!modalVisible);
          }}>
-          <VStack style={styles.container} gap={20} p={50}>
+          <VStack style={styles.container} gap={20} p={50} flexMain={false}>
             <Text style={styles.title}>Enter a Task</Text>
             <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
             <Pressable
