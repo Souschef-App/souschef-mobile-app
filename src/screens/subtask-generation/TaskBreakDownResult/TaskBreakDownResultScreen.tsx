@@ -8,6 +8,7 @@ import { Theme } from "../../../styles";
 
 import useStore from "../../../data/store";
 import TaskEditScreen from "./TaskEditView";
+import { SaveRecipeView } from "./SaveRecipeView";
 
 export const TaskBreakDownResultScreen = () => {
   const theme = useContext(ThemeContext);
@@ -32,7 +33,7 @@ export const TaskBreakDownResultScreen = () => {
   }
 
   const nextTask = () =>{
-    if(brokenDownRecipe != undefined && activeIndex < brokenDownRecipe?.length - 1)
+    if(brokenDownRecipe != undefined && activeIndex < brokenDownRecipe?.length)
     {
       setActiveIndex(activeIndex + 1)
     }
@@ -91,7 +92,16 @@ export const TaskBreakDownResultScreen = () => {
             <VStack>
             {
               (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
-                <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
+                
+                  (activeIndex >= brokenDownRecipe.length) ?
+                  (
+                      <SaveRecipeView />
+                  )
+                  :
+                  (
+                    <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
+                  )
+                
               ) : (
                 <VStack>
                   <Text>No Tasks To Edit</Text>
@@ -119,7 +129,7 @@ export const TaskBreakDownResultScreen = () => {
               <Text style={TextStyle.h3}>Previous</Text>
             </Button>
             <VStack>
-                <Text style={TextStyle.h3}> {activeIndex + 1}/{brokenDownRecipe?.length}</Text>
+                <Text style={TextStyle.h3}> {activeIndex + 1}/{brokenDownRecipe?.length + 1}</Text>
             </VStack>
             <Button
               onPress={()=>nextTask()}

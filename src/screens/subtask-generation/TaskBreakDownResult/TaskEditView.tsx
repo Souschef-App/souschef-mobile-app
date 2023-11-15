@@ -22,6 +22,15 @@ export type TaskAvailaleProps = {
   task: Task;
 };
 
+const ModalButton = (props : any) =>{
+  
+  return(
+    <Pressable style={props.style} onPress={() => props.onPress()} >
+      <Text>{props.title}</Text>
+    </Pressable>
+  )
+}
+
 const TaskEditView = (props: TaskAvailaleProps) => {
   // Theme
   const theme = React.useContext(ThemeContext);
@@ -139,12 +148,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <Pressable style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} >
-                <Text>Cancel</Text>
-              </Pressable>
-              <Pressable style={styles.saveBTN} onPress={()=>{}} >
-                <Text>Save</Text>
-              </Pressable>
+              <ModalButton title="Cancel" style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} />
+              <ModalButton title="Save" style={styles.saveBTN} onPress={() => setIsEditTitleVisible(false)} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -161,8 +166,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <TextButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditRatingVisible(false)} />
-              <TextButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+              <ModalButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditRatingVisible(false)} />
+              <ModalButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -175,8 +180,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <TextButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
-              <TextButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+              <ModalButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
+              <ModalButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>

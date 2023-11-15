@@ -8,6 +8,7 @@ export const underline: ViewStyle = {
   height: theme.spacing.xl,
   borderBottomColor: theme.colors.text,
   borderBottomWidth: 2,
+  alignSelf: "stretch",
 };
 
 export const multiline: ViewStyle = {
@@ -21,4 +22,5 @@ export const outline: ViewStyle = {
   borderColor: theme.colors.text,
   borderRadius: 8,
   borderWidth: 2,
+  alignSelf: "stretch",
 };
