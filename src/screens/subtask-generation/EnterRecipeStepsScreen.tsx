@@ -8,7 +8,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import useStore from "../../data/store";
 
 
-export const EnterRecipeScreen = ({
+export const EnterRecipeStepsScreen = ({
   navigation,
 }: {
   navigation: EnterDescriptionScreenNavigationProp;
