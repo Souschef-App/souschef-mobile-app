@@ -3596,10 +3596,10 @@ expo-keep-awake@~12.3.0:
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-12.3.0.tgz#c42449ae19c993274ddc43aafa618792b6aec408"
   integrity sha512-ujiJg1p9EdCOYS05jh5PtUrfiZnK0yyLy+UewzqrjUqIT8eAGMQbkfOn3C3fHE7AKd5AefSMzJnS3lYZcZYHDw==
 
-expo-linear-gradient@~12.3.0:
-  version "12.3.0"
-  resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-12.3.0.tgz#7abd8fedbf0138c86805aebbdfbbf5e5fa865f19"
-  integrity sha512-f9e+Oxe5z7fNQarTBZXilMyswlkbYWQHONVfq8MqmiEnW3h9XsxxmVJLG8uVQSQPUsbW+x1UUT/tnU6mkMWeLg==
+expo-linear-gradient@^12.5.0:
+  version "12.5.0"
+  resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-12.5.0.tgz#793f56fdc87f57b99b64f4a1b2bb16cba8c47672"
+  integrity sha512-GOV2wODawr2biRCtF2Yb5+wLzvnwXS8dAblfQO7qjyh4f7TDTJn7X0TlVSDMNhIdbAcZBrdxvGFeE2iXdzQ6ow==
 
 expo-linking@~5.0.2:
   version "5.0.2"
@@ -6191,6 +6191,11 @@ react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
+
+react-native-timer-picker@^1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/react-native-timer-picker/-/react-native-timer-picker-1.2.11.tgz#c36615b2865330d0b5d553cc9c06010ab4851a75"
+  integrity sha512-14FmSwWBRM1b+Swz7wJmqzrbdhoD7pOskAzdBjI9WkkFGtwLz2R0YTbCSOhImMjSuU2Sm/Cv5lDXabz8pxJ/qw==
 
 react-native-toast-message@^2.1.6:
   version "2.1.6"

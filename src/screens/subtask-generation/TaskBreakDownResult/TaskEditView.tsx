@@ -19,6 +19,8 @@ import { Modal } from "../../../components/Modal";
 import { EditDropdownList } from "./EditDropDownList";
 import useStore from "../../../data/store";
 import ModalIconButton from "./ModalIconButton";
+import { TimerPickerModal } from "react-native-timer-picker";
+import { LinearGradient } from "expo-linear-gradient"; 
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -49,10 +51,12 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
   const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
   const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
+  const [isEditDurationVisible, setIsEditDurationVisible] = useState(false) 
 
   const [taskTitle, setTaskTitle] = useState(task.title)
   const [taskDescription, setTaskDescription] = useState(task.description)
   const [taskDifficulty, setTaskDifficulty]   = useState(task.difficulty)
+
 
   const updateRecipe = useStore((state) => state.updateRecipeTask);
 
@@ -75,6 +79,13 @@ const TaskEditView = (props: TaskAvailaleProps) => {
     cloneTask.difficulty = taskDifficulty
     updateRecipe(cloneTask)
     setIsEditDifficultyVisible(false)
+  }
+  
+  const updateDuration = (duration : number) =>{
+    const cloneTask = props.task;
+    cloneTask.duration = duration
+    updateRecipe(cloneTask)
+    setIsEditDurationVisible(false);
   }
   
 
@@ -100,7 +111,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           >
             <HStack flexMain={false} gap={theme.spacing.s}>
               <Icon name="timer" color={theme.colors.text} size={24} />
-              <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>{}}>
+              <Button style={canEdit ? styles.highlightEdit : null} onPress={canEdit ? ()=> setIsEditDurationVisible(true) : () => {}}>
                 <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
               </Button>
             </HStack>
@@ -236,6 +247,22 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Footer>
         </Modal.Container>
       </Modal>
+      <TimerPickerModal
+            visible={isEditDurationVisible}
+            setIsVisible={setIsEditDurationVisible}
+            onConfirm={(pickedDuration) => {
+                updateDuration(pickedDuration.minutes);
+            }}
+            modalTitle="Set Duration"
+            onCancel={() => setIsEditDurationVisible(false)}
+            closeOnOverlayPress
+            LinearGradient={LinearGradient}
+            styles={{
+                theme: "light",
+            }}
+            hideHours={true}
+            hideSeconds={true}
+        />
     </VStack >
   );
 };
