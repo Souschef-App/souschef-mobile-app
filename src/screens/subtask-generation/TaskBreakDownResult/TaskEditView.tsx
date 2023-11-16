@@ -12,7 +12,7 @@ import {
   VStack,
 } from "../../../components";
 import { DIFFICULTY, Task } from "../../../data/types";
-import { ButtonStyle, TextStyle, Theme } from "../../../styles";
+import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { Modal } from "../../../components/Modal";
 
@@ -21,6 +21,9 @@ import useStore from "../../../data/store";
 import ModalIconButton from "./ModalIconButton";
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; 
+import { FlatList } from "react-native-gesture-handler";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import { formatIngredientQuantity } from "../../../utils/format";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -30,7 +33,7 @@ const ModalButton = (props : any) =>{
   
   return(
     <Pressable style={props.style} onPress={() => props.onPress()} >
-      <Text>{props.title}</Text>
+      <Text style={props.textStyle}>{props.title}</Text>
     </Pressable>
   )
 }
@@ -52,6 +55,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
   const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
   const [isEditDurationVisible, setIsEditDurationVisible] = useState(false) 
+  const [isEditIngredientsVisible, setIsEditIngredientsVisible] = useState(false) 
 
   const [taskTitle, setTaskTitle] = useState(task.title)
   const [taskDescription, setTaskDescription] = useState(task.description)
@@ -156,7 +160,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             setIsOpen={() => setIsIngredientOpen(!isIngredientOpen)} 
             items={task.ingredients}
             styles={styles}
-            isEditMode={canEdit}/>
+            isEditMode={canEdit}
+            onEdit={()=> setIsEditIngredientsVisible(true)}/>
 
           <EditDropdownList 
             title="Kitchenware"
@@ -188,8 +193,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton title="Cancel" style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} />
-              <ModalButton title="Save" style={styles.saveBTN} onPress={() => updateTitle()} />
+              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} />
+              <ModalButton title="Save"  textStyle={styles.btnText} style={styles.saveBTN} onPress={() => updateTitle()} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -227,8 +232,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditDifficultyVisible(false)} />
-              <ModalButton style={styles.saveBTN}   title="Save" onPress={updateDifficulty} />
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditDifficultyVisible(false)} />
+              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText} title="Save" onPress={updateDifficulty} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -241,8 +246,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
-              <ModalButton style={styles.saveBTN}   title="Save" onPress={updateDescription} />
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
+              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={updateDescription} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -263,12 +268,59 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             hideHours={true}
             hideSeconds={true}
         />
+
+      <Modal isVisible={isEditIngredientsVisible}>
+        <Modal.Container>
+          <Modal.Header title="Edit Ingredients" />
+          <Modal.Body>
+            <HStack p={10}>
+              <FlatList 
+                data={task.ingredients} 
+                renderItem={({item}) =><IngredientEditItem item={item} name={item.name} quantity={item.quantity} unit={item.unit} styles={styles} theme={theme} />}
+                keyExtractor={item => item.id}
+                ListFooterComponent={<AddIngredient styles={styles} theme={theme} />}
+                
+                />
+            </HStack>
+
+          </Modal.Body>
+          <Modal.Footer>
+            <HStack gap={15}>
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditIngredientsVisible(false)} />
+              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={updateDescription} />
+            </HStack>
+          </Modal.Footer>
+        </Modal.Container>
+      </Modal>
     </VStack >
   );
 };
 
+const IngredientEditItem = (props : any) =>{
+  return(
+    <HStack justifyContent="space-between" style={props.styles.editRowStyle} p={10}>
+      <VStack align="flex-start">
+        <Text style={TextStyle.h2}>{props.name}</Text>
+
+          <Text style={TextStyle.h4}>{formatIngredientQuantity(props.item)}</Text>
+   
+      </VStack>
+      <ModalIconButton icon="x" color={props.theme.colors.danger} onPress={()=>{}} />
+    </HStack>
+  )
+}
+
+const AddIngredient = (props : any) => {
+  return(
+    <HStack justifyContent="space-between" style={props.styles.editRowFooterStyle} p={10}>
+      <TextInput value="HI" style={props.styles.custInput} />
+      <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>{}} />
+    </HStack>
+  )
+}
+
 const makeStyles = (theme: Theme) =>
-  StyleSheet.create({
+  StyleSheet.create({ 
     taskTitle: {
       ...TextStyle.h1,
       fontSize: 40,
@@ -326,7 +378,25 @@ const makeStyles = (theme: Theme) =>
     },
     red:{
       backgroundColor: "red"
-    }
+    },
+    editRowStyle:{
+      backgroundColor: theme.colors.background2
+    },
+    editRowFooterStyle:{
+      backgroundColor: theme.colors.highlight
+    },
+    custInput:{
+      ...InputStyle.underline,
+      backgroundColor: theme.colors.background,
+      flexGrow: 1,
+      borderRadius: theme.spacing.s
+    },
+    ok:{
+      backgroundColor: theme.colors.background,
+      padding: 10,
+      borderRadius: theme.spacing.xxl, 
+      marginLeft: 10
+    },
   });
 
 export default TaskEditView;
