@@ -1,9 +1,10 @@
 export interface RecipeStepDTO {
-  Title: string;
-  Description: string;
-  Ingredients: string[];
-  Kitchenware: string[];
-  Duration: number;
-  Difficulty: number;
-  Dependencies: number[];
+  title: string;
+  description: string;
+  ingredients: string[];
+  kitchenware: string[];
+  duration: number;
+  difficulty: number;
+  dependencies: string[];
+  priority: number;
 }

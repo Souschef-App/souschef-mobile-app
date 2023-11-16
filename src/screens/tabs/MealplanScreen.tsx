@@ -200,7 +200,7 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
       </Text>
         <TouchableOpacity
             style={[primary,styles.exploreMoreButton]}
-              onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
+              onPress={() => navigation.navigate("EnterRecipeIngredientsScreen")}>
             <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Add a Recipe</Text>
       </TouchableOpacity>
       </View>
