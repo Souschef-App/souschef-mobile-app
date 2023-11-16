@@ -20,7 +20,7 @@ export const TaskBreakDownResultScreen = ({
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
-  const updateRecipe = useStore((state) => state.updateRecipe);
+
 
   const [activeIndex, setActiveIndex] = useState<number>(0)
 

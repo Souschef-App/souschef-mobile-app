@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput } from "react-native";
 import {
   Button,
   Divider,
@@ -17,6 +17,8 @@ import { ThemeContext } from "../../../contexts/AppContext";
 import { Modal } from "../../../components/Modal";
 
 import { EditDropdownList } from "./EditDropDownList";
+import useStore from "../../../data/store";
+import ModalIconButton from "./ModalIconButton";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -46,8 +48,35 @@ const TaskEditView = (props: TaskAvailaleProps) => {
 
   const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
   const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
-  const [isEditRatingVisible, setIsEditRatingVisible] = useState(false) 
+  const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
 
+  const [taskTitle, setTaskTitle] = useState(task.title)
+  const [taskDescription, setTaskDescription] = useState(task.description)
+  const [taskDifficulty, setTaskDifficulty]   = useState(task.difficulty)
+
+  const updateRecipe = useStore((state) => state.updateRecipeTask);
+
+  const updateTitle = () =>{
+    const cloneTask = props.task;
+    cloneTask.title = taskTitle
+    updateRecipe(cloneTask)
+    setIsEditTitleVisible(false)
+  }
+
+  const updateDescription = () =>{
+    const cloneTask = props.task;
+    cloneTask.description = taskDescription
+    updateRecipe(cloneTask)
+    setIsEditDescriptionVisible(false)
+  }
+
+  const updateDifficulty = () =>{
+    const cloneTask = props.task;
+    cloneTask.difficulty = taskDifficulty
+    updateRecipe(cloneTask)
+    setIsEditDifficultyVisible(false)
+  }
+  
 
   return (
     <VStack style={styles.card} p={theme.spacing.m}>
@@ -77,7 +106,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             </HStack>
             <Divider thickness={3} color={theme.colors.background2} />
 
-            <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>setIsEditRatingVisible(true)}>
+            <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>setIsEditDifficultyVisible(true)}>
               <HStack flexMain={false} gap={theme.spacing.s}>
                 <Icon name="star" color={theme.colors.highlight2} size={24} />
                 <Icon
@@ -144,12 +173,12 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         <Modal.Container>
           <Modal.Header title="Edit Title" />
           <Modal.Body>
-            <Input value={task.title} onChange={()=>{}}  />
+            <TextInput value={taskTitle} onChangeText={setTaskTitle}  />
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
               <ModalButton title="Cancel" style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} />
-              <ModalButton title="Save" style={styles.saveBTN} onPress={() => setIsEditTitleVisible(false)} />
+              <ModalButton title="Save" style={styles.saveBTN} onPress={() => updateTitle()} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -159,15 +188,36 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           <Modal.Header title="Edit Rating" />
           <Modal.Body>
             <HStack>
-              <IconButton icon="star" onPress={()=>{}}/>
-              <IconButton icon="star" onPress={()=>{}}/>
-              <IconButton icon="star" onPress={()=>{}}/>
+              <ModalIconButton 
+                icon={
+                  taskDifficulty >= DIFFICULTY.Easy ? "star" : "star-outline"
+                }
+                color={theme.colors.highlight2}
+                onPress={()=>setTaskDifficulty(0)}
+                iconSize={50}
+                />
+              <ModalIconButton 
+                icon={
+                  taskDifficulty > DIFFICULTY.Easy ? "star" : "star-outline"
+                }
+                color={theme.colors.highlight2}
+                onPress={()=>setTaskDifficulty(1)}
+                iconSize={50}
+                />
+              <ModalIconButton 
+                icon={
+                  taskDifficulty > DIFFICULTY.Medium ? "star" : "star-outline"
+                }
+                color={theme.colors.highlight2}
+                onPress={()=>setTaskDifficulty(2)}
+                iconSize={50}
+                />
             </HStack>
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditRatingVisible(false)} />
-              <ModalButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+              <ModalButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditDifficultyVisible(false)} />
+              <ModalButton style={styles.saveBTN}   title="Save" onPress={updateDifficulty} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -176,12 +226,12 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         <Modal.Container>
           <Modal.Header title="Edit Description" />
           <Modal.Body>
-            <Input value={task.description} onChange={()=>{}}  />
+            <Input value={taskDescription} onChange={setTaskDescription}  />
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
               <ModalButton style={styles.cancelBTN} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
-              <ModalButton style={styles.saveBTN}   title="Save" onPress={()=>{}} />
+              <ModalButton style={styles.saveBTN}   title="Save" onPress={updateDescription} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>

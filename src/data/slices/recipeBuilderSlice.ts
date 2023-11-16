@@ -12,7 +12,7 @@ export interface RecipeBuilderSlice {
   saveRecipeSuccess: string | null;
   setEnteredRecipe: (recipe: string[]) => void;
   submitForBreakDown: () => void;
-  updateRecipe: (ID: string, updatedRecipe: Task) => void;
+  updateRecipeTask: (updatedRecipe: Task) => void;
   saveRecipe: (name: string) => void;
 }
 
@@ -52,17 +52,16 @@ export const createRecipeBuilderSlice: StateCreator<
     // console.log(JSON.stringify(breakdownResult.tasks));
     set({ brokenDownRecipe: breakdownResult });
   },
-  updateRecipe: (ID: string, updatedRecipe: Task) => {
+  updateRecipeTask: (updatedTask: Task) => {
     const list = get().brokenDownRecipe;
 
     if (list == null) return;
 
     const index = list.findIndex((item) => {
-      return item.id === ID;
+      return item.id === updatedTask.id;
     });
-    list.splice(index, 0, updatedRecipe);
 
-    console.log("LIST " + list);
+    list.splice(index, 1, updatedTask);
 
     set({ brokenDownRecipe: list });
   },
