@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
-import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
 import {  Pressable, StyleSheet, Text } from "react-native";
-import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
-import { ThemeContext } from "../../contexts/AppContext";
-import { EnterRecipeIngredientsScreenNavigationProp } from "../../navigation/types";
 import { ScrollView } from "react-native-gesture-handler";
-import useStore from "../../data/store";
-import { Modal } from "../../components/Modal";
 
+import { EnterRecipeIngredientsScreenNavigationProp } from "../../navigation/types";
+import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
+import { Modal } from "../../components/Modal";
+import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
+import useStore from "../../data/store";
+import { ThemeContext } from "../../contexts/AppContext";
 
 export const EnterRecipeIngredientsScreen = ({
   navigation,
@@ -23,7 +23,6 @@ export const EnterRecipeIngredientsScreen = ({
 
   const setEnteredRecipe = useStore((state) => state.setEnteredRecipe);
   const submitForBreakDown = useStore((state) => state.submitForBreakDown);
-
 
   const getSuggestions = () => {
     console.log("pressed")

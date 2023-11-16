@@ -9,8 +9,13 @@ import { Theme } from "../../../styles";
 import useStore from "../../../data/store";
 import TaskEditScreen from "./TaskEditView";
 import { SaveRecipeView } from "./SaveRecipeView";
+import { TaskBreakDownResultScreenProp } from "navigation/types";
 
-export const TaskBreakDownResultScreen = () => {
+export const TaskBreakDownResultScreen = ({
+  navigation,
+}: {
+  navigation: TaskBreakDownResultScreenProp;
+}) =>{
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
@@ -95,7 +100,7 @@ export const TaskBreakDownResultScreen = () => {
                 
                   (activeIndex >= brokenDownRecipe.length) ?
                   (
-                      <SaveRecipeView />
+                      <SaveRecipeView navigation={navigation} />
                   )
                   :
                   (

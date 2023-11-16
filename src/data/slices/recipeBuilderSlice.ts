@@ -8,9 +8,12 @@ export interface RecipeBuilderSlice {
   loading: boolean;
   enteredRecipe: string[] | null;
   brokenDownRecipe: Task[] | null;
+  saveRecipeError: string | null;
+  saveRecipeSuccess: string | null;
   setEnteredRecipe: (recipe: string[]) => void;
   submitForBreakDown: () => void;
   updateRecipe: (ID: string, updatedRecipe: Task) => void;
+  saveRecipe: (name: string) => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -22,6 +25,8 @@ export const createRecipeBuilderSlice: StateCreator<
   loading: false,
   enteredRecipe: null,
   brokenDownRecipe: [],
+  saveRecipeError: null,
+  saveRecipeSuccess: null,
   setEnteredRecipe: (recipe: string[]) => {
     set({ enteredRecipe: recipe });
   },
@@ -60,5 +65,38 @@ export const createRecipeBuilderSlice: StateCreator<
     console.log("LIST " + list);
 
     set({ brokenDownRecipe: list });
+  },
+  saveRecipe: async (name: string) => {
+    console.log("saveRecipe");
+    const tasks = get().brokenDownRecipe;
+    const userID = get().user?.id;
+
+    if (tasks != null && name != null && userID != null) {
+      const recipe: Recipe = {
+        id: "",
+        name: name,
+        date: 0,
+        duration: 0,
+        difficulty: 0,
+        serves: 0,
+        favorites: 0,
+        tasks: tasks,
+        ingredients: [],
+        kitchenware: [],
+        ownerId: userID,
+      };
+
+      const [res, error] = await jsonRequest.post<any>(ApiUrls.saveRecipe, {
+        json: recipe,
+      });
+
+      if (error) {
+        set({ saveRecipeError: error });
+      } else {
+        set({ saveRecipeSuccess: "Success" });
+      }
+    } else {
+      set({ saveRecipeError: "No Recipe" });
+    }
   },
 });

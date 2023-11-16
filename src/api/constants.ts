@@ -17,4 +17,5 @@ export const ApiUrls = {
   getLiveSession: `${liveSession}/get-session`,
   startSubTaskSession: `${subTaskGeneration}/session`,
   subtaskBreakDown: `${subTaskGeneration}/request`,
+  saveRecipe: `${recipe}/add-recipe`,
 };

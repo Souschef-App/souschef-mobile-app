@@ -1,31 +1,90 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { TextStyle, ButtonStyle, Theme, InputStyle } from "../../../styles";
 import { HStack, TextButton, VStack } from "../../../components"
-import {Text, StyleSheet, TextInput} from "react-native"
+import {Text, StyleSheet, TextInput, Pressable} from "react-native"
 import { ThemeContext } from "../../../contexts/AppContext";
+import useStore from "../../../data/store";
+import { Modal } from "../../../components/Modal";
+import { TaskBreakDownResultScreenProp } from "navigation/types";
 
+const ModalButton = (props : any) =>{
+  
+  return(
+    <Pressable style={props.style} onPress={() => props.onPress()} >
+      <Text>{props.title}</Text>
+    </Pressable>
+  )
+}
 
-export const SaveRecipeView = () => {
+type SaveRecipeViewProps = {
+  navigation : TaskBreakDownResultScreenProp
+}
+
+export const SaveRecipeView = ({navigation} : SaveRecipeViewProps) => {
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+    const saveRecipe = useStore((state) => state.saveRecipe);
+    const saveRecipeSuccess = useStore((state) => state.saveRecipeSuccess);
+    const saveRecipeError = useStore((state) => state.saveRecipeError);
+
+    const [name, setName] = useState<string>("");
+
+    const [successModalOpen, setSuccessModalOpen] = useState(false)
+    const [errorModalOpen, setErrorModalOpen] = useState(false)
+
+    useEffect(()=>{
+      if(saveRecipeSuccess == "Success")
+        setSuccessModalOpen(true)
+    },[saveRecipeSuccess])
+
+    useEffect(()=>{
+      if(saveRecipeError != null)
+      setErrorModalOpen(true)
+    },[saveRecipeSuccess])
+
+
+    const recipeAddedOk = () =>{
+      setErrorModalOpen(false)
+      navigation.navigate("MealPlan")
+    }
+    
     
     return(
         <VStack style={styles.card} align="flex-start" pVH={{v: 5, h : 40}}>
             <HStack>
                 <Text style={styles.taskTitle}>Save Recipe</Text>
-
             </HStack>
             <Text>Name</Text>
-            <TextInput style={InputStyle.underline} />
+            <TextInput onChangeText={setName} style={InputStyle.underline} />
             <VStack justifyContent="flex-end">
-                <TextButton title="Save" style={styles.saveBTN} onPress={()=>{}}/>
+                <TextButton title="Save" style={styles.saveBTN} onPress={() => saveRecipe(name)}/>
             </VStack>
+
+            <Modal isVisible={successModalOpen}>
+              <Modal.Container>
+                <Modal.Header title="Recipe Added!" />
+                <Modal.Body>
+
+                </Modal.Body>
+                <Modal.Footer>
+                  <ModalButton title="Close" onPress={()=> setSuccessModalOpen(false)} />
+                </Modal.Footer>
+              </Modal.Container>
+            </Modal>
+            <Modal isVisible={errorModalOpen}>
+              <Modal.Container>
+                <Modal.Header title="Recipe Save Error" />
+                <Modal.Footer>
+                  <ModalButton title="Ok" onPress={()=> recipeAddedOk()} />
+                </Modal.Footer>
+              </Modal.Container>
+            </Modal>
         </VStack>
     )
 }
-
 
 const makeStyles = (theme: Theme) =>
   StyleSheet.create({

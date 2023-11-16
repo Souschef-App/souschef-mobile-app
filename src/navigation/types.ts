@@ -170,6 +170,11 @@ export type EnterRecipeIngredientsScreenNavigationProp =
     "EnterRecipeIngredientsScreen"
   >;
 
+export type TaskBreakDownResultScreenProp = NativeStackNavigationProp<
+  MealPlanNavigatorParamList,
+  "TaskBreakDownResultScreen"
+>;
+
 export type JoinScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<JoinNavigatorParamList, "JoinSelection">,
   NativeStackNavigationProp<HomeStackNavigatorParamList, "Tabs">
