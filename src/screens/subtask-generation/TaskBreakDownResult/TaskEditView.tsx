@@ -11,7 +11,7 @@ import {
   VStack,
 } from "../../../components";
 
-import { DIFFICULTY, Ingredient, Task } from "../../../data/types";
+import { DIFFICULTY, Ingredient, Kitchenware, Task } from "../../../data/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { Modal } from "../../../components/Modal";
@@ -57,11 +57,13 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
   const [isEditDurationVisible, setIsEditDurationVisible] = useState(false) 
   const [isEditIngredientsVisible, setIsEditIngredientsVisible] = useState(false) 
+  const [isEditKitchenwareVisible, setIsEditIKitchenwareVisible] = useState(false) 
 
-  const [taskTitle, setTaskTitle] = useState(task.title)
-  const [taskDescription, setTaskDescription] = useState(task.description)
-  const [taskDifficulty, setTaskDifficulty]   = useState(task.difficulty)
+  const [taskTitle, setTaskTitle]               = useState(task.title)
+  const [taskDescription, setTaskDescription]   = useState(task.description)
+  const [taskDifficulty, setTaskDifficulty]     = useState(task.difficulty)
   const [taskIngredients, setTaskIngredients]   = useState(task.ingredients)
+  const [taskKitchenware, setTaskKitchenware]   = useState(task.kitchenware)
 
   const updateRecipe = useStore((state) => state.updateRecipeTask);
 
@@ -97,9 +99,17 @@ const TaskEditView = (props: TaskAvailaleProps) => {
     
 
     const cloneTask = props.task;
-    cloneTask.ingredients = Array.from(taskIngredients.values())
+    cloneTask.ingredients = taskIngredients
     updateRecipe(cloneTask)
     setIsEditIngredientsVisible(false);
+  }
+
+  const updateKitchenware = () =>{
+    
+    const cloneTask = props.task;
+    cloneTask.kitchenware = taskKitchenware
+    updateRecipe(cloneTask)
+    setIsEditIKitchenwareVisible(false);
   }
 
   return (
@@ -180,7 +190,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             setIsOpen={() => setIsKitchenwareOpen(!isKitchenwareOpen)} 
             items={task.kitchenware}
             styles={styles}
-            isEditMode={canEdit}/>
+            isEditMode={canEdit}
+            onEdit={()=> setIsEditIKitchenwareVisible(true)}/>
 
           <EditDropdownList 
             title="Dependencies"
@@ -285,8 +296,8 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             <VStack p={10}>
                 <ScrollView style={{backgroundColor: theme.colors.background2, height: 300, alignSelf: "stretch"}}>
                   {
-                    taskIngredients.map((item)=>{
-                      return <IngredientsEditItem ingredient={item} taskIngredients={taskIngredients} setTaskIngredients={setTaskIngredients}  styles={styles} theme={theme} />
+                    taskIngredients.map((ingredient)=>{
+                      return <EditItem item={ingredient} itemList={taskIngredients} setItemList={setTaskIngredients}  styles={styles} theme={theme} />
                     })
 
                   }
@@ -305,30 +316,58 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           </Modal.Footer>
         </Modal.Container>
       </Modal>
+
+      <Modal isVisible={isEditKitchenwareVisible}>
+        <Modal.Container>
+          <Modal.Header title="Edit Kitchenware" />
+          <Modal.Body>
+            <VStack p={10}>
+                <ScrollView style={{backgroundColor: theme.colors.background2, height: 300, alignSelf: "stretch"}}>
+                  {
+                    taskKitchenware.map((kitchenware)=>{
+                      return <EditItem item={kitchenware} itemList={taskKitchenware} setItemList={setTaskKitchenware}  styles={styles} theme={theme} />
+                    })
+
+                  }
+                </ScrollView>
+                <VStack>
+                  <AddKitchenware taskKitchenware={taskKitchenware} setTaskKitchenware={setTaskKitchenware} styles={styles} theme={theme} />
+                </VStack>
+            </VStack>
+
+          </Modal.Body>
+          <Modal.Footer>
+            <HStack gap={15}>
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditIKitchenwareVisible(false)} />
+              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={updateKitchenware} />
+            </HStack>
+          </Modal.Footer>
+        </Modal.Container>
+      </Modal>
     </VStack >
   );
 };
 
-const IngredientsEditItem = (props : any) =>{
+const EditItem = (props : any) =>{
 
-  const deleteIngredient = () => {
+  const deleteItem = () => {
 
-    const taskIngredientsClone = props.taskIngredients
+    const itemClone = props.itemList
 
-    const index = taskIngredientsClone.indexOf(props.ingredient);
+    const index = itemClone.indexOf(props.item);
 
-    taskIngredientsClone.splice(index, 1);
+    itemClone.splice(index, 1);
 
-    props.setTaskIngredients([...taskIngredientsClone])
+    props.setItemList([...itemClone])
   }
 
   return(
     <HStack justifyContent="space-between" style={props.styles.editRowStyle} p={10}>
       <VStack align="flex-start">
-        <Text style={TextStyle.h2}>{props.ingredient.name}</Text>
-          <Text style={TextStyle.h4}>{formatIngredientQuantity(props.ingredient)}</Text>
+        <Text style={TextStyle.h2}>{props.item.name}</Text>
+          <Text style={TextStyle.h4}>{formatIngredientQuantity(props.item)}</Text>
       </VStack>
-      <ModalIconButton icon="x" color={props.theme.colors.danger} onPress={()=>deleteIngredient()} />
+      <ModalIconButton icon="x" color={props.theme.colors.danger} onPress={()=>deleteItem()} />
     </HStack>
   )
 }
@@ -371,6 +410,39 @@ const AddIngredient = (props : any) => {
             <Picker.Item label="JavaScript" value="js" />
           </Picker>
           <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>addIngredient()} />
+        </HStack>
+    </VStack>
+  )
+}
+
+const AddKitchenware = (props : any) => {
+
+  const [name, setName] = useState("")
+  const [quantity, setQuantity] = useState("")
+
+  const addKitchenware = () =>{
+    const kitchenware : Kitchenware = {
+      id: uuid.v4().toString(),
+      name: name,
+      quantity: 0,
+    }
+
+    const taskKitchenwareClone = props.taskKitchenware
+
+    taskKitchenwareClone.push(kitchenware)
+
+    console.log(taskKitchenwareClone)
+
+    props.setTaskKitchenware([...taskKitchenwareClone])
+  }
+
+  return(
+    <VStack  align="flex-start" style={props.styles.editRowFooterStyle} p={10} gap={10}>
+        <Text style={props.styles.addIngridientTitle}>Add Kitchenware</Text>
+        <TextInput value={name} onChangeText={setName} style={props.styles.custInput} placeholder="Name" />
+        <HStack justifyContent="space-between">
+          <TextInput value={quantity} onChangeText={setQuantity} style={props.styles.custInput2} placeholder="Quantity" />
+          <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>addKitchenware()} />
         </HStack>
     </VStack>
   )
