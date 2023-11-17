@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput } from "react-native";
 import {
   Button,
@@ -11,7 +11,7 @@ import {
   TextButton,
   VStack,
 } from "../../../components";
-import { DIFFICULTY, Task } from "../../../data/types";
+import { DIFFICULTY, Ingredient, Task } from "../../../data/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { Modal } from "../../../components/Modal";
@@ -24,6 +24,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FlatList } from "react-native-gesture-handler";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { formatIngredientQuantity } from "../../../utils/format";
+import uuid from 'react-native-uuid';
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -61,6 +62,12 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [taskDescription, setTaskDescription] = useState(task.description)
   const [taskDifficulty, setTaskDifficulty]   = useState(task.difficulty)
 
+  const ingredientsMap = new Map<string, Ingredient>([]);
+
+  useEffect(()=>{
+    task.ingredients.forEach((ingredient) => ingredientsMap.set(ingredient.id, ingredient))
+  },[task.ingredients])
+
 
   const updateRecipe = useStore((state) => state.updateRecipeTask);
 
@@ -91,7 +98,13 @@ const TaskEditView = (props: TaskAvailaleProps) => {
     updateRecipe(cloneTask)
     setIsEditDurationVisible(false);
   }
-  
+
+  const updateIngredients = () =>{
+    const cloneTask = props.task;
+    cloneTask.ingredients = Array.from(ingredientsMap.values())
+    updateRecipe(cloneTask)
+    setIsEditDurationVisible(false);
+  }
 
   return (
     <VStack style={styles.card} p={theme.spacing.m}>
@@ -253,21 +266,21 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         </Modal.Container>
       </Modal>
       <TimerPickerModal
-            visible={isEditDurationVisible}
-            setIsVisible={setIsEditDurationVisible}
-            onConfirm={(pickedDuration) => {
-                updateDuration(pickedDuration.minutes);
-            }}
-            modalTitle="Set Duration"
-            onCancel={() => setIsEditDurationVisible(false)}
-            closeOnOverlayPress
-            LinearGradient={LinearGradient}
-            styles={{
-                theme: "light",
-            }}
-            hideHours={true}
-            hideSeconds={true}
-        />
+        visible={isEditDurationVisible}
+        setIsVisible={setIsEditDurationVisible}
+        onConfirm={(pickedDuration) => {
+            updateDuration(pickedDuration.minutes);
+        }}
+        modalTitle="Set Duration"
+        onCancel={() => setIsEditDurationVisible(false)}
+        closeOnOverlayPress
+        LinearGradient={LinearGradient}
+        styles={{ 
+            theme: "light",
+        }}
+        hideHours={true}
+        hideSeconds={true}
+      />
 
       <Modal isVisible={isEditIngredientsVisible}>
         <Modal.Container>
@@ -276,9 +289,9 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             <HStack p={10}>
               <FlatList 
                 data={task.ingredients} 
-                renderItem={({item}) =><IngredientEditItem item={item} name={item.name} quantity={item.quantity} unit={item.unit} styles={styles} theme={theme} />}
+                renderItem={({item}) =><IngredientsEditItem ingredient={item} ingredientsMap={ingredientsMap} updateIngredients={updateIngredients} styles={styles} theme={theme} />}
                 keyExtractor={item => item.id}
-                ListFooterComponent={<AddIngredient styles={styles} theme={theme} />}
+                ListFooterComponent={<AddIngredient ingredientsMap={ingredientsMap} updateIngredients={updateIngredients} styles={styles} theme={theme} />}
                 
                 />
             </HStack>
@@ -296,25 +309,46 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   );
 };
 
-const IngredientEditItem = (props : any) =>{
+const IngredientsEditItem = (props : any) =>{
+
+  const deleteIngredient = () => {
+    props.ingredientsMap.delete(props.ingredient.id)
+    props.updateIngredients()
+  }
+
   return(
     <HStack justifyContent="space-between" style={props.styles.editRowStyle} p={10}>
       <VStack align="flex-start">
-        <Text style={TextStyle.h2}>{props.name}</Text>
+        <Text style={TextStyle.h2}>{props.ingredient.name}</Text>
 
-          <Text style={TextStyle.h4}>{formatIngredientQuantity(props.item)}</Text>
+          <Text style={TextStyle.h4}>{formatIngredientQuantity(props.ingredient)}</Text>
    
       </VStack>
-      <ModalIconButton icon="x" color={props.theme.colors.danger} onPress={()=>{}} />
+      <ModalIconButton icon="x" color={props.theme.colors.danger} onPress={()=>deleteIngredient()} />
     </HStack>
   )
 }
 
 const AddIngredient = (props : any) => {
+
+  const [name, setName] = useState(props.ingredient.name)
+
+  const addIngredient = () =>{
+    const ingredient : Ingredient = {
+      id: uuid.v4().toString(),
+      name: name,
+      quantity: 0,
+      unit: 0
+    }
+
+    props.ingredientMap.add(ingredient.id ,ingredient)
+    props.updateIngredient()
+  }
+
   return(
     <HStack justifyContent="space-between" style={props.styles.editRowFooterStyle} p={10}>
-      <TextInput value="HI" style={props.styles.custInput} />
-      <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>{}} />
+      <TextInput value={name} onChangeText={setName} style={props.styles.custInput} />
+      <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>addIngredient()} />
     </HStack>
   )
 }
