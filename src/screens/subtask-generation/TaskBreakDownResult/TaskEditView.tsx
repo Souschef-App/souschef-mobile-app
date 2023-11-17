@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput } from "react-native";
 import {
   Button,
   Divider,
-  Dropdown,
   HStack,
   Icon,
   IconButton,
@@ -11,6 +10,7 @@ import {
   TextButton,
   VStack,
 } from "../../../components";
+
 import { DIFFICULTY, Ingredient, Task } from "../../../data/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
 import { ThemeContext } from "../../../contexts/AppContext";
@@ -21,10 +21,10 @@ import useStore from "../../../data/store";
 import ModalIconButton from "./ModalIconButton";
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; 
-import { FlatList } from "react-native-gesture-handler";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { ScrollView } from "react-native-gesture-handler";
 import { formatIngredientQuantity } from "../../../utils/format";
 import uuid from 'react-native-uuid';
+import { Picker } from "@react-native-picker/picker";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -61,13 +61,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [taskTitle, setTaskTitle] = useState(task.title)
   const [taskDescription, setTaskDescription] = useState(task.description)
   const [taskDifficulty, setTaskDifficulty]   = useState(task.difficulty)
-
-  const ingredientsMap = new Map<string, Ingredient>([]);
-
-  useEffect(()=>{
-    task.ingredients.forEach((ingredient) => ingredientsMap.set(ingredient.id, ingredient))
-  },[task.ingredients])
-
+  const [taskIngredients, setTaskIngredients]   = useState(task.ingredients)
 
   const updateRecipe = useStore((state) => state.updateRecipeTask);
 
@@ -100,10 +94,12 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   }
 
   const updateIngredients = () =>{
+    
+
     const cloneTask = props.task;
-    cloneTask.ingredients = Array.from(ingredientsMap.values())
+    cloneTask.ingredients = Array.from(taskIngredients.values())
     updateRecipe(cloneTask)
-    setIsEditDurationVisible(false);
+    setIsEditIngredientsVisible(false);
   }
 
   return (
@@ -286,21 +282,25 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         <Modal.Container>
           <Modal.Header title="Edit Ingredients" />
           <Modal.Body>
-            <HStack p={10}>
-              <FlatList 
-                data={task.ingredients} 
-                renderItem={({item}) =><IngredientsEditItem ingredient={item} ingredientsMap={ingredientsMap} updateIngredients={updateIngredients} styles={styles} theme={theme} />}
-                keyExtractor={item => item.id}
-                ListFooterComponent={<AddIngredient ingredientsMap={ingredientsMap} updateIngredients={updateIngredients} styles={styles} theme={theme} />}
-                
-                />
-            </HStack>
+            <VStack p={10}>
+                <ScrollView style={{backgroundColor: theme.colors.background2, height: 300, alignSelf: "stretch"}}>
+                  {
+                    taskIngredients.map((item)=>{
+                      return <IngredientsEditItem ingredient={item} taskIngredients={taskIngredients} setTaskIngredients={setTaskIngredients}  styles={styles} theme={theme} />
+                    })
+
+                  }
+                </ScrollView>
+                <VStack>
+                  <AddIngredient taskIngredients={taskIngredients} setTaskIngredients={setTaskIngredients} styles={styles} theme={theme} />
+                </VStack>
+            </VStack>
 
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
               <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditIngredientsVisible(false)} />
-              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={updateDescription} />
+              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={updateIngredients} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -312,17 +312,21 @@ const TaskEditView = (props: TaskAvailaleProps) => {
 const IngredientsEditItem = (props : any) =>{
 
   const deleteIngredient = () => {
-    props.ingredientsMap.delete(props.ingredient.id)
-    props.updateIngredients()
+
+    const taskIngredientsClone = props.taskIngredients
+
+    const index = taskIngredientsClone.indexOf(props.ingredient);
+
+    taskIngredientsClone.splice(index, 1);
+
+    props.setTaskIngredients([...taskIngredientsClone])
   }
 
   return(
     <HStack justifyContent="space-between" style={props.styles.editRowStyle} p={10}>
       <VStack align="flex-start">
         <Text style={TextStyle.h2}>{props.ingredient.name}</Text>
-
           <Text style={TextStyle.h4}>{formatIngredientQuantity(props.ingredient)}</Text>
-   
       </VStack>
       <ModalIconButton icon="x" color={props.theme.colors.danger} onPress={()=>deleteIngredient()} />
     </HStack>
@@ -331,7 +335,9 @@ const IngredientsEditItem = (props : any) =>{
 
 const AddIngredient = (props : any) => {
 
-  const [name, setName] = useState(props.ingredient.name)
+  const [name, setName] = useState("")
+  const [quantity, setQuantity] = useState("")
+  const [unit, setUnit] = useState("")
 
   const addIngredient = () =>{
     const ingredient : Ingredient = {
@@ -341,19 +347,37 @@ const AddIngredient = (props : any) => {
       unit: 0
     }
 
-    props.ingredientMap.add(ingredient.id ,ingredient)
-    props.updateIngredient()
+    const taskIngredientsClone = props.taskIngredients
+
+    taskIngredientsClone.push(ingredient)
+
+    console.log(taskIngredientsClone)
+
+    props.setTaskIngredients([...taskIngredientsClone])
   }
 
   return(
-    <HStack justifyContent="space-between" style={props.styles.editRowFooterStyle} p={10}>
-      <TextInput value={name} onChangeText={setName} style={props.styles.custInput} />
-      <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>addIngredient()} />
-    </HStack>
+    <VStack  align="flex-start" style={props.styles.editRowFooterStyle} p={10} gap={10}>
+        <Text style={props.styles.addIngridientTitle}>Add Ingredients</Text>
+        <TextInput value={name} onChangeText={setName} style={props.styles.custInput} placeholder="Name" />
+        <HStack justifyContent="space-between">
+          <TextInput value={quantity} onChangeText={setQuantity} style={props.styles.custInput2} placeholder="Quantity" />
+          <Picker
+              selectedValue="java"
+              onValueChange={(itemValue, itemIndex) =>
+                setUnit(itemValue)
+              }>
+            <Picker.Item label="Java" value="java" />
+            <Picker.Item label="JavaScript" value="js" />
+          </Picker>
+          <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>addIngredient()} />
+        </HStack>
+    </VStack>
   )
 }
 
-const makeStyles = (theme: Theme) =>
+
+const makeStyles = (theme: Theme) =>  
   StyleSheet.create({ 
     taskTitle: {
       ...TextStyle.h1,
@@ -414,15 +438,21 @@ const makeStyles = (theme: Theme) =>
       backgroundColor: "red"
     },
     editRowStyle:{
-      backgroundColor: theme.colors.background2
+      backgroundColor: theme.colors.background
     },
     editRowFooterStyle:{
-      backgroundColor: theme.colors.highlight
+      backgroundColor: theme.colors.highlight,
     },
     custInput:{
       ...InputStyle.underline,
       backgroundColor: theme.colors.background,
       flexGrow: 1,
+      borderRadius: theme.spacing.s
+    },
+    custInput2:{
+      ...InputStyle.underline,
+      backgroundColor: theme.colors.background,
+      width: 60,
       borderRadius: theme.spacing.s
     },
     ok:{
@@ -431,6 +461,10 @@ const makeStyles = (theme: Theme) =>
       borderRadius: theme.spacing.xxl, 
       marginLeft: 10
     },
+    addIngridientTitle:{
+      ...TextStyle.h2,
+      color: theme.colors.background
+    }
   });
 
 export default TaskEditView;
