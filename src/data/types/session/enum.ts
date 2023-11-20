@@ -14,10 +14,11 @@ export enum SESSION_SERVER_MSG {
   MealCompleted = "meal_completed",
   TaskNew = "task_new",
   FeedSnapshot = "feed_snapshot",
+  TimestampUpdate = "timestamp_update",
 }
 
-export enum TASK_STATUS {
-  Assigned,
-  Completed,
-  Rerolled,
+export enum FEED_ACTION {
+  Assignment,
+  Completion,
+  Reroll,
 }

@@ -9,7 +9,7 @@ import {
 } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 import useStore from "../../../data/store";
-import { TASK_STATUS } from "../../../data/types/session/enum";
+import { FEED_ACTION } from "../../../data/types/session/enum";
 import { FeedScreenNavigationProp } from "../../../navigation/types";
 import { TextStyle, Theme } from "../../../styles";
 import { ScrollView } from "react-native-gesture-handler";
@@ -46,14 +46,14 @@ const FeedScreen = ({
   const users = useStore((state) => state.connectedUsers);
   const livefeed = useStore((state) => state.livefeed);
 
-  const renderActionType = (status: TASK_STATUS) => {
-    switch (status) {
-      case TASK_STATUS.Assigned:
+  const renderActionType = (action: FEED_ACTION) => {
+    switch (action) {
+      case FEED_ACTION.Assignment:
         return <Icon name="clipboard" color={theme.colors.text} />;
-      case TASK_STATUS.Completed:
+      case FEED_ACTION.Completion:
         return <Icon name="check-round" color={theme.colors.success} />;
-      case TASK_STATUS.Rerolled:
-        return <Icon name="dice" color={theme.colors.text} />;
+      case FEED_ACTION.Reroll:
+        return <Icon name="reload" color={theme.colors.text} />;
     }
   };
 
@@ -101,7 +101,7 @@ const FeedScreen = ({
                   justifyContent="space-between"
                   style={styles.feedItem}
                 >
-                  {renderActionType(snapshot.status)}
+                  {renderActionType(snapshot.action)}
                   <VStack align="flex-start">
                     <Text style={styles.feedItemUser}>
                       {user?.name === snapshot.user.name

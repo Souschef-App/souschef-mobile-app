@@ -1,21 +1,22 @@
+import { StateCreator, StoreApi } from "zustand";
 import { ApiUrls } from "../../../api/constants";
 import jsonRequest from "../../../api/requests";
-import { StateCreator, StoreApi } from "zustand";
+import { fakeTask, guestUser } from "../../__mocks__";
 import { StoreState } from "../../store";
 import {
+  FEED_ACTION,
   FeedSnapshot,
+  LiveSession,
   SESSION_CLIENT_CMD,
+  SessionUser,
   Task,
   User,
-  LiveSession,
-  TASK_STATUS,
-  SessionUser,
 } from "../../types";
 import { Client } from "./client";
-import { fakeTask, guestUser } from "../../__mocks__";
 
 type SessionState = {
-  assignedTask: Task | null;
+  tasks: { [key: string]: Task };
+  assignedTask: string | null;
   taskLoading: boolean;
   connectedUsers: User[];
   livefeed: FeedSnapshot[];
@@ -27,6 +28,7 @@ type SessionState = {
 };
 
 const initialState: SessionState = {
+  tasks: {},
   assignedTask: null,
   taskLoading: true,
   connectedUsers: [],
@@ -80,7 +82,8 @@ export const createSessionSlice: StateCreator<
       }
 
       set({ session });
-      client.connect(`ws://${session?.ip}/ws`, user);
+      client.connect(`ws://192.168.0.244:8080/ws`, user);
+      // client.connect(`ws://${session?.ip}/ws`, user);
       return true;
     },
     joinFakeSession: () => {
@@ -95,13 +98,14 @@ export const createSessionSlice: StateCreator<
       });
       setTimeout(() => {
         set({
-          assignedTask: fakeTask,
+          tasks: {},
+          assignedTask: null,
           taskLoading: false,
           livefeed: [
             {
               user: guestUser,
               task: fakeTask,
-              status: TASK_STATUS.Assigned,
+              action: FEED_ACTION.Assignment,
               timestamp: new Date(),
             },
           ],

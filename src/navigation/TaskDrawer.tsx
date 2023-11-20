@@ -9,7 +9,12 @@ import { StyleSheet, Text } from "react-native";
 import { Icon, IconButton, SafeArea, VStack } from "../components";
 import { ThemeContext } from "../contexts/AppContext";
 import useStore from "../data/store";
-import { FeedScreen, InviteScreen, TaskScreen } from "../screens";
+import {
+  FeedScreen,
+  InviteScreen,
+  TaskScreen,
+  TrackerScreen,
+} from "../screens";
 import { TextStyle, Theme } from "../styles";
 import { theme } from "../styles/theme";
 import { TaskDrawerNavigatorParamList } from "./types";
@@ -38,6 +43,14 @@ const TaskDrawerNavigator = () => {
         options={{
           swipeEnabled: true,
           drawerIcon: ({ color }) => <Icon name="clipboard" color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Tracker"
+        component={TrackerScreen}
+        options={{
+          drawerLabel: "Task Tracker",
+          drawerIcon: ({ color }) => <Icon name="tracker" color={color} />,
         }}
       />
       <Drawer.Screen

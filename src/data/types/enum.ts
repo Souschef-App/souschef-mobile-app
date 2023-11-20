@@ -33,3 +33,10 @@ export enum OCCASION_TYPE {
   Professional,
   Educational,
 }
+
+export enum TASK_STATUS {
+  Unassigned,
+  InProgress,
+  Background,
+  Completed,
+}

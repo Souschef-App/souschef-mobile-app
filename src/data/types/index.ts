@@ -1,4 +1,10 @@
-import { COOKING_UNIT, DIFFICULTY, OCCASION_TYPE, SKILL_LEVEL } from "./enum";
+import {
+  COOKING_UNIT,
+  DIFFICULTY,
+  OCCASION_TYPE,
+  SKILL_LEVEL,
+  TASK_STATUS,
+} from "./enum";
 import Ingredient from "./ingredient";
 import Kitchenware from "./kitchenware";
 import MealPlan from "./mealplan";
@@ -6,7 +12,7 @@ import Recipe from "./recipe";
 import {
   SESSION_CLIENT_CMD,
   SESSION_SERVER_MSG,
-  TASK_STATUS,
+  FEED_ACTION,
 } from "./session/enum";
 import { ServerMessage } from "./session/message";
 import { LiveSession } from "./session/session";
@@ -31,6 +37,7 @@ export {
   ServerMessage,
   SessionUser,
   TASK_STATUS,
+  FEED_ACTION,
   Task,
   User,
   WelcomeSnapshot,

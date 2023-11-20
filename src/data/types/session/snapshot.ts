@@ -1,15 +1,16 @@
 import Task from "../task";
 import User from "../user";
-import { TASK_STATUS } from "./enum";
+import { FEED_ACTION } from "./enum";
 
 export interface WelcomeSnapshot {
   users: User[];
+  tasks: { [key: string]: Task };
   livefeed: FeedSnapshot[];
 }
 
 export interface FeedSnapshot {
   user: User;
   task: Task;
-  status: TASK_STATUS;
+  action: FEED_ACTION;
   timestamp: Date;
 }
