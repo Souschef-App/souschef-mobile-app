@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { Button, Icon } from '../../components';
 import {primary} from '../../styles/ButtonStyle';
-import {TextStyle} from '../../styles/';
+import {ButtonStyle, TextStyle} from '../../styles/';
 import { DateScreenNavigationProp } from "../../navigation/types";
+import { theme } from 'styles/theme';
 interface MealPlanRecipe {
   id: number;
   name: string;
@@ -227,11 +228,12 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
           </TouchableOpacity>
         )}
       />
+
       <Button
           style={[primary, styles.confirmButton]}
           onPress={goToDateScreen}
         >
-          <Text style={[TextStyle.h3, styles.buttonText]}>Create a New Meal Plan</Text>
+          <Text style={[TextStyle.h4, {color:'white'}]}>Create a New Meal Plan</Text>
         </Button>
     </View>
   );
@@ -262,7 +264,7 @@ const styles = StyleSheet.create({
   },
   recipeItem: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start', 
     justifyContent: 'space-between',
     borderWidth: 1,
     borderColor: '#E5E5E5',
@@ -271,18 +273,20 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: 'white',
     elevation: 2,
-    height:100,
+    height: 100,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
   },
+
   recipeImage: {
     width: 80,
     height: 80,
     borderRadius: 8,
     marginRight: 16,
   },
+
   recipeInfo: {
     flex: 1,
   },
@@ -312,21 +316,21 @@ const styles = StyleSheet.create({
   },
   recipeFavItem: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     borderWidth: 1,
     borderColor: '#E5E5E5',
     borderRadius: 12,
     padding: 10,
     marginBottom: 50,
-    marginLeft:10,
-    height:100,
+    marginLeft: 10,
+    height: 100,
     backgroundColor: 'white',
     elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
   },
   exploreMoreButton: {
     backgroundColor: '#2E9DFB', 
