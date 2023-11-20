@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, TextInput, TouchableOpacity, TextInputChangeEventData, NativeSyntheticEvent } from "react-native";
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, TextInput, TouchableOpacity, TextInputChangeEventData, NativeSyntheticEvent, Alert } from "react-native";
 import { TextStyle } from "../styles";
 import { Button, Icon } from "../components";
 import { primary } from "../styles/ButtonStyle";
@@ -20,7 +20,18 @@ const MealPlanScreen: React.FC<{
   }; 
 
   const goToCalendarScreen = () => {
-    console.log(date, time)
+    console.log(date, time);
+  
+    if (recipes.length === 0) {
+      // Show an alert if there are no recipes
+      Alert.alert(
+        "No Recipes Added",
+        "Please add at least one recipe to your meal plan before confirming.",
+        [{ text: "OK" }]
+      );
+      return; // Stop the function execution here
+    }
+  
     createMealPlan({
       Name: mealPlanName,
       Date: date + "T" + time
@@ -42,13 +53,13 @@ const MealPlanScreen: React.FC<{
       <ScrollView>
         <View style={styles.container}>
         <View style={styles.mealContainer}>
-          <Text style={[TextStyle.h1]}>Meal Plan</Text> 
+          <Text style={[TextStyle.h1, {textAlign:"center"}]}>Meal Plan</Text> 
         <View>
-            <Icon name="kitchenware" size={30} color="black" />
+            <Icon name="kitchenware" size={30} color="black"/>
              </View>
             </View>
           <View style={styles.headerTitle}>
-            <Text style={[TextStyle.h2,styles.disableText]}>What's your Meal Plan today?</Text>
+            <Text style={[TextStyle.h2, {textAlign:"center"}]}>What's your Meal Plan today?</Text>
           </View>
 
           <View style={styles.inputContainer}>
@@ -61,10 +72,7 @@ const MealPlanScreen: React.FC<{
 
             <View style={styles.titleContainer}>
               <View style={styles.bellConcierge}>
-                <Text style={[TextStyle.h2,styles.title]}>Appetizer{' '}</Text>
-                <Icon
-                  name="brochette"                  
-                />
+                <Text style={TextStyle.h2}>Add Recipes{' '}</Text>
                 <Button onPress={() => goToRecipeSelectorScreen('Recipes')}>
                   <View style={styles.plusIconContainer}>
                     <Icon
@@ -90,9 +98,7 @@ const MealPlanScreen: React.FC<{
                 </View>) : ""
               }
             </View>
-            
-            <View style={styles.whiteSpace}></View> 
-            
+                        
             <View style={styles.confirmButtonContainer}>
               <Button onPress={goToCalendarScreen} style={[primary,styles.touchableContainerBlue]}>
                 <View style={styles.itemCenter}>
@@ -125,21 +131,20 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    backgroundColor: '#B8E0D2',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: "white",
     padding: 20,
   },
   inputSelfContainer: {
     width: '100%',
     height: 50,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "white",
     borderRadius: 10,
     fontSize: 17,
     elevation: 40,
-    shadowColor: 'black',
   },
   titleContainer: {
     display: "flex",
@@ -154,6 +159,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 10,
     paddingVertical: 10,
+    backgroundColor: "white",
   },
   title: {
     textAlign: "left",
@@ -178,7 +184,6 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     width: "100%",
     marginVertical: 5,
-    shadowColor: "#2f394a",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 1,
     shadowRadius: 5,
@@ -218,31 +223,33 @@ const styles = StyleSheet.create({
   },
   mealContainer: {
     width: '100%',
-    height: 120,
+    height: 150,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10,
     flexDirection: 'row',
-    backgroundColor: '#F0D5BA',
-    elevation: 50,
-    shadowColor: 'black',
-    borderBottomEndRadius: 50,
     position: 'relative',
     right: 50,
+    backgroundColor: "white",
+
   },
   bellConcierge: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+    
   },
   confirmButtonContainer: {
     alignSelf: 'center',
     width: '70%',
+    backgroundColor: "white",
   },
+
   whiteSpace: {
     height: 20, 
+    backgroundColor: "white",
   },
+
   plusIconContainer: {
     flexDirection:"row",
     marginLeft:200,
