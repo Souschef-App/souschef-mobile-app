@@ -1,5 +1,6 @@
 export enum SESSION_CLIENT_CMD {
-  Handshake = "client_handshake",
+  Handshake = "handshake",
+  GuestHandshake = "guest_handshake",
   SessionStart = "session_start",
   SessionStop = "session_stop",
   TaskCompleted = "task_completed",

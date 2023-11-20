@@ -38,7 +38,7 @@ const TaskScreen = ({
 
   React.useEffect(() => {
     if (!connected) {
-      navigation.navigate("Tabs", defaultBottomTabNavigatorParamList);
+      navigation.popToTop();
     }
   }, [connected]);
 

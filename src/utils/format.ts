@@ -74,7 +74,7 @@ export const formatDifficultyToHex = (value: DIFFICULTY) => {
 };
 
 export const formatRelativeTime = (timestamp?: Date): string => {
-  if (timestamp === null) return "";
+  if (!timestamp) return "";
 
   const now = new Date();
   const timeDifference = now.getTime() - timestamp!.getTime();

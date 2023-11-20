@@ -87,7 +87,7 @@ const FeedScreen = ({
                   {renderActionType(snapshot.action)}
                   <VStack align="flex-start">
                     <Text style={styles.feedItemUser}>
-                      {user?.name === snapshot.user.name
+                      {user?.id === snapshot.user.id
                         ? "You"
                         : snapshot.user.name}
                     </Text>

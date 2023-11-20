@@ -2,6 +2,7 @@ import {
   FEED_ACTION,
   FeedSnapshot,
   SESSION_SERVER_MSG,
+  SessionUser,
   TASK_STATUS,
   User,
   WelcomeSnapshot,
@@ -28,6 +29,15 @@ const handleHandshake = (set: SessionSetState, payload: WelcomeSnapshot) => {
     payload.livefeed[i].timestamp = new Date(payload.livefeed[i].timestamp);
   }
 
+  Object.entries(payload.tasks).forEach(([taskID, task]) => {
+    if (task.timestamp) {
+      payload.tasks[taskID] = {
+        ...task,
+        timestamp: new Date(task.timestamp),
+      };
+    }
+  });
+
   set({
     connectedUsers: payload.users,
     tasks: payload.tasks,
@@ -35,13 +45,30 @@ const handleHandshake = (set: SessionSetState, payload: WelcomeSnapshot) => {
   });
 };
 
-const handleClientConnected = (set: SessionSetState, payload: User) => {
+const handleClientConnected = (set: SessionSetState, payload: SessionUser) => {
   if (!payload) return;
   set((state) => ({ connectedUsers: [...state.connectedUsers, payload] }));
 };
 
-const handleClientDisconnected = (set: SessionSetState, payload: User) => {
+const handleClientDisconnected = (
+  set: SessionSetState,
+  payload: SessionUser
+) => {
   if (!payload) return;
+
+  if (payload.taskID) {
+    set((state) => ({
+      tasks: {
+        ...state.tasks,
+        [payload.taskID!]: {
+          ...state.tasks[payload.taskID!],
+          status: TASK_STATUS.Unassigned,
+          timestamp: new Date(),
+        },
+      },
+    }));
+  }
+
   set((state) => ({
     connectedUsers: state.connectedUsers.filter((u) => u.id !== payload.id),
   }));

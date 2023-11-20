@@ -1,10 +1,9 @@
-import { SKILL_LEVEL, User } from "../types";
+import { SKILL_LEVEL, SessionUser, User } from "../types";
 
-const guestUser: User = {
-  id: "123",
+const guestSessionUser: SessionUser = {
+  id: "",
   name: "Guest",
-  email: "guest@mail.com",
   skillLevel: SKILL_LEVEL.Expert,
 };
 
-export default guestUser;
+export default guestSessionUser;

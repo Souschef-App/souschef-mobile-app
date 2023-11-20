@@ -14,6 +14,7 @@ import Icon from "./primitives/Icon";
 export type ValidationInputProps = TextInputProps & {
   validationRegex: RegExp;
   containerStyle?: StyleProp<ViewStyle>;
+  onValidationChange?: (isValid: boolean) => void;
 };
 
 const iconSize = 18;
@@ -28,6 +29,8 @@ const ValidationInput = (props: ValidationInputProps) => {
     const valid = props.validationRegex.test(value);
     setIsValid(valid);
     setIsVisible(valid);
+
+    props.onValidationChange?.(valid);
   };
 
   const handleBlur = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {

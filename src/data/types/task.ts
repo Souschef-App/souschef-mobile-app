@@ -12,8 +12,6 @@ interface Task {
   ingredients: Ingredient[]; // Change to list of ingredients
   kitchenware: Kitchenware[]; // Change to list of kitchenware
   isBackground: boolean;
-  status: TASK_STATUS;
-  timestamp?: Date;
 }
 
 export default Task;

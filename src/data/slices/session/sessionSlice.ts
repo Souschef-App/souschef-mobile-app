@@ -1,24 +1,24 @@
 import { StateCreator, StoreApi } from "zustand";
 import { ApiUrls } from "../../../api/constants";
 import jsonRequest from "../../../api/requests";
-import { fakeTask, guestUser } from "../../__mocks__";
+import { fakeTask, guestSessionUser } from "../../__mocks__";
 import { StoreState } from "../../store";
 import {
   FEED_ACTION,
   FeedSnapshot,
   LiveSession,
   SESSION_CLIENT_CMD,
+  SessionTask,
   SessionUser,
   Task,
-  User,
 } from "../../types";
 import { Client } from "./client";
 
 type SessionState = {
-  tasks: { [key: string]: Task };
+  tasks: { [key: string]: SessionTask };
   assignedTask: string | null;
   taskLoading: boolean;
-  connectedUsers: User[];
+  connectedUsers: SessionUser[];
   livefeed: FeedSnapshot[];
   session: LiveSession | null;
   sessionCompleted: boolean;
@@ -42,10 +42,11 @@ const initialState: SessionState = {
 
 type SessionActions = {
   resetSessionSlice: () => void;
-  joinSession: (code: string, user: SessionUser) => Promise<boolean>;
+  joinSession: (code: string, user: SessionUser | null) => Promise<boolean>;
   joinFakeSession: () => void;
   leaveSession: () => void;
   commands: {
+    setGuestIdentity: (guestname: string) => void;
     startSession: () => void;
     stopSession: () => void;
     completeTask: () => void;
@@ -68,7 +69,7 @@ export const createSessionSlice: StateCreator<
   return {
     ...initialState,
     resetSessionSlice: () => set(initialState),
-    joinSession: async (code: string, user: SessionUser) => {
+    joinSession: async (code: string, user: SessionUser | null) => {
       set({ sessionLoading: true, sessionError: null });
 
       const query = { code }; // TODO: Convert API to string
@@ -83,14 +84,16 @@ export const createSessionSlice: StateCreator<
       }
 
       set({ session });
-      client.connect(`ws://${session?.ip}/ws`, user);
+
+      client.connect(`ws://192.168.0.244:8080/ws`, user);
+      // client.connect(`ws://${session?.ip}/ws`, user);
       return true;
     },
     joinFakeSession: () => {
       set({
         clientConnected: true,
         taskLoading: true,
-        connectedUsers: [guestUser],
+        connectedUsers: [guestSessionUser],
         session: {
           code: 12345,
           ip: "localhost",
@@ -103,7 +106,7 @@ export const createSessionSlice: StateCreator<
           taskLoading: false,
           livefeed: [
             {
-              user: guestUser,
+              user: guestSessionUser,
               task: fakeTask,
               action: FEED_ACTION.Assignment,
               timestamp: new Date(),
@@ -114,13 +117,11 @@ export const createSessionSlice: StateCreator<
     },
     leaveSession: () => {
       client.leave();
-      set({
-        session: null,
-        sessionError: null,
-        sessionCompleted: false,
-      });
+      get().resetSessionSlice();
     },
     commands: {
+      setGuestIdentity: (guestname: string) =>
+        client.sendCommandPayload(SESSION_CLIENT_CMD.GuestHandshake, guestname),
       startSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStart),
       stopSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStop),
       completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskCompleted),

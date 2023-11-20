@@ -4,7 +4,6 @@ import React from "react";
 import { StyleSheet, Text } from "react-native";
 import { Icon, QRScan, SafeArea, TextButton, VStack } from "../../components";
 import { AppContext, ThemeContext } from "../../contexts/AppContext";
-import { guestUser } from "../../data/__mocks__";
 import useStore from "../../data/store";
 import {
   QRCodeScreenNavigationProp,
@@ -41,7 +40,7 @@ const QRCodeScreen = ({
       joinFakeSession();
       navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
     } else if (typeof e.data === "string" && fiveDigitRegex.test(e.data)) {
-      joinSession(e.data, user ?? guestUser);
+      joinSession(e.data, user);
       navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
     }
   };

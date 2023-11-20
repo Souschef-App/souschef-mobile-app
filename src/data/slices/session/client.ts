@@ -18,7 +18,7 @@ export class Client extends ZustandStoreAccess {
     this.socket = null;
   }
 
-  connect(url: string, identity: SessionUser) {
+  connect(url: string, identity: SessionUser | null) {
     this.leave(); // Severe any ongoing connection
     this.set({ sessionLoading: true, sessionError: null });
     this.socket = new WebSocket(url);
@@ -48,14 +48,18 @@ export class Client extends ZustandStoreAccess {
     }
   }
 
-  private configureSocket(socket: WebSocket, identity: SessionUser) {
+  private configureSocket(socket: WebSocket, identity: SessionUser | null) {
     socket.onopen = () => {
       this.set({ clientConnected: true, sessionLoading: false });
-      const handshakeMessage = {
-        type: SESSION_CLIENT_CMD.Handshake,
-        payload: identity,
-      };
-      socket.send(JSON.stringify(handshakeMessage));
+
+      // Non-guest
+      if (identity !== null) {
+        const handshakeMessage = {
+          type: SESSION_CLIENT_CMD.Handshake,
+          payload: identity,
+        };
+        socket.send(JSON.stringify(handshakeMessage));
+      }
     };
 
     socket.onmessage = (e) => {
