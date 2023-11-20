@@ -17,6 +17,7 @@ import {primary} from '../../styles/ButtonStyle';
 import { TextStyle } from '../../styles/';
 import { CalendarScreenRouteProp } from '../../navigation/types';
 import { useSessionApi } from '../../hooks/useSessionApi';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 interface Booking {
   id: number;
@@ -28,6 +29,7 @@ interface Booking {
 
 interface CalendarScreenProps {
   route: CalendarScreenRouteProp
+  navigation: NavigationProp<ParamListBase>;
 }
 
 interface CalendarScreenState {
@@ -39,7 +41,7 @@ interface CalendarScreenState {
 }
 
 const CalendarScreen: React.FC<CalendarScreenProps> = ({route, navigation}) => {
-  const {date, time, mealName} = route.params ? route.params : {};
+  const { date = '', time = '', mealName = '' } = route.params || {};
 
   const [mealPlans, setMealPlans] = useState<any[]>([])
 
