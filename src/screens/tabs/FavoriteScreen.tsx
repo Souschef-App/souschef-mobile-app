@@ -178,7 +178,7 @@ const FavoriteRecipesScreen: React.FC<{ route: FavoriteScreenRouteProp, navigati
       <View style={styles.titleContainer}>
         <Text style={textStyle.h2}>Favorite Recipes</Text>
         <TouchableOpacity
-          style={[styles.seeAllButton]}
+          style={[textStyle.h4]}
           onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}
         >
           <Text style={textStyle.body}>See All</Text>
@@ -215,7 +215,7 @@ const FavoriteRecipesScreen: React.FC<{ route: FavoriteScreenRouteProp, navigati
       <View style={styles.titleContainer}>
         <Text style={textStyle.h2}>Your Recipes</Text>
         <TouchableOpacity
-          style={[styles.seeAllButton]}
+          style={[textStyle.h4]}
           onPress={() => setShowAllYourRecipes(!showAllYourRecipes)}
         >
           <Text style={textStyle.body}>See All</Text>
@@ -257,15 +257,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F7FB',
     padding: 10,
   },
+  mealPlanTitle: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginLeft: 10,
+  },
+  dateText: {
+    fontSize: 18,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  seeAllButton: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#4CAF50',
+    marginBottom: 15,
   },
   recipeItem: {
     flexDirection: 'row',
@@ -274,14 +281,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E5E5',
     borderRadius: 12,
-    padding: 16,
+    padding: 10,
     marginBottom: 16,
     backgroundColor: 'white',
     elevation: 2,
+    height:100,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
   },
   recipeImage: {
     width: 80,
@@ -313,9 +321,50 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
     alignItems: 'center',
-    paddingRight: 200,
-    width: 390,
+    paddingRight: 200, 
+    width: 390, 
   },
+  recipeFavItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    borderRadius: 12,
+    padding: 10,
+    marginBottom: 50,
+    marginLeft:10,
+    height:100,
+    backgroundColor: 'white',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    shadowOffset: {width: 0, height: 2},
+  },
+  exploreMoreButton: {
+    backgroundColor: '#2E9DFB', 
+    alignItems: 'center',
+    height:50, 
+    marginTop:20
+  },
+  exploreMoreButtonText: {
+    color: 'white', 
+    fontWeight: 'bold', 
+    fontSize: 16, 
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  confirmButton: {
+    marginTop: 30, 
+    backgroundColor: '#4CAF50', 
+    alignItems: 'center',
+    marginHorizontal:40
+  },
+
 });
 
 export default FavoriteRecipesScreen;
