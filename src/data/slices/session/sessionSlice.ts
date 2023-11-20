@@ -85,8 +85,7 @@ export const createSessionSlice: StateCreator<
 
       set({ session });
 
-      client.connect(`ws://192.168.0.244:8080/ws`, user);
-      // client.connect(`ws://${session?.ip}/ws`, user);
+      client.connect(`ws://${session?.ip}/ws`, user);
       return true;
     },
     joinFakeSession: () => {
