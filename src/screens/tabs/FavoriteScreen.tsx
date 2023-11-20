@@ -100,13 +100,13 @@ const yourRecipes: Recipe[] = [
 
 const FavoriteRecipesScreen: React.FC<{ route: FavoriteScreenRouteProp, navigation: MealNameScreenNavigationProp }> = ({ route, navigation }) => {
 
-  const { date, time, occasion, mealName, recipes, mealType } = route.params;
+  const { date, time, mealName, recipes, mealType } = route.params;
 
   const { fetchFavoriteRecipes, fetchAllRecipes } = useSessionApi()
   const user = useStore((state) => state.user);
   
   const goToMealScreen = (recipe: any) => {
-    navigation.navigate('MealNameScreen', { date, time, occasion, mealName, recipes: !recipes ? [ recipe ] : [ ...recipes, { ...recipe, type: mealType } ] });
+    navigation.navigate('MealNameScreen', { date, time, mealName, recipes: !recipes ? [ recipe ] : [ ...recipes, { ...recipe, type: mealType } ] });
   }
   const [searchText, setSearchText] = useState<string>('');
   const [allRecipes, setAllRecipes] = useState<any[]>([]);
