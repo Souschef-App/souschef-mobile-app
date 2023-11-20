@@ -7,7 +7,6 @@ import { MealPlanNavigatorParamList } from "./types";
 import DateScreen from "../screens/DateScreen";
 import TimeScreen from "../screens/TimeScreen";
 import MealNameScreen from "../screens/MealNameScreen";
-import OccasionScreen from "../screens/OccasionScreen";
 import RecipeSelectorScreen from "../screens/RecipeSelectorScreen";
 import FavoriteScreen from "../screens/tabs/FavoriteScreen";
 import { EnterRecipeIngredientsScreen } from "../screens/subtask-generation/EnterRecipeIngredientsScreen";
@@ -52,12 +51,6 @@ const MealPlanNavigator = () => {
         name="MealNameScreen"
         component={MealNameScreen}
         options={{ headerShown: false }}
-      />
-      
-      <MealPlanStack.Screen
-      name="OccasionScreen"
-      component={OccasionScreen}
-      options={{ headerShown: false }}
       />
 
       <MealPlanStack.Screen

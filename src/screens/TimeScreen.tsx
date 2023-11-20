@@ -4,7 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Button, Icon} from '../components'; 
 import { primary,account } from '../styles/ButtonStyle';
 import { TextStyle } from '../styles';
-import { OccasionScreenNavigationProp, TimeScreenRouteProp } from '../navigation/types';
+import { MealNameScreenNavigationProp, TimeScreenRouteProp } from '../navigation/types';
 
 
 interface TimeScreenState { 
@@ -12,12 +12,14 @@ interface TimeScreenState {
   selectedDate: string | null;
 }
 
-const TimeScreen: React.FC <{ route: TimeScreenRouteProp, navigation: OccasionScreenNavigationProp }> = ({route, navigation }) => {
-  const goToOccasionScreen = () => {
-    navigation.navigate('OccasionScreen', {date: state.selectedDate, time: state.selectedTime});}
+const TimeScreen: React.FC <{ route: TimeScreenRouteProp, navigation: MealNameScreenNavigationProp }> = ({route, navigation }) => {
+  const goToMealNameScreen = () => {
+    navigation.navigate('MealNameScreen', {date: state.selectedDate, time: state.selectedTime,  mealName: "", // Default value for mealName
+    recipes: []});}
   const [state, setState] = useState<TimeScreenState>({
     selectedTime: null,
     selectedDate: route.params.date
+
   });
 
   const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
@@ -71,7 +73,7 @@ const TimeScreen: React.FC <{ route: TimeScreenRouteProp, navigation: OccasionSc
         />
       )}
 
-      <Button onPress={goToOccasionScreen} style={[account,styles.confirmSessionButton]}>
+      <Button onPress={goToMealNameScreen} style={[account,styles.confirmSessionButton]}>
         <Text style={[TextStyle.h3,styles.buttonText]}>Confirm Time</Text>
       </Button>
     </View>

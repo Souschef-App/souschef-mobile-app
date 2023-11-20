@@ -60,25 +60,19 @@ export type MealPlanNavigatorParamList = {
     date: string | null;
     time: string | null;
     mealName: string;
-    occasion: number;
     recipes: any[];
   };
   RecipeSelectorScreen: {
     date: string | null;
     time: string | null;
-    occasion: number;
     recipes: any[];
     mealName: string;
     mealType: string;
   };
-  OccasionScreen: {
-    date: string | null;
-    time: string | null;
-  };
+
   FavoriteScreen: {
     date: string | null;
     time: string | null;
-    occasion: number;
     recipes: any[];
     mealName: string;
     mealType: string;
@@ -102,26 +96,20 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
     time: null,
     mealName: "",
     recipes: [],
-    occasion: 1
   },
   RecipeSelectorScreen: {
     date: null,
     time: null,
     mealName: "",
     recipes: [],
-    occasion: 1,
     mealType: "Appetizer"
   },
-  OccasionScreen: {
-    date: null,
-    time: null,
-  },
+
   FavoriteScreen: {
     date: null,
     time: null,
     mealName: "",
     recipes: [],
-    occasion: 1,
     mealType: "Appetizer"
   },
   CalendarScreen: {
@@ -278,11 +266,6 @@ export type RecipeSelectorScreenNavigationProp = NativeStackNavigationProp<
   "CalendarScreen"
 >;
 
-export type OccasionScreenNavigationProp = NativeStackNavigationProp<
-  MealPlanNavigatorParamList,
-  "OccasionScreen"
->;
-
 export type FavoriteScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
   "FavoriteScreen"
@@ -291,11 +274,6 @@ export type FavoriteScreenNavigationProp = NativeStackNavigationProp<
 export type TimeScreenRouteProp = RouteProp<
   MealPlanNavigatorParamList,
   "TimeScreen"
->;
-
-export type OccasionScreenRouteProp = RouteProp<
-  MealPlanNavigatorParamList,
-  "OccasionScreen"
 >;
 
 export type MealNameScreenRouteProp = RouteProp<

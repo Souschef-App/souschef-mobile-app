@@ -10,12 +10,12 @@ const MealPlanScreen: React.FC<{
   route: MealNameScreenRouteProp;
   navigation: RecipeSelectorScreenNavigationProp;
 }> = ({ route, navigation }) => {
-  const { date, time, occasion, mealName, recipes } = route.params;
+  const { date, time, mealName, recipes } = route.params;
   const [mealPlanName, setMealPlanName] = useState<string>(mealName);
   const { createMealPlan, addRecipeToMealPlan } = useSessionApi();
   
   const goToRecipeSelectorScreen = (mealType: string) => {
-    navigation.navigate("RecipeSelectorScreen", { date, time, mealName: mealPlanName, occasion, recipes, mealType });
+    navigation.navigate("RecipeSelectorScreen", { date, time, mealName: mealPlanName, recipes, mealType });
 
   }; 
 
