@@ -2,8 +2,9 @@ export enum SESSION_CLIENT_CMD {
   Handshake = "client_handshake",
   SessionStart = "session_start",
   SessionStop = "session_stop",
-  TaskComplete = "task_completed",
-  TaskReroll = "task_reroll",
+  TaskCompleted = "task_completed",
+  TaskRerolled = "task_rerolled",
+  TaskBackgroundCompleted = "task_background_completed",
 }
 
 export enum SESSION_SERVER_MSG {
@@ -20,5 +21,6 @@ export enum SESSION_SERVER_MSG {
 export enum FEED_ACTION {
   Assignment,
   Completion,
+  Deferred,
   Reroll,
 }

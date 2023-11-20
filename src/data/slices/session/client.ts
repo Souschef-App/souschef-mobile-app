@@ -41,6 +41,13 @@ export class Client extends ZustandStoreAccess {
     }
   }
 
+  sendCommandPayload(commandType: string, payload: any) {
+    if (this.socket?.OPEN) {
+      const command = { type: commandType, payload: payload };
+      this.socket.send(JSON.stringify(command));
+    }
+  }
+
   private configureSocket(socket: WebSocket, identity: SessionUser) {
     socket.onopen = () => {
       this.set({ clientConnected: true, sessionLoading: false });

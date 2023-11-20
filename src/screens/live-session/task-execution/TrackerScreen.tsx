@@ -1,18 +1,77 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  Dropdown,
-  HStack,
-  IconButton,
-  SafeArea,
-  VStack,
-} from "../../../components";
+import { HStack, IconButton, SafeArea, VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 import useStore from "../../../data/store";
+import { TASK_STATUS } from "../../../data/types/enum";
 import { TrackerScreenNavigationProp } from "../../../navigation/types";
 import { TextStyle, Theme } from "../../../styles";
-import { TASK_STATUS } from "../../../data/types/enum";
+import { formatRelativeTime } from "../../../utils/format";
+
+const EmptyListItem = () => {
+  // Theme
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  return (
+    <HStack style={styles.feedItem}>
+      <Text
+        style={[styles.feedItemDetails, { color: theme.colors.textDisabled }]}
+      >
+        None
+      </Text>
+    </HStack>
+  );
+};
+
+const ListItemWBtn = ({
+  title,
+  onPress,
+}: {
+  title: string;
+  onPress: () => void;
+}) => {
+  // Theme
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  return (
+    <HStack
+      pVH={{ h: theme.spacing.m }}
+      justifyContent="space-between"
+      style={styles.feedItem}
+    >
+      <Text>{title}</Text>
+      <IconButton
+        icon="check-round"
+        iconSize={16}
+        title="DONE"
+        color={"#fff"}
+        onPress={onPress}
+        textStyle={styles.doneBtnText}
+        style={styles.doneBtn}
+      />
+    </HStack>
+  );
+};
+
+const ListItem = ({ title, info }: { title: string; info: string }) => {
+  // Theme
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  return (
+    <HStack
+      pVH={{ h: theme.spacing.m }}
+      justifyContent="space-between"
+      style={styles.feedItem}
+    >
+      <Text>{title}</Text>
+      <Text style={styles.feedItemDetails}>{info}</Text>
+    </HStack>
+  );
+};
 
 const TrackerScreen = ({
   navigation,
@@ -23,14 +82,51 @@ const TrackerScreen = ({
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  // State
-  const [inProgressOpen, setInProgressOpen] = React.useState(true);
-  const [backgroundOpen, setBackgroundOpen] = React.useState(true);
-  const [completedOpen, setCompletedOpen] = React.useState(true);
-  const [unassignedOpen, setUnassignedOpen] = React.useState(true);
-
   // Store
   const tasks = useStore((state) => state.tasks);
+  const completeBackgroundTask = useStore(
+    (state) => state.commands.completeBackgroundTask
+  );
+
+  const inProgressTasks = Object.entries(tasks)
+    .filter(([_, task]) => task.status === TASK_STATUS.InProgress)
+    .map(([taskID, task]) => (
+      <ListItem
+        key={taskID}
+        title={task.title}
+        info={formatRelativeTime(task.timestamp)}
+      />
+    ));
+
+  const backgroundTasks = Object.entries(tasks)
+    .filter(([_, task]) => task.status === TASK_STATUS.Background)
+    .map(([taskID, task]) => (
+      <ListItemWBtn
+        key={taskID}
+        title={task.title}
+        onPress={() => completeBackgroundTask(taskID)}
+      />
+    ));
+
+  const completedTasks = Object.entries(tasks)
+    .filter(([_, task]) => task.status === TASK_STATUS.Completed)
+    .map(([taskID, task]) => (
+      <ListItem
+        key={taskID}
+        title={task.title}
+        info={formatRelativeTime(task.timestamp)}
+      />
+    ));
+
+  const unassignedTasks = Object.entries(tasks)
+    .filter(([_, task]) => task.status === TASK_STATUS.Unassigned)
+    .map(([taskID, task]) => (
+      <ListItem
+        key={taskID}
+        title={task.title}
+        info={`~${task.duration} min`}
+      />
+    ));
 
   return (
     <SafeArea>
@@ -49,73 +145,31 @@ const TrackerScreen = ({
           />
         </HStack>
         <ScrollView style={styles.scrollView}>
-          <VStack justifyContent="flex-start" gap={8}>
-            <Dropdown
-              title="In Progress"
-              isOpen={inProgressOpen}
-              onPress={() => setInProgressOpen(!inProgressOpen)}
-              textStyle={styles.headerText}
-              style={styles.header}
-            >
-              <VStack>
-                {Object.entries(tasks)
-                  .filter(([_, task]) => task.status === TASK_STATUS.InProgress)
-                  .map(([taskID, task]) => (
-                    <Text key={taskID}>{task.title}</Text>
-                  ))}
-              </VStack>
-            </Dropdown>
-            <Dropdown
-              title="Background"
-              isOpen={backgroundOpen}
-              onPress={() => setBackgroundOpen(!backgroundOpen)}
-              textStyle={styles.headerText}
-              style={styles.header}
-            >
-              <VStack>
-                {Object.entries(tasks)
-                  .filter(([_, task]) => task.status === TASK_STATUS.Background)
-                  .map(([taskID, task]) => (
-                    <Text key={taskID}>{task.title}</Text>
-                  ))}
-              </VStack>
-            </Dropdown>
-            <Dropdown
-              title="Completed"
-              isOpen={completedOpen}
-              onPress={() => setCompletedOpen(!completedOpen)}
-              textStyle={styles.headerText}
-              style={styles.header}
-            >
-              <VStack>
-                {Object.entries(tasks)
-                  .filter(([_, task]) => task.status === TASK_STATUS.Completed)
-                  .map(([taskID, task]) => (
-                    <Text key={taskID}>{task.title}</Text>
-                  ))}
-              </VStack>
-            </Dropdown>
-            <Dropdown
-              title="Unassigned"
-              isOpen={unassignedOpen}
-              onPress={() => setUnassignedOpen(!unassignedOpen)}
-              textStyle={styles.headerText}
-              style={styles.header}
-            >
-              <VStack>
-                {Object.entries(tasks)
-                  .filter(([_, task]) => task.status === TASK_STATUS.Unassigned)
-                  .map(([taskID, task]) => (
-                    <HStack
-                      pVH={{ h: 16 }}
-                      justifyContent="flex-start"
-                      style={styles.feedItem}
-                    >
-                      <Text key={taskID}>{task.title}</Text>
-                    </HStack>
-                  ))}
-              </VStack>
-            </Dropdown>
+          <VStack justifyContent="flex-start">
+            <HStack justifyContent="flex-start" style={styles.header}>
+              <Text style={styles.headerText}>In Progress</Text>
+            </HStack>
+            <VStack>
+              {inProgressTasks.length > 0 ? inProgressTasks : <EmptyListItem />}
+            </VStack>
+            <HStack justifyContent="flex-start" style={styles.header}>
+              <Text style={styles.headerText}>Background</Text>
+            </HStack>
+            <VStack>
+              {backgroundTasks.length > 0 ? backgroundTasks : <EmptyListItem />}
+            </VStack>
+            <HStack justifyContent="flex-start" style={styles.header}>
+              <Text style={styles.headerText}>Completed</Text>
+            </HStack>
+            <VStack>
+              {completedTasks.length > 0 ? completedTasks : <EmptyListItem />}
+            </VStack>
+            <HStack justifyContent="flex-start" style={styles.header}>
+              <Text style={styles.headerText}>Unassigned</Text>
+            </HStack>
+            <VStack>
+              {unassignedTasks.length > 0 ? unassignedTasks : <EmptyListItem />}
+            </VStack>
           </VStack>
         </ScrollView>
       </VStack>
@@ -161,6 +215,15 @@ const makeStyles = (theme: Theme) =>
     feedItemEmpty: {
       ...TextStyle.body,
       color: theme.colors.textDisabled,
+    },
+    doneBtn: {
+      backgroundColor: theme.colors.primary,
+      paddingHorizontal: theme.spacing.s,
+      paddingVertical: theme.spacing.xs,
+      borderRadius: 64,
+    },
+    doneBtnText: {
+      ...TextStyle.bold,
     },
   });
 

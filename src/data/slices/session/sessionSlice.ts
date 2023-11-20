@@ -50,6 +50,7 @@ type SessionActions = {
     stopSession: () => void;
     completeTask: () => void;
     rerollTask: () => void;
+    completeBackgroundTask: (taskID: string) => void;
   };
 };
 
@@ -82,8 +83,7 @@ export const createSessionSlice: StateCreator<
       }
 
       set({ session });
-      client.connect(`ws://192.168.0.244:8080/ws`, user);
-      // client.connect(`ws://${session?.ip}/ws`, user);
+      client.connect(`ws://${session?.ip}/ws`, user);
       return true;
     },
     joinFakeSession: () => {
@@ -123,11 +123,16 @@ export const createSessionSlice: StateCreator<
     commands: {
       startSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStart),
       stopSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStop),
-      completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskComplete),
+      completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskCompleted),
       rerollTask: () => {
         set({ taskLoading: true });
-        client.sendCommand(SESSION_CLIENT_CMD.TaskReroll);
+        client.sendCommand(SESSION_CLIENT_CMD.TaskRerolled);
       },
+      completeBackgroundTask: (taskID: string) =>
+        client.sendCommandPayload(
+          SESSION_CLIENT_CMD.TaskBackgroundCompleted,
+          taskID
+        ),
     },
   };
 };

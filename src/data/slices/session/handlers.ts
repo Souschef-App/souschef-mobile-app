@@ -61,6 +61,8 @@ const userActionToTaskStatus = (action: FEED_ACTION): TASK_STATUS => {
       return TASK_STATUS.InProgress;
     case FEED_ACTION.Completion:
       return TASK_STATUS.Completed;
+    case FEED_ACTION.Deferred:
+      return TASK_STATUS.Background;
     case FEED_ACTION.Reroll:
       return TASK_STATUS.Unassigned;
   }
@@ -77,13 +79,17 @@ const handleFeedSnapshot = (set: SessionSetState, payload: FeedSnapshot) => {
       [payload.task.id]: {
         ...state.tasks[payload.task.id],
         status: userActionToTaskStatus(payload.action),
+        timestamp: payload.timestamp,
       },
     },
   }));
 };
 
 const handleTimestampUpdate = (set: SessionSetState, _: any) => {
-  set((state) => ({ livefeed: [...state.livefeed] }));
+  set((state) => ({
+    livefeed: [...state.livefeed],
+    tasks: { ...state.tasks },
+  }));
 };
 
 const messageHandlerMap: MessageHandlerMap = {
