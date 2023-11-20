@@ -14,10 +14,12 @@ import { Calendar } from 'react-native-calendars';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Icon } from '../../components';
 import {primary} from '../../styles/ButtonStyle';
-import { TextStyle } from '../../styles/';
+import { ButtonStyle, TextStyle } from '../../styles/';
 import { CalendarScreenRouteProp } from '../../navigation/types';
 import { useSessionApi } from '../../hooks/useSessionApi';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { Button } from 'react-native';
+import { theme } from 'styles/theme';
 
 interface Booking {
   id: number;
@@ -131,20 +133,27 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route, navigation}) => {
   };
 
   const handleBookingConfirmation = () => {
-    const { selectedDate, selectedTime, mealNameInput, confirmedBookings } = state;
-    console.log("booking confirmation")
-
+    const { selectedDate, selectedTime, mealNameInput } = state;
+  
     if (selectedDate && selectedTime && mealNameInput) {
-      createMealSession({
-        DateTime: selectedDate + "T" + selectedTime,
-        PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
-      }).then(res => {
-        refreshSessions()
-      })
+      const plan = mealPlans.find(plan => plan.name === mealNameInput);
+  
+      if (plan) {
+        createMealSession({
+          DateTime: selectedDate + "T" + selectedTime,
+          PlanId: plan.id
+        }).then(res => {
+          refreshSessions();
+        });
+      } else {
+        // No plan found, handle this case
+        Alert.alert('Error', 'No meal plan found with the entered name.');
+      }
     } else {
-      Alert.alert('Please enter a meal plan name and select a time');
+      Alert.alert('Error', 'Please ensure all fields are filled correctly.');
     }
   };
+  
 
   const getDaysLeft = (bookingDate: string) => {
     const currentDate = new Date();
@@ -163,7 +172,7 @@ const isPastDate = (date: string) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={TextStyle.h2}>Create a Cook Session!</Text>      
+      <Text style={[TextStyle.h2,{textAlign: 'center'}]}>Create a Cook Session!</Text>      
       <Calendar
         minDate={(new Date()).toISOString().substring(0, 10)}
         onDayPress={(day) => {
@@ -195,7 +204,7 @@ const isPastDate = (date: string) => {
           <Text style={TextStyle.body}>Selected Date:</Text>
           <Text style={styles.selectedDate}>{state.selectedDate}</Text>
           <TouchableOpacity onPress={handleTimeSelect} style={[primary, styles.selectTimeButtonBlue]}>
-            <Text style={[styles.buttonText, styles.selectTimeButtonTextBlue]}>
+            <Text style={[TextStyle.h4, styles.selectTimeButtonTextBlue]}>
               {state.selectedTime ? `Selected Time: ${state.selectedTime}` : 'Select Time'}
             </Text>
           </TouchableOpacity>
@@ -206,7 +215,7 @@ const isPastDate = (date: string) => {
             onChangeText={handleMealNameChange}
           />
           <TouchableOpacity onPress={handleBookingConfirmation} style={[primary, styles.confirmationButton]}>
-            <Text style={styles.buttonText}>Confirm Booking</Text>
+            <Text style={[TextStyle.h4, styles.selectTimeButtonTextBlue]}>Confirm Booking</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -216,21 +225,21 @@ const isPastDate = (date: string) => {
         <ScrollView> 
           <FlatList
             data={state.confirmedBookings.filter(booking => getDaysLeft(booking.date) >= 0)}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
+            keyExtractor={(item) => item?.id.toString()}  
+              renderItem={({ item }) => (
               <TouchableOpacity onPress={() => navigation.navigate('SessionStartScreen', { session: item.session })} style={styles.sessionItem}>
                 <View style={styles.checkIcon}>
                   <Icon name="check" color="green" />
                 </View>
                 <View style={styles.sessionInfo}>
                   <Text style={styles.bookingDate}>Date: {item.date}</Text>
-                  <Text style={styles.mealPlan}>
+                  <Text style={TextStyle.h4}>
                     Meal Plan: <Text style={TextStyle.body}>{item.mealPlanName}</Text>
                     <Text style={{...TextStyle.body, fontWeight: 'bold'}}> - {item.time}</Text> 
                   </Text>
                   <View style={styles.daysLeftContainer}>
                     <Icon name="timer" />
-                    <Text style={styles.daysLeft}>{getDaysLeft(item.date)} days left</Text>
+                    <Text style={TextStyle.h4}>{getDaysLeft(item.date)} days left</Text>
                   </View>
                 </View>
               </TouchableOpacity>
