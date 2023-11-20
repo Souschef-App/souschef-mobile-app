@@ -1,64 +1,87 @@
-import {SetStateAction, useEffect, useState} from 'react';
-import {sessionapi} from '../api/sessionapi'; // Import your session API functions
+import { useState } from 'react';
+import { sessionapi } from '../api/sessionapi'; // Ensure this is using the fetch API
 
 export function useSessionApi() {
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
   const [mealPlans, setMealPlans] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
 
-  // Fetch favorite recipes and update state
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const processResponse = (response: Response) => {
+    if (!response.ok) {
+      throw new Error(`API call failed with status: ${response.status}`);
+    }
+    return response.json();
+  };
+
+  const handleApiError = (error: Error) => {
+    console.error('API call failed:', error.message);
+    // Additional error handling logic added here
+  };
+
   const fetchFavoriteRecipes = (userId: string) => {
     return sessionapi.getFavoriteRecipes(userId)
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
   };
   
   const fetchAllRecipes = () => {
     return sessionapi.getAllRecipes()
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
   };
 
   const createMealPlan = (data: any) => {
-    return sessionapi.createMealPlan(data);
-  }
+    return sessionapi.createMealPlan(data)
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
+  };
 
-  // Fetch meal plans and update state
   const fetchMealPlans = () => {
     sessionapi
       .getMealPlans()
-      .then((response: {data: SetStateAction<any[]>}) => {
-        setMealPlans(response.data);
-      })
-      .catch((error: any) => {
-        console.error('Error fetching meal plans:', error);
-      });
+      .then(response => processResponse(response as Response))
+      .then(data => setMealPlans(data))
+      .catch(handleApiError);
   };
 
-  const addRecipeToMealPlan = (planId: string, type: string, recipeId: any) => {
-    return sessionapi.addRecipeToMealPlan(planId, type, recipeId);
-  }
+  const addRecipeToMealPlan = (planId: string, type: string, recipeId: string) => {
+    return sessionapi.addRecipeToMealPlan(planId, type, recipeId)
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
+  };
 
   const getMealPlans = () => {
-    return sessionapi.getMealPlans();
-  }
+    return sessionapi.getMealPlans()
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
+  };
 
   const createMealSession = (data: any) => {
-    return sessionapi.createMealSession(data);
-  }
+    return sessionapi.createMealSession(data)
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
+  };
 
   const getMealSessions = () => {
-    return sessionapi.getMealSessions();
-  }
+    return sessionapi.getMealSessions()
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
+  };
 
   const joinMealSession = (code: string) => {
-    return sessionapi.joinMealSession(code);
-  }
+    return sessionapi.joinMealSession(code)
+      .then(response => processResponse(response as Response))
+      .catch(handleApiError);
+  };
 
   return {
     fetchFavoriteRecipes,
     fetchAllRecipes,
     createMealPlan,
+    fetchMealPlans,
     addRecipeToMealPlan,
-    createMealSession,
     getMealPlans,
+    createMealSession,
     getMealSessions,
     joinMealSession
     // Add other functions here as needed

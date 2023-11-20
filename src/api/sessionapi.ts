@@ -1,62 +1,76 @@
-// create a server connection;
-import axios, {AxiosInstance} from 'axios';
-
 const API_BASE_URL = 'http://192.168.2.86:8082/api';
 
-let axiosInst: AxiosInstance = axios.create({
-    baseURL: API_BASE_URL,
-    timeout: 10000,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
+// Helper function to perform fetch requests
+const fetchWithTimeout = (url: string, options: RequestInit, timeout = 10000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Timeout')), timeout)
+    ),
+  ]);
+};
 
-// Add a request interceptor to include authentication tokens if needed
-axiosInst.interceptors.request.use(
-  ( config: any ) => {
-    const authToken = 'your-auth-token'; // Replace with the actual token retrieval logic
-    // Add the token to the request headers if it exists
-    if (authToken) {
-      config.headers.Authorization = `Bearer ${authToken}`;
-    }
-    return config;
-  },
-  ( error: any ) => {
-    return Promise.reject(error);
-  },
-);
+const createRequest = (method: string, path: string, data: any = null) => {
+  const authToken = 'your-auth-token'; // Replace with the actual token retrieval logic
+
+  let headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
+  }
+
+  let options: RequestInit = {
+    method,
+    headers,
+  };
+
+  if (data) {
+    options.body = JSON.stringify(data);
+  }
+
+  return fetchWithTimeout(`${API_BASE_URL}${path}`, options);
+};
 
 export const sessionapi = {
-  getAllRecipes: () => axiosInst.get('/recipe/public-recipes'),
+  getAllRecipes: () => createRequest('GET', '/recipe/public-recipes'),
 
-  getFavoriteRecipes: (id: string) => axiosInst.get(`/favoriterecipes/${id}`),
+  getFavoriteRecipes: (id: string) => createRequest('GET', `/favoriterecipes/${id}`),
   addFavoriteRecipe: (id: string, recipeId: string) =>
-    axiosInst.post(`/favoriterecipes/${id}/${recipeId}`, {}),
+    createRequest('POST', `/favoriterecipes/${id}/${recipeId}`),
   deleteFavoriteRecipe: (id: string, recipeId: string) =>
-    axiosInst.delete(`/favoriterecipes/${id}/${recipeId}`),
+    createRequest('DELETE', `/favoriterecipes/${id}/${recipeId}`),
 
-  getMealPlans: () => axiosInst.get('/mealplans'),
-  getMealPlan: (id: string) => axiosInst.get(`/mealplans/${id}`),
-  createMealPlan: (data: any) => axiosInst.post('/mealplans', data),
+  getMealPlans: () => createRequest('GET', '/mealplans'),
+  getMealPlan: (id: string) => createRequest('GET', `/mealplans/${id}`),
+  createMealPlan: (data: any) => createRequest('POST', '/mealplans', data),
   updateMealPlan: (id: string, data: any) =>
-    axiosInst.put(`/mealplans/${id}`, data),
+    createRequest('PUT', `/mealplans/${id}`, data),
   deleteMealPlan: (id: string) =>
-    axiosInst.delete(`/mealplans/${id}`),
+    createRequest('DELETE', `/mealplans/${id}`),
 
-  getMealPlanRecipes: (id: string) => axiosInst.get(`/mealplans/${id}/recipes`),
-  addRecipeToMealPlan: (id: string, type: string, recipeId: string) => axiosInst.post(`/mealplans/${id}/recipes/${type}/${recipeId}`),
-  deleteRecipeFromMealPlan: (id: string, recipeId: string) => axiosInst.delete(`/mealplans/${id}/recipes/${recipeId}`),
+  getMealPlanRecipes: (id: string) => createRequest('GET', `/mealplans/${id}/recipes`),
+  addRecipeToMealPlan: (id: string, type: string, recipeId: string) =>
+    createRequest('POST', `/mealplans/${id}/recipes/${type}/${recipeId}`),
+  deleteRecipeFromMealPlan: (id: string, recipeId: string) =>
+    createRequest('DELETE', `/mealplans/${id}/recipes/${recipeId}`),
 
-  getMealSessions: () => axiosInst.get('/mealsessions'),
-  getMealSession: (id: string) => axiosInst.get(`/mealsessions/${id}`),
-  joinMealSession: (code: string) => axiosInst.get(`/mealsessions/join/${code}`),
-  createMealSession: (data: any) => axiosInst.post('/mealsessions', data),
+  getMealSessions: () => createRequest('GET', '/mealsessions'),
+  getMealSession: (id: string) => createRequest('GET', `/mealsessions/${id}`),
+  joinMealSession: (code: string) =>
+    createRequest('GET', `/mealsessions/join/${code}`),
+  createMealSession: (data: any) =>
+    createRequest('POST', '/mealsessions', data),
   updateMealSession: (id: string, data: any) =>
-    axiosInst.put(`/mealsessions/${id}`, data),
+    createRequest('PUT', `/mealsessions/${id}`, data),
   deleteMealSession: (id: string) =>
-    axiosInst.delete(`/mealsessions/${id}`),
+    createRequest('DELETE', `/mealsessions/${id}`),
 
-  getMealSessionUsers: (id: string) => axiosInst.get(`/mealsessions/${id}/users`),
-  addUserToMealSession: (id: string, userId: string) => axiosInst.post(`/mealsessions/${id}/users/${userId}`),
-  deleteUserFromMealSession: (id: string, userId: string) => axiosInst.delete(`/mealsessions/${id}/users/${userId}`)
+  getMealSessionUsers: (id: string) =>
+    createRequest('GET', `/mealsessions/${id}/users`),
+  addUserToMealSession: (id: string, userId: string) =>
+    createRequest('POST', `/mealsessions/${id}/users/${userId}`),
+  deleteUserFromMealSession: (id: string, userId: string) =>
+    createRequest('DELETE', `/mealsessions/${id}/users/${userId}`),
 };
