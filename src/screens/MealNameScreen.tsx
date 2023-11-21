@@ -4,23 +4,33 @@ import { TextStyle } from "../styles";
 import { Button, Icon } from "../components";
 import { primary } from "../styles/ButtonStyle";
 import { MealNameScreenRouteProp,  RecipeSelectorScreenNavigationProp } from "../navigation/types";
+import { useSessionApi } from "../hooks/useSessionApi";
 
 const MealPlanScreen: React.FC<{
   route: MealNameScreenRouteProp;
   navigation: RecipeSelectorScreenNavigationProp;
 }> = ({ route, navigation }) => {
-  const {date, time} = route.params;
-  const [mealPlanName, setMealPlanName] = useState<string>("");
+  const { date, time, occasion, mealName, recipes } = route.params;
+  const [mealPlanName, setMealPlanName] = useState<string>(mealName);
+  const { createMealPlan, addRecipeToMealPlan } = useSessionApi();
   
-  
-  const goToRecipeSelectorScreen = () => {
-    navigation.navigate("RecipeSelectorScreen", {date, time, mealName: mealPlanName});
+  const goToRecipeSelectorScreen = (mealType: string) => {
+    navigation.navigate("RecipeSelectorScreen", { date, time, mealName: mealPlanName, occasion, recipes, mealType });
 
   }; 
 
   const goToCalendarScreen = () => {
-    
-    navigation.navigate("CalendarScreen", {date, time: time, mealName: mealPlanName});
+    console.log(date, time)
+    createMealPlan({
+      Name: mealPlanName,
+      Date: date + "T" + time
+    }).then(async res => {
+      const planId = res.data.id;
+      for (let recipe of recipes) {
+        await addRecipeToMealPlan(planId, recipe.type, recipe.id);
+      }
+      navigation.navigate("CalendarScreen", { date, time, mealName: mealPlanName });
+    });
   };
   
   useEffect(() => {
@@ -32,7 +42,7 @@ const MealPlanScreen: React.FC<{
       <ScrollView>
         <View style={styles.container}>
         <View style={styles.mealContainer}>
-          <Text style={[TextStyle.h1]}>Meal Name{' '}</Text> 
+          <Text style={[TextStyle.h1]}>Meal Plan</Text> 
         <View>
             <Icon name="kitchenware" size={30} color="black" />
              </View>
@@ -55,7 +65,7 @@ const MealPlanScreen: React.FC<{
                 <Icon
                   name="brochette"                  
                 />
-                <Button onPress={goToRecipeSelectorScreen}>
+                <Button onPress={() => goToRecipeSelectorScreen('Recipes')}>
                   <View style={styles.plusIconContainer}>
                     <Icon
                       name="plus"
@@ -65,70 +75,22 @@ const MealPlanScreen: React.FC<{
               </View>
             </View>
             <View style={styles.sectionContainer}>
-              <TouchableOpacity style={styles.touchableContainer}>
-                <View style={styles.item}>
-                  <Text style={[TextStyle.h3,styles.itemText]}>
-                    Teriyaki Pineapple Meatballs{' '}
-                  </Text>
-                  <Icon
-                    name="pencil"
-                  />
-                </View>
-              </TouchableOpacity>
-
-              <View style={{ height: 5 }} />
-
-              <TouchableOpacity style={styles.touchableContainer}>
-                <View style={styles.item}>
-                  <Text style={[TextStyle.h3,styles.itemText]}>Fruit Charcuterie Board{' '}</Text>
-                  <Icon
-                    name="pencil"
-                  />
-                </View>
-              </TouchableOpacity>
+              {recipes ? recipes.filter(recipe => recipe.type == 'Recipes').map((recipe,i) => <View key={i}>
+                  <TouchableOpacity style={styles.touchableContainer}>
+                    <View style={styles.item}>
+                      <Text style={[TextStyle.h3,styles.itemText]}>
+                        {recipe.name + " "}
+                      </Text>
+                      <Icon
+                        name="pencil"
+                      />
+                    </View>
+                  </TouchableOpacity>
+                  <View style={{ height: 5 }} />
+                </View>) : ""
+              }
             </View>
-
-            <View style={styles.titleContainer}>
-              <View style={styles.bellConcierge}>
-                <Text style={[TextStyle.h2,styles.title]}>Entree{' '}</Text>
-                <Icon
-                  name="meal"
-                />
-                <Button onPress={goToRecipeSelectorScreen}>
-                  <View style={styles.plusIconContainer}>
-                    <Icon
-                      name="plus"
-                    />
-                  </View>
-                </Button>
-              </View>
-            </View>
-            <View style={styles.sectionContainer}>
-              <TouchableOpacity style={styles.touchableContainer}>
-                <View style={styles.item}>
-                  <Text style={[TextStyle.h3,styles.itemText]}>
-                    Chorizo & mozzarella gnocchi bake{' '}
-                  </Text>
-                  <View><Icon
-                    name="pencil"
-                  /></View>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.titleContainer}>  
-              <View style={styles.bellConcierge}>
-                <Text style={[TextStyle.h2,styles.title]}>Dessert{' '}</Text>
-                <Icon name= "cake" />
-                <Button onPress={goToRecipeSelectorScreen}>
-                  <View style={styles.plusIconContainer}>
-                    <Icon
-                      name="plus"
-                    />
-                  </View>
-                </Button>
-              </View>
-            </View>
+            
             <View style={styles.whiteSpace}></View> 
             
             <View style={styles.confirmButtonContainer}>

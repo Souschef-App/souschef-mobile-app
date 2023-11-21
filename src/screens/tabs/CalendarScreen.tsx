@@ -16,12 +16,14 @@ import { Icon } from '../../components';
 import {primary} from '../../styles/ButtonStyle';
 import { TextStyle } from '../../styles/';
 import { CalendarScreenRouteProp } from '../../navigation/types';
+import { useSessionApi } from '../../hooks/useSessionApi';
 
 interface Booking {
   id: number;
   date: string;
   time: string;
   mealPlanName: string;
+  session: any;
 }
 
 interface CalendarScreenProps {
@@ -36,8 +38,10 @@ interface CalendarScreenState {
   isTimePickerVisible: boolean;
 }
 
-const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
-  const {date, time, mealName} = route.params;
+const CalendarScreen: React.FC<CalendarScreenProps> = ({route, navigation}) => {
+  const {date, time, mealName} = route.params ? route.params : {};
+
+  const [mealPlans, setMealPlans] = useState<any[]>([])
 
   const [state, setState] = useState<CalendarScreenState>({
     selectedDate: null,
@@ -48,8 +52,8 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
   });
 
   const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
-
   const [dateTime, setDateTime] = useState(new Date());
+  const { createMealSession, getMealPlans, getMealSessions } = useSessionApi()
 
   const handleDateSelect = (date: string) => {
     setState((prevState) => ({
@@ -58,21 +62,44 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
     }));
   };
 
-  useEffect(() => {
-    if(date!=null && time!=null && mealName!=null) {
-      const newBooking: Booking = {
-        id: Date.now(),
-        date: date || '',
-        time: time || '',
-        mealPlanName: mealName || '',
-      };
-  
+  const refreshSessions = () => {
+    getMealSessions().then(res => {  
+      console.log(res.data);
       setState((prevState) => ({
         ...prevState,
-        confirmedBookings: [...[], newBooking],
-       
+        confirmedBookings: res.data.map((session: any) => ({
+          id: session.id,
+          date: session.dateTime.substring(0, 10),
+          time: session.dateTime.substring(11, 16),
+          mealPlanName: session.plan ? session.plan.name : "Test Meal Plan",
+          session: session
+        })),
+        selectedDate: null,
+        selectedTime: null, 
+        mealNameInput: ''
       }));
-    }
+    })
+  }
+
+  useEffect(() => {
+    getMealPlans().then(res => {
+      console.log(res.data);
+      setMealPlans(res.data);
+        
+      if(date!=null && time!=null && mealName!=null) {
+        console.log(mealName);
+
+        createMealSession({
+          DateTime: date + "T" + time,
+          PlanId: res.data.find((plan: any) => plan.name === mealName).id
+        }).then(res => {
+          refreshSessions()
+        })
+      }
+      else {
+        refreshSessions()
+      }
+    })
   }, [])
 
 
@@ -84,7 +111,9 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
     setIsDateTimePickerVisible(false);
 
     if (date) {
-      const formattedTime = `${date.getHours()}:${date.getMinutes()}`;
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const formattedTime = `${hours}:${minutes}`;
       setState((prevState) => ({
         ...prevState,
         selectedTime: formattedTime,
@@ -101,22 +130,15 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({route}) => {
 
   const handleBookingConfirmation = () => {
     const { selectedDate, selectedTime, mealNameInput, confirmedBookings } = state;
+    console.log("booking confirmation")
 
     if (selectedDate && selectedTime && mealNameInput) {
-      const newBooking: Booking = {
-        id: Date.now(),
-        date: selectedDate,
-        time: selectedTime,
-        mealPlanName: mealNameInput,
-      };
-
-      setState((prevState) => ({
-        ...prevState,
-        confirmedBookings: [...confirmedBookings, newBooking],
-        selectedDate: null,
-        selectedTime: null, 
-        mealNameInput: ''
-      }));
+      createMealSession({
+        DateTime: selectedDate + "T" + selectedTime,
+        PlanId: mealPlans.find(plan => plan.name === mealNameInput).id
+      }).then(res => {
+        refreshSessions()
+      })
     } else {
       Alert.alert('Please enter a meal plan name and select a time');
     }
@@ -139,32 +161,33 @@ const isPastDate = (date: string) => {
 
   return (
     <ScrollView style={styles.container}>
-  <Text style={TextStyle.h2}>Create a Cook Session!</Text>      
-  <Calendar
-  onDayPress={(day) => {
-    if (!isPastDate(day.dateString)) {
-      handleDateSelect(day.dateString);
-    } else {
-      Alert.alert('Please select a future date.');
-    }
-  }}
-  markedDates={{
-    [state.selectedDate || '']: {
-      selected: true,
-      selectedColor: '#4CAF50',
-    },
-    ...state.confirmedBookings.reduce((marked, booking) => {
-      if (isPastDate(booking.date)) {
-        marked[booking.date] = {
-          disabled: true,
-          disableTouchEvent: true,
-          customStyles: { container: { backgroundColor: '#E0E0E0' } },
-        };
-      }
-      return marked;
-    }, {} as { [date: string]: object }), 
-  }}
-/>
+      <Text style={TextStyle.h2}>Create a Cook Session!</Text>      
+      <Calendar
+        minDate={(new Date()).toISOString().substring(0, 10)}
+        onDayPress={(day) => {
+          if (!isPastDate(day.dateString)) {
+            handleDateSelect(day.dateString);
+          } else {
+            Alert.alert('Please select a future date.');
+          }
+        }}
+        markedDates={{
+          [state.selectedDate || '']: {
+            selected: true,
+            selectedColor: '#4CAF50',
+          },
+          ...state.confirmedBookings.reduce((marked, booking) => {
+            if (isPastDate(booking.date)) {
+              marked[booking.date] = {
+                disabled: true,
+                disableTouchEvent: true,
+                customStyles: { container: { backgroundColor: '#E0E0E0' } },
+              };
+            }
+            return marked;
+          }, {} as { [date: string]: object }), 
+        }}
+      />
       {state.selectedDate && (
         <View style={styles.confirmationContainer}>
           <Text style={TextStyle.body}>Selected Date:</Text>
@@ -190,10 +213,10 @@ const isPastDate = (date: string) => {
 <Text style={[TextStyle.h3, { color: 'green', textAlign: 'center' }]}>Active Cooking Sessions</Text>
         <ScrollView> 
           <FlatList
-            data={state.confirmedBookings}
+            data={state.confirmedBookings.filter(booking => getDaysLeft(booking.date) >= 0)}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <View style={styles.sessionItem}>
+              <TouchableOpacity onPress={() => navigation.navigate('SessionStartScreen', { session: item.session })} style={styles.sessionItem}>
                 <View style={styles.checkIcon}>
                   <Icon name="check" color="green" />
                 </View>
@@ -201,14 +224,14 @@ const isPastDate = (date: string) => {
                   <Text style={styles.bookingDate}>Date: {item.date}</Text>
                   <Text style={styles.mealPlan}>
                     Meal Plan: <Text style={TextStyle.body}>{item.mealPlanName}</Text>
-                    <Text style={TextStyle.body}> - {item.time}</Text> 
+                    <Text style={{...TextStyle.body, fontWeight: 'bold'}}> - {item.time}</Text> 
                   </Text>
                   <View style={styles.daysLeftContainer}>
                     <Icon name="timer" />
                     <Text style={styles.daysLeft}>{getDaysLeft(item.date)} days left</Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             )}
           />
         </ScrollView>

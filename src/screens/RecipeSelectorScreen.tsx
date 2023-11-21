@@ -3,12 +3,16 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Icon } from '../components';
 import { TextStyle } from '../styles';
 import { primary } from '../styles/ButtonStyle';
-import { FavoriteScreenNavigationProp } from "../navigation/types";
+import { FavoriteScreenNavigationProp, RecipeSelectorScreenRouteProp } from "../navigation/types";
 
-const RecipeSelectorScreen : React.FC<{ navigation: FavoriteScreenNavigationProp }> = ({ navigation }) => {
+const RecipeSelectorScreen : React.FC<{ route: RecipeSelectorScreenRouteProp, navigation: FavoriteScreenNavigationProp }> = ({ route, navigation }) => {
+  
+  const { date, time, occasion, mealName, recipes, mealType } = route.params;
+
   const goToFavScreen = () => {
-    navigation.navigate('FavoriteScreen');
+    navigation.navigate('FavoriteScreen', { date, time, occasion, mealName, recipes, mealType } );
   }
+  
   return ( 
     <View style={style.container}>
       <Text style={TextStyle.h1}>Where is This Recipe?</Text>

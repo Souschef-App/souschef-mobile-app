@@ -1,6 +1,5 @@
 import { StateCreator } from "zustand";
 import { ApiUrls } from "../../api/constants";
-import { User } from "../types";
 import jsonRequest from "../../api/requests";
 import { StoreState } from "../store";
 import { guestSessionUser } from "../__mocks__";

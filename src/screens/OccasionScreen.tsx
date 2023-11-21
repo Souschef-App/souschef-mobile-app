@@ -8,11 +8,11 @@ import { MealNameScreenNavigationProp, OccasionScreenRouteProp } from "../naviga
 
 const OccasionScreen: React.FC<{ route: OccasionScreenRouteProp, navigation: MealNameScreenNavigationProp }> = ({ route, navigation }) => {
   
-  const {date, time} = route.params
+  const { date, time } = route.params
 
-  const goToMealNameScreen = () => {
+  const goToMealNameScreen = (occasion: number) => {
     navigation.navigate('MealNameScreen', {
-      date, time
+      date, time, occasion, mealName: "", recipes: []
     }); 
 
   }
@@ -22,7 +22,7 @@ const OccasionScreen: React.FC<{ route: OccasionScreenRouteProp, navigation: Mea
       
       <Text style={[TextStyle.h2, style.title]}>What's The Occasion?</Text>
       <View style={style.item_container}>
-        <Button onPress={goToMealNameScreen} style={style.touchable_container}>
+        <Button onPress={() => goToMealNameScreen(0)} style={style.touchable_container}>
           <View style={style.item}>
             <View style={style.sub_item}>
               <Icon name="home" />
@@ -33,7 +33,7 @@ const OccasionScreen: React.FC<{ route: OccasionScreenRouteProp, navigation: Mea
         </Button>
 
         <View style={{ height: 5 }}></View>
-        <Button onPress={goToMealNameScreen} style={style.touchable_container}>
+        <Button onPress={() => goToMealNameScreen(1)} style={style.touchable_container}>
           <View style={style.item}>
             <View style={style.sub_item}>
               <Icon name="briefcase" />
@@ -44,7 +44,7 @@ const OccasionScreen: React.FC<{ route: OccasionScreenRouteProp, navigation: Mea
         </Button>
 
         <View style={{ height: 5 }}></View>
-        <Button onPress={goToMealNameScreen} style={style.touchable_container}>
+        <Button onPress={() => goToMealNameScreen(2)} style={style.touchable_container}>
           <View style={style.item}>
             <View style={style.sub_item}>
               <Icon name="graduationcap" />

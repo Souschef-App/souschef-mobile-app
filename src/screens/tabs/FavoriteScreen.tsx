@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,9 @@ import { Button, Icon } from '../../components';
 import { primary } from '../../styles/ButtonStyle';
 import { TextStyle as textStyle } from '../../styles/';
 import { RouteProp, NavigationProp } from '@react-navigation/native';
-import { MealNameScreenNavigationProp } from '../../navigation/types';
+import { FavoriteScreenNavigationProp, FavoriteScreenRouteProp, MealNameScreenNavigationProp } from '../../navigation/types';
+import { useSessionApi } from '../../hooks/useSessionApi';
+import useStore from '../../data/store';
 
 interface Recipe {
   id: number;
@@ -96,14 +98,23 @@ const yourRecipes: Recipe[] = [
 ];
 
 
-const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp }> = ({ navigation }) => {
-  const goToMealScreen = () => {
-    navigation.navigate('MealNameScreen', {date: null, time: null});}
+const FavoriteRecipesScreen: React.FC<{ route: FavoriteScreenRouteProp, navigation: MealNameScreenNavigationProp }> = ({ route, navigation }) => {
+
+  const { date, time, occasion, mealName, recipes, mealType } = route.params;
+
+  const { fetchFavoriteRecipes, fetchAllRecipes } = useSessionApi()
+  const user = useStore((state) => state.user);
+  
+  const goToMealScreen = (recipe: any) => {
+    navigation.navigate('MealNameScreen', { date, time, occasion, mealName, recipes: !recipes ? [ recipe ] : [ ...recipes, { ...recipe, type: mealType } ] });
+  }
   const [searchText, setSearchText] = useState<string>('');
+  const [allRecipes, setAllRecipes] = useState<any[]>([]);
+  const [yourRecipes, setYourRecipes] = useState<any[]>([]);
   const [filteredFavoriteRecipes, setFilteredFavoriteRecipes] =
-    useState<Recipe[]>(allRecipes);
+    useState<any[]>([]);
   const [filteredYourRecipes, setFilteredYourRecipes] =
-    useState<Recipe[]>(yourRecipes);
+    useState<any[]>([]);
   const [showAllFavoriteRecipes, setShowAllFavoriteRecipes] =
     useState<boolean>(false);
   const [showAllYourRecipes, setShowAllYourRecipes] = useState<boolean>(false);
@@ -128,6 +139,28 @@ const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp
   const displayedYourRecipes = showAllYourRecipes
     ? filteredYourRecipes
     : filteredYourRecipes.slice(0, 3);
+
+  useEffect(() => {
+    console.log("Recipes", user?.id);
+    fetchFavoriteRecipes(user?.id ?? "").then(res => {
+      
+      const recipes = res.data.map((r: any) => r.recipe)
+      console.log(res.data, recipes)
+      setAllRecipes(recipes);
+      setFilteredFavoriteRecipes(recipes);
+    }).catch(err => {
+      setAllRecipes([])
+      setFilteredFavoriteRecipes([])
+    })
+
+    fetchAllRecipes().then(res => {  
+      setYourRecipes(res.data);
+      setFilteredYourRecipes(res.data);
+    }).catch(err => {
+      setYourRecipes([])
+      setFilteredYourRecipes([])
+    })
+  }, [setAllRecipes, setFilteredFavoriteRecipes])
 
   return (
     <View style={styles.container}>
@@ -158,9 +191,9 @@ const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp
         renderItem={({ item }) => (
           <Button
             style={[primary, styles.recipeItem]}
-            onPress={goToMealScreen}
+            onPress={() => goToMealScreen(item)}
           >
-            <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
+            <Image source={{ uri: item.imageUrl ? item.imageUrl : 'https://121399388.cdn6.editmysite.com/uploads/1/2/1/3/121399388/s179680401136495038_p25_i1_w700.jpeg?width=800&optimize=medium' }} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
               <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
@@ -168,7 +201,7 @@ const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp
                   <Icon name="timer" size={16} /> {item.duration} min
                 </Text>
                 <Text style={styles.rating}>
-                  {[...Array(Math.round(item.rating))].map((_, i) => (
+                  {[...Array(Math.round(4.5))].map((_, i) => (
                     <Icon key={i} name="star" size={16} color="#FFD700" />
                   ))}
                 </Text>
@@ -195,9 +228,9 @@ const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp
         renderItem={({ item }) => (
           <Button
             style={[primary, styles.recipeItem]}
-            onPress={goToMealScreen}
+            onPress={() => goToMealScreen(item)}
           >
-            <Image source={{ uri: item.imageUrl }} style={styles.recipeImage} />
+            <Image source={{ uri: item.imageUrl ? item.imageUrl : 'https://121399388.cdn6.editmysite.com/uploads/1/2/1/3/121399388/s179680401136495038_p25_i1_w700.jpeg?width=800&optimize=medium' }} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
               <Text style={textStyle.h3}>{item.name}</Text>
               <View style={styles.additionalInfo}>
@@ -205,7 +238,7 @@ const FavoriteRecipesScreen: React.FC<{ navigation: MealNameScreenNavigationProp
                   <Icon name="timer" size={16} /> {item.duration} min
                 </Text>
                 <Text style={styles.rating}>
-                  {[...Array(Math.round(item.rating))].map((_, i) => (
+                  {[...Array(Math.round(4.5))].map((_, i) => (
                     <Icon key={i} name="star" size={16} color="#FFD700" />
                   ))}
                 </Text>

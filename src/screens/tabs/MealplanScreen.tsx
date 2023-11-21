@@ -171,7 +171,7 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
         data={displayedFavoriteRecipes}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <TouchableOpacity style={[primary, styles.recipeFavItem]}>
+          <TouchableOpacity key={`favRecipe${item.id}`} style={[primary, styles.recipeFavItem]}>
             <Image source={{uri: item.imageUrl}} style={styles.recipeImage} />
             <View style={styles.recipeInfo}>
               <Text style={TextStyle.h3}>{item.name}</Text>
@@ -200,11 +200,10 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
       </Text>
         <TouchableOpacity
             style={[primary,styles.exploreMoreButton]}
-              onPress={() => setShowAllFavoriteRecipes(!showAllFavoriteRecipes)}>
+              onPress={() => navigation.navigate("EnterRecipeIngredientsScreen")}>
             <Text style={[TextStyle.h3,styles.exploreMoreButtonText]}>Add a Recipe</Text>
       </TouchableOpacity>
       </View>
-      <ScrollView>
       <FlatList
         data={displayedYourRecipes}
         keyExtractor={item => item.id.toString()}
@@ -228,7 +227,6 @@ const MealPlanScreen: React.FC<{ navigation: DateScreenNavigationProp }> = ({ na
           </TouchableOpacity>
         )}
       />
-      </ScrollView>
       <Button
           style={[primary, styles.confirmButton]}
           onPress={goToDateScreen}

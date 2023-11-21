@@ -1,17 +1,18 @@
 import React, { useContext, useState } from "react";
 import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
-import { Modal, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
 import { ThemeContext } from "../../contexts/AppContext";
-import { EnterDescriptionScreenNavigationProp } from "../../navigation/types";
+import { EnterRecipeStepsScreenNavigationProp } from "../../navigation/types";
 import { ScrollView } from "react-native-gesture-handler";
 import useStore from "../../data/store";
+import { Modal } from "../../components/Modal";
 
 
-export const EnterRecipeScreen = ({
+export const EnterRecipeStepsScreen = ({
   navigation,
 }: {
-  navigation: EnterDescriptionScreenNavigationProp;
+  navigation: EnterRecipeStepsScreenNavigationProp;
 }) => {
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -23,14 +24,21 @@ export const EnterRecipeScreen = ({
   const setEnteredRecipe = useStore((state) => state.setEnteredRecipe);
   const submitForBreakDown = useStore((state) => state.submitForBreakDown);
 
-
   const getSuggestions = () => {
-    setEnteredRecipe(taskList)
-    submitForBreakDown();
-    navigation.navigate("TaskBreakDownResultScreen");
+    console.log("pressed")
+    if(taskList.length <= 0)
+    {
+      console.log("Add tasks first")
+    }
+    else{
+      setEnteredRecipe(taskList)
+      submitForBreakDown();
+      navigation.navigate("TaskBreakDownResultScreen");
+    }
   };
 
   const addTaskToList = () => {
+    console.log("adding task to list")
     taskList.push(text)
     setText("")
     setModalVisible(!modalVisible)
@@ -40,36 +48,50 @@ export const EnterRecipeScreen = ({
     <SafeArea>
       <VStack m={20}>
         <HStack p={20} justifyContent="space-between" flexMain={false}>
-          <Text style={styles.title}>Recipe</Text> 
+          <Text style={styles.title}>Enter Recipe Steps</Text> 
           <IconButton icon="plus" onPress={() => setModalVisible(true)} />
         </HStack>
-        <ScrollView style={{ backgroundColor: "#77777722", flex: 1, alignSelf: "stretch"}}>
-          {
-            taskList.map((task , index) =>{
-              return (
-                <VStack key={index} style={styles.card} align="flex-start" justifyContent="center">
-                    <Text style={styles.listText}>{index + 1}. {task}</Text>
+        <VStack>
+        {
+          taskList.length == 0 ? (
+          <VStack>
+                <VStack flexMain={false} >
+                  <Text>Enter Each Step</Text>
+                  <Text>Of Your Recipe</Text>
                 </VStack>
-              )
-            })
-          }
-        </ScrollView>
+          </VStack>
+          ):
+          (
+            <ScrollView style={{ flex: 1, alignSelf: "stretch", padding: 20}}>
+            {
+              taskList.map((task , index) =>{
+                return (
+                  <VStack key={index} p={20} style={styles.card} align="flex-start" justifyContent="center">
+                      <Text style={styles.listText}>{index + 1}. {task}</Text>
+                  </VStack>
+                )
+              })
+            }
+            </ScrollView>
+          )
+        }
+        </VStack>
+
         <Modal
          animationType="slide"
          transparent={true}
-         visible={modalVisible}
+         isVisible={modalVisible}
          onRequestClose={() => {
            setModalVisible(!modalVisible);
          }}>
-          <VStack style={styles.container} gap={20}>
+          <VStack style={styles.container} gap={20} p={50} flexMain={false}>
             <Text style={styles.title}>Enter a Task</Text>
             <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
-            <TextButton
+            <Pressable
               style={styles.button}
-              textStyle={styles.buttonText}
-              onPress={addTaskToList}
-              title="Add Task To Recipe"
-            />
+              onPress={addTaskToList}>
+                <Text style={styles.buttonText}>Add Task To Recipe</Text>
+            </Pressable>
           </VStack>
 
         </Modal>
@@ -78,7 +100,7 @@ export const EnterRecipeScreen = ({
           style={styles.button}
           textStyle={styles.buttonText}
           onPress={getSuggestions}
-          title="Get Suggestions"
+          title="FINISHED"
         />
 
       </VStack>
@@ -99,7 +121,7 @@ const makeStyles = (theme: Theme) =>
     },
     input: {
       ...InputStyle.multiline,
-      maxWidth: 300,
+      // maxWidth: 300,
       textAlignVertical: "top",
       minHeight: 120,
 
@@ -112,10 +134,13 @@ const makeStyles = (theme: Theme) =>
     },
     card:{
       backgroundColor: theme.colors.background2,
-      padding: theme.spacing.s
+      padding: theme.spacing.m
     },
     listText:{
       ...TextStyle.body,
       flex: 1
+    },
+    red:{
+      backgroundColor: "red"
     }
   });

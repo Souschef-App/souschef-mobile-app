@@ -1,7 +1,7 @@
-import { Task } from "react-native";
 import { DIFFICULTY } from "./enum";
 import Ingredient from "./ingredient";
 import Kitchenware from "./kitchenware";
+import Task from "./task";
 
 interface Recipe {
   id: string;

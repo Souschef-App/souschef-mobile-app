@@ -2,16 +2,18 @@ import { StateCreator } from "zustand";
 import { StoreState } from "../store";
 import jsonRequest from "../../api/requests";
 import { ApiUrls } from "../../api/constants";
-import { RecipeStep } from "../types/recipeStep";
-import { RecipeStepDTO } from "../types/recipeStepDTO";
+import { Recipe, Task } from "../types";
 
 export interface RecipeBuilderSlice {
   loading: boolean;
   enteredRecipe: string[] | null;
-  brokenDownRecipe: RecipeStep[] | null;
+  brokenDownRecipe: Task[] | null;
+  saveRecipeError: string | null;
+  saveRecipeSuccess: string | null;
   setEnteredRecipe: (recipe: string[]) => void;
   submitForBreakDown: () => void;
-  updateRecipe: (ID: number, updatedRecipe: RecipeStep) => void;
+  updateRecipeTask: (updatedRecipe: Task) => void;
+  saveRecipe: (name: string) => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -22,7 +24,9 @@ export const createRecipeBuilderSlice: StateCreator<
 > = (set, get) => ({
   loading: false,
   enteredRecipe: null,
-  brokenDownRecipe: null,
+  brokenDownRecipe: [],
+  saveRecipeError: null,
+  saveRecipeSuccess: null,
   setEnteredRecipe: (recipe: string[]) => {
     set({ enteredRecipe: recipe });
   },
@@ -34,7 +38,7 @@ export const createRecipeBuilderSlice: StateCreator<
 
     console.log(result);
 
-    const [breakdownResult, error] = await jsonRequest.post<string>(
+    const [breakdownResult, error] = await jsonRequest.post<Task[]>(
       ApiUrls.subtaskBreakDown,
       {
         json: { recipe: result },
@@ -43,46 +47,55 @@ export const createRecipeBuilderSlice: StateCreator<
 
     if (error !== null || breakdownResult == null) return;
 
-    console.log(breakdownResult);
+    console.log("BREAKDOWN RESULT" + JSON.stringify(breakdownResult));
 
-    const removedExtraText = breakdownResult.slice(
-      breakdownResult.indexOf("{"),
-      breakdownResult.lastIndexOf("}") + 1
-    );
-    console.log(removedExtraText);
-    try {
-      const response = JSON.parse(removedExtraText);
-      const tasks: RecipeStepDTO[] = response.recipe;
-
-      const subTasks: RecipeStep[] = [];
-
-      tasks.map((item, index) => {
-        const step: RecipeStep = {
-          ID: index,
-          ...item,
-        };
-        subTasks.push(step);
-      });
-
-      console.log(JSON.stringify(subTasks));
-
-      set({ brokenDownRecipe: subTasks });
-    } catch (error) {
-      console.log(error);
-    }
+    // console.log(JSON.stringify(breakdownResult.tasks));
+    set({ brokenDownRecipe: breakdownResult });
   },
-  updateRecipe: (ID: number, updatedRecipe: RecipeStep) => {
+  updateRecipeTask: (updatedTask: Task) => {
     const list = get().brokenDownRecipe;
 
     if (list == null) return;
 
     const index = list.findIndex((item) => {
-      return item.ID === ID;
+      return item.id === updatedTask.id;
     });
-    list.splice(index, 0, updatedRecipe);
 
-    console.log("LIST " + list);
+    list.splice(index, 1, updatedTask);
 
     set({ brokenDownRecipe: list });
+  },
+  saveRecipe: async (name: string) => {
+    console.log("saveRecipe");
+    const tasks = get().brokenDownRecipe;
+    const userID = get().user?.id;
+
+    if (tasks != null && name != null && userID != null) {
+      const recipe: Recipe = {
+        id: "",
+        name: name,
+        date: 0,
+        duration: 0,
+        difficulty: 0,
+        serves: 0,
+        favorites: 0,
+        tasks: tasks,
+        ingredients: [],
+        kitchenware: [],
+        ownerId: userID,
+      };
+
+      const [res, error] = await jsonRequest.post<any>(ApiUrls.saveRecipe, {
+        json: recipe,
+      });
+
+      if (error) {
+        set({ saveRecipeError: error });
+      } else {
+        set({ saveRecipeSuccess: "Success" });
+      }
+    } else {
+      set({ saveRecipeError: "No Recipe" });
+    }
   },
 });
