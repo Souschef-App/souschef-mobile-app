@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { CalendarScreen, MealplanScreen } from "../screens";
-import { EnterRecipeStepsScreen } from "../screens/subtask-generation/EnterRecipeStepsScreen";
+import { EnterRecipeStepsScreen } from "../screens/subtask-generation/InputRecipe/EnterRecipeStepsScreen";
 import { TaskBreakDownResultScreen } from "../screens/subtask-generation/TaskBreakDownResult/TaskBreakDownResultScreen";
 import { MealPlanNavigatorParamList } from "./types";
 import DateScreen from "../screens/DateScreen";
@@ -10,7 +10,7 @@ import MealNameScreen from "../screens/MealNameScreen";
 import OccasionScreen from "../screens/OccasionScreen";
 import RecipeSelectorScreen from "../screens/RecipeSelectorScreen";
 import FavoriteScreen from "../screens/tabs/FavoriteScreen";
-import { EnterRecipeIngredientsScreen } from "../screens/subtask-generation/EnterRecipeIngredientsScreen";
+import { EnterRecipeIngredientsScreen } from "../screens/subtask-generation/InputRecipe/EnterRecipeIngredientsScreen";
 
 const MealPlanStack = createNativeStackNavigator<MealPlanNavigatorParamList>();
 
