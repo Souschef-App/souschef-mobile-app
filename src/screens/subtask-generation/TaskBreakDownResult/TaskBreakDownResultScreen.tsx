@@ -83,7 +83,7 @@ export const TaskBreakDownResultScreen = ({
             style={styles.container} 
             pVH={{v: 20, h : 20}} 
             gap={0}>
-            <HStack justifyContent="space-between" >
+            {/* <HStack justifyContent="space-between" >
               <Text style={styles.title}>Steps</Text>
 
               <Button style={styles.reGenerateBTN} onPress={()=>{}}>
@@ -92,7 +92,7 @@ export const TaskBreakDownResultScreen = ({
                   <Icon name="retry"  color={theme.colors.background} />
                 </HStack>
               </Button>
-            </HStack>
+            </HStack> */}
 
             <VStack>
             {
@@ -183,10 +183,10 @@ const makeStyles = (theme: Theme) =>
       color: theme.colors.background,
     },
     stepComponentWrapper: {
-      backgroundColor: theme.colors.background,
-      flexGrow: 0,
-      elevation: 5,
-      borderRadius: 20
+      // backgroundColor: theme.colors.background,
+      // flexGrow: 0,
+      // elevation: 5,
+      // borderRadius: 20
     },
     orgtask: {
       backgroundColor: theme.colors.background2,

@@ -6,7 +6,7 @@ import { formatIngredientQuantity } from "../../../utils/format"
 export const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, styles, onEdit, isEditMode} : any) =>{
 
     return(
-      <Button style={isEditMode ? styles.highlightEdit : null} onPress={() => onEdit()}>
+      <Button style={styles.highlightEdit} onPress={() => onEdit()}>
         <Dropdown 
           title={title}
           icon={icon}

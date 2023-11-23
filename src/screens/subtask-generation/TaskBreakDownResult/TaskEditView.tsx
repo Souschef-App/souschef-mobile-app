@@ -113,19 +113,19 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   }
 
   return (
-    <VStack style={styles.card} p={theme.spacing.m}>
+    <VStack p={theme.spacing.m}>
       <VStack gap={theme.spacing.xl}>
         <VStack flexMain={false} gap={theme.spacing.s}>
-          <HStack justifyContent="space-between">
+          {/* <HStack justifyContent="space-between">
             <IconButton icon="pencil" onPress={()=> setCanEdit(!canEdit)} />
             <IconButton style={styles.retry} icon="retry" onPress={() => { }} color="#fff" iconSize={30} />
-          </HStack>
+          </HStack> */}
           {/* <Text style={styles.taskTitle}>{task.title}</Text> */}
           <TextButton 
-            style={canEdit ? styles.highlightEdit : null} 
+            style={styles.highlightEdit} 
             textStyle={styles.taskTitle} 
             title={task.title} 
-            onPress={canEdit ? ()=> setIsEditTitleVisible(true) : () => {}} />
+            onPress={() => setIsEditTitleVisible(true)} />
 
           <HStack
             flexMain={false}
@@ -134,13 +134,13 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           >
             <HStack flexMain={false} gap={theme.spacing.s}>
               <Icon name="timer" color={theme.colors.text} size={24} />
-              <Button style={canEdit ? styles.highlightEdit : null} onPress={canEdit ? ()=> setIsEditDurationVisible(true) : () => {}}>
+              <Button style={styles.highlightEdit} onPress={() => setIsEditDurationVisible(true)}>
                 <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
               </Button>
             </HStack>
             <Divider thickness={3} color={theme.colors.background2} />
 
-            <Button style={canEdit ? styles.highlightEdit : null} onPress={()=>setIsEditDifficultyVisible(true)}>
+            <Button style={styles.highlightEdit} onPress={()=>setIsEditDifficultyVisible(true)}>
               <HStack flexMain={false} gap={theme.spacing.s}>
                 <Icon name="star" color={theme.colors.highlight2} size={24} />
                 <Icon
@@ -163,7 +163,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             </Button>
           </HStack>
         </VStack>
-        <Button style={canEdit ? styles.highlightEdit : null} onPress={canEdit ? () => setIsEditDescriptionVisible(true) : () => {}}>
+        <Button style={styles.highlightEdit} onPress={() => setIsEditDescriptionVisible(true)}>
           <Text style={TextStyle.h3}>{task.description}</Text>
         </Button>
         <VStack
@@ -481,10 +481,6 @@ const makeStyles = (theme: Theme) =>
     timerText: {
       ...TextStyle.body,
       fontWeight: "bold",
-    },
-    card: {
-      elevation: 6,
-      borderColor: 'red'
     },
     retry: {
       backgroundColor: theme.colors.danger,
