@@ -131,8 +131,8 @@ export const TaskBreakDownResultScreen = ({
                     <VStack>
                       <HStack flexMain={false} justifyContent="flex-end">
                         <HoldItem  items={[
-                          { text: '@enesozt', onPress: () => {} },
-                          { text: 'All Rooms', onPress: () => {} },
+                          { text: '@enesozt', onPress: () => console.log('@enesozt') },
+                          { text: 'All Rooms', onPress: () => console.log('All Rooms') },
                         ]}>
                           <Text>HOLD ITEM</Text>
                         </HoldItem>

@@ -16,7 +16,7 @@ import {
   calculateMenuHeight,
   menuAnimationAnchor,
 } from '../../utils/calculations';
-import { BlurView } from 'expo-blur';
+import { BlurTint, BlurView } from 'expo-blur';
 
 import MenuItems from './MenuItems';
 
@@ -93,22 +93,22 @@ const MenuListComponent = () => {
     };
   });
 
-  // const animatedInnerContainerStyle = useAnimatedStyle(() => {
-  //   return {
-  //     backgroundColor:
-  //       theme.value === 'light'
-  //         ? IS_IOS
-  //           ? 'rgba(255, 255, 255, .75)'
-  //           : 'rgba(255, 255, 255, .95)'
-  //         : IS_IOS
-  //         ? 'rgba(0,0,0,0.5)'
-  //         : 'rgba(39, 39, 39, .8)',
-  //   };
-  // }, [theme]);
+  const animatedInnerContainerStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor:
+        "light" === 'light'
+          ? IS_IOS
+            ? 'rgba(255, 255, 255, .75)'
+            : 'rgba(255, 255, 255, .95)'
+          : IS_IOS
+          ? 'rgba(0,0,0,0.5)'
+          : 'rgba(39, 39, 39, .8)',
+    };
+  }, []);
 
-  // const animatedProps = useAnimatedProps(() => {
-  //   return { tint: theme.value };
-  // }, [theme]);
+  const animatedProps = useAnimatedProps(() => {
+    return { tint: "dark" as BlurTint };
+  }, []);
 
   const setter = (items: MenuItemProps[]) => {
     setItemList(items);
@@ -126,21 +126,25 @@ const MenuListComponent = () => {
   );
 
   return (
-    <AnimatedView
-      intensity={100}
-      // animatedProps={animatedProps}
-      style={[styles.menuContainer, messageStyles]}
-    >
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFillObject,
-          styles.menuInnerContainer,
-          // animatedInnerContainerStyle,
-        ]}
+    <Animated.View style={[styles.menuContainer, messageStyles]}>
+      <AnimatedView
+        intensity={100}
+        animatedProps={animatedProps}
+        style={{
+          ...StyleSheet.absoluteFillObject,
+        }}
       >
-        <MenuItems items={itemList} />
-      </Animated.View>
-    </AnimatedView>
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFillObject,
+            styles.menuInnerContainer,
+            animatedInnerContainerStyle,
+          ]}
+        >
+          <MenuItems items={itemList} />
+        </Animated.View>
+      </AnimatedView>
+    </Animated.View>
   );
 };
 

@@ -102,30 +102,32 @@ const BackdropComponent = () => {
     };
   });
 
-  // const animatedInnerContainerStyle = useAnimatedStyle(() => {
-  //   const backgroundColor = 
-  //     theme.value === 'light'
-  //       ? BACKDROP_LIGHT_BACKGROUND_COLOR
-  //       : BACKDROP_DARK_BACKGROUND_COLOR;
+  const animatedInnerContainerStyle = useAnimatedStyle(() => {
+    const backgroundColor = 
+      "light" === 'light'
+        ? "#00000092"
+        : "purple";
 
-  //   return { backgroundColor };
-  // }, [theme]);
+    return { backgroundColor };
+  }, []);
 
   return (
     <TapGestureHandler onHandlerStateChange={tapGestureEvent}>
-      <AnimatedBlurView
-        // @ts-ignore
-        tint="default"
-        animatedProps={animatedContainerProps}
-        style={[styles.container, animatedContainerStyle]}
-      >
-        <Animated.View
-          style={[
-            { ...StyleSheet.absoluteFillObject },
-            // animatedInnerContainerStyle,
-          ]}
-        />
-      </AnimatedBlurView>
+      <Animated.View style={[styles.container, animatedContainerStyle]}>
+        <AnimatedBlurView
+          // @ts-ignore
+          tint="default"
+          animatedProps={animatedContainerProps}
+          style={[styles.container]}
+        >
+          <Animated.View
+            style={[
+              { ...StyleSheet.absoluteFillObject },
+              animatedInnerContainerStyle,
+            ]}
+          />
+        </AnimatedBlurView>
+      </Animated.View>
     </TapGestureHandler>
   );
 };

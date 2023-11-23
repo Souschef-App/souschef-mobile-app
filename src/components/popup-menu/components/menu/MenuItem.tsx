@@ -30,7 +30,7 @@ const MenuItemComponent = ({ item, isLast }: MenuItemComponentProps) => {
   const theme = useContext(ThemeContext);
 
   const borderStyles = useAnimatedStyle(() => {
-    const borderBottomColor = theme.colors.danger //CHANGE LATER
+    const borderBottomColor = theme.colors.text //CHANGE LATER
 
     return {
       borderBottomColor,
@@ -51,7 +51,9 @@ const MenuItemComponent = ({ item, isLast }: MenuItemComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, item]);
 
+
   return (
+  
     <>
       <AnimatedTouchable
         onPress={handleOnPress}
