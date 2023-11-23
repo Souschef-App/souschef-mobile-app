@@ -37,8 +37,8 @@ const AnimatedPagination: React.FC<IAnimatedPaginationProps> = ({
     <Animated.View
       style={[
         {
-          width: 8,
-          height: 8,
+          width: 10,
+          height: 10,
           borderRadius: 8,
           marginHorizontal: 4,
         },

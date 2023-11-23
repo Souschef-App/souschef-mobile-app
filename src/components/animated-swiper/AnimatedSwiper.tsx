@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleSheet, View, ViewStyle, Text} from 'react-native';
 
 import useSwipe from './hooks/useSwipe';
 import AnimatedPagination from './AnimatedPagination';
@@ -19,8 +19,8 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
   children,
   paginationStyle,
   duration = 300,
-  dotColor = '#021f6d',
-  activeDotColor = '#FFFFFF',
+  dotColor = '#777777dd',
+  activeDotColor = '#021f6d',
 }) => {
   const childrenArray: React.ReactNode[] = Array.isArray(children)
     ? children
@@ -79,7 +79,7 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
             );
         })}
         </View>
-        <HStack flexMain={false} justifyContent='flex-start'>
+        <HStack flexMain={false} justifyContent='space-between'>
             <View style={[styles.dotContainer, paginationStyle]}>
                 {childrenArray.map((_, index) => {
                 return (
@@ -93,7 +93,9 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
                 );
                 })}
             </View>
-            
+            <HStack flexMain={false}>
+                <Text>{activeIndex + 1}/{childrenArray.length}</Text>
+            </HStack>
 
         </HStack>
     </VStack>
