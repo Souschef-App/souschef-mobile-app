@@ -1,7 +1,9 @@
 import {
+  FEED_ACTION,
   FeedSnapshot,
   SESSION_SERVER_MSG,
-  Task,
+  SessionUser,
+  TASK_STATUS,
   User,
   WelcomeSnapshot,
 } from "../../types";
@@ -27,16 +29,46 @@ const handleHandshake = (set: SessionSetState, payload: WelcomeSnapshot) => {
     payload.livefeed[i].timestamp = new Date(payload.livefeed[i].timestamp);
   }
 
-  set({ connectedUsers: payload.users, livefeed: payload.livefeed });
+  Object.entries(payload.tasks).forEach(([taskID, task]) => {
+    if (task.timestamp) {
+      payload.tasks[taskID] = {
+        ...task,
+        timestamp: new Date(task.timestamp),
+      };
+    }
+  });
+
+  set({
+    connectedUsers: payload.users,
+    tasks: payload.tasks,
+    livefeed: payload.livefeed,
+  });
 };
 
-const handleClientConnected = (set: SessionSetState, payload: User) => {
+const handleClientConnected = (set: SessionSetState, payload: SessionUser) => {
   if (!payload) return;
   set((state) => ({ connectedUsers: [...state.connectedUsers, payload] }));
 };
 
-const handleClientDisconnected = (set: SessionSetState, payload: User) => {
+const handleClientDisconnected = (
+  set: SessionSetState,
+  payload: SessionUser
+) => {
   if (!payload) return;
+
+  if (payload.taskID) {
+    set((state) => ({
+      tasks: {
+        ...state.tasks,
+        [payload.taskID!]: {
+          ...state.tasks[payload.taskID!],
+          status: TASK_STATUS.Unassigned,
+          timestamp: new Date(),
+        },
+      },
+    }));
+  }
+
   set((state) => ({
     connectedUsers: state.connectedUsers.filter((u) => u.id !== payload.id),
   }));
@@ -46,18 +78,45 @@ const handleMealCompleted = (set: SessionSetState, _: any) => {
   set({ assignedTask: null, sessionCompleted: true });
 };
 
-const handleTaskNew = (set: SessionSetState, payload: Task) => {
+const handleTaskNew = (set: SessionSetState, payload: string) => {
   set({ assignedTask: payload, taskLoading: false });
 };
 
-const handleFeedSnapshot = (set: SessionSetState, payload: FeedSnapshot) => {
-  if (!payload) {
-    // Force re-render
-    set((state) => ({ livefeed: [...state.livefeed] }));
-  } else {
-    payload.timestamp = new Date(payload.timestamp);
-    set((state) => ({ livefeed: [payload, ...state.livefeed] }));
+const userActionToTaskStatus = (action: FEED_ACTION): TASK_STATUS => {
+  switch (action) {
+    case FEED_ACTION.Assignment:
+      return TASK_STATUS.InProgress;
+    case FEED_ACTION.Completion:
+      return TASK_STATUS.Completed;
+    case FEED_ACTION.Deferred:
+      return TASK_STATUS.Background;
+    case FEED_ACTION.Reroll:
+      return TASK_STATUS.Unassigned;
   }
+};
+
+const handleFeedSnapshot = (set: SessionSetState, payload: FeedSnapshot) => {
+  if (!payload) return;
+
+  payload.timestamp = new Date(payload.timestamp);
+  set((state) => ({
+    livefeed: [payload, ...state.livefeed],
+    tasks: {
+      ...state.tasks,
+      [payload.task.id]: {
+        ...state.tasks[payload.task.id],
+        status: userActionToTaskStatus(payload.action),
+        timestamp: payload.timestamp,
+      },
+    },
+  }));
+};
+
+const handleTimestampUpdate = (set: SessionSetState, _: any) => {
+  set((state) => ({
+    livefeed: [...state.livefeed],
+    tasks: { ...state.tasks },
+  }));
 };
 
 const messageHandlerMap: MessageHandlerMap = {
@@ -68,6 +127,7 @@ const messageHandlerMap: MessageHandlerMap = {
   [SESSION_SERVER_MSG.MealCompleted]: handleMealCompleted,
   [SESSION_SERVER_MSG.TaskNew]: handleTaskNew,
   [SESSION_SERVER_MSG.FeedSnapshot]: handleFeedSnapshot,
+  [SESSION_SERVER_MSG.TimestampUpdate]: handleTimestampUpdate,
 };
 
 export default messageHandlerMap;

@@ -4,4 +4,5 @@ export interface SessionUser {
   id: string;
   name: string;
   skillLevel: SKILL_LEVEL;
+  taskID?: string;
 }

@@ -33,6 +33,7 @@ export type LiveSessionNavigatorParamList = {
 
 export type TaskDrawerNavigatorParamList = {
   Task: undefined;
+  Tracker: undefined;
   Feed: undefined;
   Invite: undefined;
 };
@@ -146,6 +147,7 @@ export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
 export const defaultTaskDrawerNavigatorParamList: TaskDrawerNavigatorParamList =
   {
     Task: undefined,
+    Tracker: undefined,
     Feed: undefined,
     Invite: undefined,
   };
@@ -240,6 +242,11 @@ export type ConnectedScreenNavigationProp = NativeStackNavigationProp<
 
 export type TaskScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<TaskDrawerNavigatorParamList, "Task">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "LiveSession">
+>;
+
+export type TrackerScreenNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<TaskDrawerNavigatorParamList, "Tracker">,
   NativeStackNavigationProp<HomeStackNavigatorParamList, "LiveSession">
 >;
 

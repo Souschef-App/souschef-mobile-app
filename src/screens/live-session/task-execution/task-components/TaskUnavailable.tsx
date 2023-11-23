@@ -8,17 +8,20 @@ const TaskUnavailable = () => {
   // Theme
   const theme = React.useContext(ThemeContext);
 
-  const messageTitle = "There are no tasks available";
-  const messageDesc = "Please wait for new tasks to become available.";
+  const messageTitle = "There are no tasks currently available";
+  const messageDesc =
+    "Please wait for new tasks to become available. Meanwhile, remember to check for any ongoing background tasks.";
 
   return (
     <VStack
       mAll={{ b: theme.spacing.xxxl }} // Offset AppBar
       pVH={{ h: theme.spacing.m }}
-      gap={theme.spacing.s}
+      gap={theme.spacing.l}
     >
-      <Text style={TextStyle.h2}>{messageTitle}</Text>
-      <Text style={TextStyle.h4}>{messageDesc}</Text>
+      <Text style={[TextStyle.h2, { textAlign: "center" }]}>
+        {messageTitle}
+      </Text>
+      <Text style={[TextStyle.h4, { textAlign: "center" }]}>{messageDesc}</Text>
     </VStack>
   );
 };

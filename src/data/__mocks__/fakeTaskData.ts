@@ -1,19 +1,11 @@
-import {
-  COOKING_UNIT,
-  DIFFICULTY,
-  Recipe,
-  SKILL_LEVEL,
-  Task,
-  User,
-} from "../types";
+import { COOKING_UNIT, DIFFICULTY, SessionTask, TASK_STATUS } from "../types";
 
-const fakeTask: Task = {
+const fakeSessionTask: SessionTask = {
   id: "task-123",
   title: "Prepare Baguette",
   description: "Split the French baguette in half lengthwise.",
   duration: 10,
   difficulty: DIFFICULTY.Medium,
-  priority: 0,
   dependencies: [],
   ingredients: [
     {
@@ -36,6 +28,8 @@ const fakeTask: Task = {
       quantity: 1,
     },
   ],
+  isBackground: false,
+  status: TASK_STATUS.Unassigned,
 };
 
-export default fakeTask;
+export default fakeSessionTask;

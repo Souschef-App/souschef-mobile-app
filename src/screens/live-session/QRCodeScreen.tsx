@@ -2,21 +2,14 @@ import { BarCodeEvent } from "expo-barcode-scanner";
 import { Camera, PermissionResponse } from "expo-camera";
 import React from "react";
 import { StyleSheet, Text } from "react-native";
-import {
-  Icon,
-  QRScan,
-  SafeArea,
-  TextButton,
-  VStack,
-} from "../../../components";
-import { AppContext, ThemeContext } from "../../../contexts/AppContext";
-import { guestUser } from "../../../data/__mocks__";
-import useStore from "../../../data/store";
+import { Icon, QRScan, SafeArea, TextButton, VStack } from "../../components";
+import { AppContext, ThemeContext } from "../../contexts/AppContext";
+import useStore from "../../data/store";
 import {
   QRCodeScreenNavigationProp,
   defaultLiveSessionNavigatorParamList,
-} from "../../../navigation/types";
-import { ButtonStyle, TextStyle, Theme } from "../../../styles";
+} from "../../navigation/types";
+import { ButtonStyle, TextStyle, Theme } from "../../styles";
 import * as Linking from "expo-linking";
 
 const fiveDigitRegex = /^\d{5}$/;
@@ -47,7 +40,7 @@ const QRCodeScreen = ({
       joinFakeSession();
       navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
     } else if (typeof e.data === "string" && fiveDigitRegex.test(e.data)) {
-      joinSession(e.data, user ?? guestUser);
+      joinSession(e.data, user);
       navigation.replace("LiveSession", defaultLiveSessionNavigatorParamList);
     }
   };

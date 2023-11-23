@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text } from "react-native";
 import { Button, SafeArea, VStack, ValidationInput } from "../../components";
 import { ThemeContext } from "../../contexts/AppContext";
-import { guestUser } from "../../data/__mocks__";
+import { guestSessionUser } from "../../data/__mocks__";
 import useStore from "../../data/store";
 import {
   ConnectedScreenNavigationProp,
@@ -23,25 +23,16 @@ const ConnectedScreen = ({
   // State
   const [name, setName] = React.useState<string>("");
   const [isNameValid, setIsNameValid] = React.useState<boolean>(false);
-  const [isNameStatusVisible, setIsNameStatusVisible] =
-    React.useState<boolean>(false);
 
-  React.useEffect(() => {
-    // Show status ONLY if valid
-    const isValid = name.length > 2;
-    setIsNameStatusVisible(isValid);
-    setIsNameValid(isValid);
-  }, [name]);
+  // Store
+  const loginAsGuest = useStore((state) => state.loginAsGuest);
+  const setGuestIdentity = useStore((state) => state.commands.setGuestIdentity);
 
   const handleSubmit = () => {
-    if (name.length > 2) {
-      // TODO: Generate proper guest with UUID
-      const guest = guestUser;
-      guest.name = name;
-      useStore.setState({ user: guest });
+    if (isNameValid) {
+      loginAsGuest(name);
+      setGuestIdentity(name);
       navigation.replace("Running", defaultTaskDrawerNavigatorParamList);
-    } else {
-      setIsNameStatusVisible(true);
     }
   };
 
@@ -50,15 +41,19 @@ const ConnectedScreen = ({
       <VStack p={theme.spacing.xxxl} gap={16}>
         <Text style={styles.label}>Your name is...</Text>
         <ValidationInput
-          validationRegex={nameRegex}
           value={name}
+          validationRegex={nameRegex}
           onChangeText={setName}
+          onValidationChange={setIsNameValid}
           placeholder="Guest Name"
           maxLength={16}
           style={styles.inputText}
           containerStyle={styles.input}
         />
-        <Button onPress={handleSubmit} style={styles.button}>
+        <Button
+          onPress={handleSubmit}
+          style={[styles.button, { opacity: isNameValid ? 1 : 0.5 }]}
+        >
           <Text style={styles.label}>OK!</Text>
         </Button>
       </VStack>

@@ -1,13 +1,13 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text } from "react-native";
-import { OtpInput, SafeArea, VStack } from "../../../components";
-import { AppContext, ThemeContext } from "../../../contexts/AppContext";
-import useStore from "../../../data/store";
+import { OtpInput, SafeArea, VStack } from "../../components";
+import { AppContext, ThemeContext } from "../../contexts/AppContext";
+import useStore from "../../data/store";
 import {
   SessionCodeScreenNavigationProp,
   defaultLiveSessionNavigatorParamList,
-} from "../../../navigation/types";
-import { TextStyle, Theme } from "../../../styles";
+} from "../../navigation/types";
+import { TextStyle, Theme } from "../../styles";
 
 const fiveDigitRegex = /^\d{5}$/;
 

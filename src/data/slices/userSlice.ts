@@ -2,8 +2,7 @@ import { StateCreator } from "zustand";
 import { ApiUrls } from "../../api/constants";
 import jsonRequest from "../../api/requests";
 import { StoreState } from "../store";
-import { User } from "../types";
-import { guestUser } from "../__mocks__";
+import { guestSessionUser } from "../__mocks__";
 
 type UserState = {
   user: User | null;
@@ -21,6 +20,7 @@ type UserActions = {
   resetUserSlice: () => void;
   resetUserError: () => void;
   login: ({}: { email: string; password: string }) => Promise<void>;
+  loginAsGuest: (guestname: string) => void;
   fakeLogin: () => void;
   register: ({}: {
     username: string;
@@ -49,8 +49,20 @@ export const createUserSlice: StateCreator<StoreState, [], [], UserSlice> = (
       ...(user ? { user } : { userError: error }),
     });
   },
+  loginAsGuest: (guestname: string) => {
+    const user: User = {
+      ...guestSessionUser,
+      email: "guest@mail.com",
+      name: guestname,
+    };
+    set({ user });
+  },
   fakeLogin: () => {
-    set({ user: guestUser });
+    const user: User = {
+      ...guestSessionUser,
+      email: "guest@mail.com",
+    };
+    set({ user });
   },
   register: async (data) => {
     set({ userLoading: true, userError: null });
