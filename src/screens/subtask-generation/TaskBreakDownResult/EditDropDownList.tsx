@@ -3,7 +3,7 @@ import { Dropdown, HStack, Divider, VStack, Button } from "../../../components"
 import { TextStyle } from "../../../styles"
 import { formatIngredientQuantity } from "../../../utils/format"
 
-export const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, styles, onEdit, isEditMode} : any) =>{
+export const EditDropdownList = ({title, icon, isOpen, setIsOpen, theme, items, styles, onEdit} : any) =>{
 
     return(
       <Button style={styles.highlightEdit} onPress={() => onEdit()}>

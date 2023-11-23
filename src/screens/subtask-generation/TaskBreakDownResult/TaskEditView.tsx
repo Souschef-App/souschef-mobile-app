@@ -50,8 +50,6 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [isKitchenwareOpen, setIsKitchenwareOpen] = useState<boolean>(false);
   const [isDependenciesOpen, setIsDependenciesOpen] = useState<boolean>(false);
 
-  const [canEdit, setCanEdit] = useState(false)
-
   const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
   const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
   const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
@@ -179,7 +177,6 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             setIsOpen={() => setIsIngredientOpen(!isIngredientOpen)} 
             items={task.ingredients}
             styles={styles}
-            isEditMode={canEdit}
             onEdit={()=> setIsEditIngredientsVisible(true)}/>
 
           <EditDropdownList 
@@ -190,7 +187,6 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             setIsOpen={() => setIsKitchenwareOpen(!isKitchenwareOpen)} 
             items={task.kitchenware}
             styles={styles}
-            isEditMode={canEdit}
             onEdit={()=> setIsEditIKitchenwareVisible(true)}/>
 
           <EditDropdownList 
@@ -200,8 +196,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             isOpen={isDependenciesOpen} 
             setIsOpen={() => setIsDependenciesOpen(!isDependenciesOpen)} 
             items={task.dependencies}
-            styles={styles}
-            isEditMode={canEdit}/>
+            styles={styles}/>
         </VStack>
       </VStack>  
 
