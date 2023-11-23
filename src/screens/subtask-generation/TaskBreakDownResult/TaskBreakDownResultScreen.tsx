@@ -10,6 +10,7 @@ import useStore from "../../../data/store";
 import TaskEditScreen from "./TaskEditView";
 import { SaveRecipeView } from "./SaveRecipeView";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
+import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
 
 export const TaskBreakDownResultScreen = ({
   navigation,
@@ -83,7 +84,7 @@ export const TaskBreakDownResultScreen = ({
             style={styles.container} 
             pVH={{v: 20, h : 20}} 
             gap={0}>
-            <HStack justifyContent="space-between" >
+            {/* <HStack justifyContent="space-between" >
               <Text style={styles.title}>Steps</Text>
 
               <Button style={styles.reGenerateBTN} onPress={()=>{}}>
@@ -92,7 +93,7 @@ export const TaskBreakDownResultScreen = ({
                   <Icon name="retry"  color={theme.colors.background} />
                 </HStack>
               </Button>
-            </HStack>
+            </HStack> */}
 
             <VStack>
             {
@@ -104,7 +105,12 @@ export const TaskBreakDownResultScreen = ({
                   )
                   :
                   (
-                    <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
+                    <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
+                    {brokenDownRecipe.map(data => (
+                      <TaskEditScreen task={data} />
+                    ))}
+                    </AnimatedSwiper>
+                    // <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
                   )
                 
               ) : (
@@ -114,7 +120,7 @@ export const TaskBreakDownResultScreen = ({
               )
             }
             </VStack>
-            <HStack>
+            {/* <HStack>
             <Button
               onPress={()=>prevTask()}
               style={{
@@ -154,7 +160,7 @@ export const TaskBreakDownResultScreen = ({
                 style={styles.arrowIcon}
               />
             </Button>
-            </HStack>
+            </HStack> */}
           </VStack>
         )
       }
@@ -183,10 +189,10 @@ const makeStyles = (theme: Theme) =>
       color: theme.colors.background,
     },
     stepComponentWrapper: {
-      backgroundColor: theme.colors.background,
-      flexGrow: 0,
-      elevation: 5,
-      borderRadius: 20
+      // backgroundColor: theme.colors.background,
+      // flexGrow: 0,
+      // elevation: 5,
+      // borderRadius: 20
     },
     orgtask: {
       backgroundColor: theme.colors.background2,

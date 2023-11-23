@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
-import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../components";
+import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../../components";
 import { Pressable, StyleSheet, Text } from "react-native";
-import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../styles";
-import { ThemeContext } from "../../contexts/AppContext";
-import { EnterRecipeStepsScreenNavigationProp } from "../../navigation/types";
+import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
+import { ThemeContext } from "../../../contexts/AppContext";
+import { EnterRecipeStepsScreenNavigationProp } from "../../../navigation/types";
 import { ScrollView } from "react-native-gesture-handler";
-import useStore from "../../data/store";
-import { Modal } from "../../components/Modal";
+import useStore from "../../../data/store";
+import { Modal } from "../../../components/Modal";
+import { makeStyles } from "./style";
+import { RowItem } from "./components";
 
 
 export const EnterRecipeStepsScreen = ({
@@ -66,9 +68,7 @@ export const EnterRecipeStepsScreen = ({
             {
               taskList.map((task , index) =>{
                 return (
-                  <VStack key={index} p={20} style={styles.card} align="flex-start" justifyContent="center">
-                      <Text style={styles.listText}>{index + 1}. {task}</Text>
-                  </VStack>
+                  <RowItem index={index} text={task} styles={styles} />
                 )
               })
             }
@@ -108,39 +108,3 @@ export const EnterRecipeStepsScreen = ({
   );
 };
 
-const makeStyles = (theme: Theme) =>
-  StyleSheet.create({
-    button: {
-      ...ButtonStyle.primary,
-      backgroundColor: theme.colors.primary,
-      margin: 5
-    },
-    buttonText:{
-      ...TextStyle.h3,
-      color: theme.colors.background,
-    },
-    input: {
-      ...InputStyle.multiline,
-      // maxWidth: 300,
-      textAlignVertical: "top",
-      minHeight: 120,
-
-    },
-    container: {
-      backgroundColor: theme.colors.background,
-    },
-    title: {
-      ...TextStyle.h3,
-    },
-    card:{
-      backgroundColor: theme.colors.background2,
-      padding: theme.spacing.m
-    },
-    listText:{
-      ...TextStyle.body,
-      flex: 1
-    },
-    red:{
-      backgroundColor: "red"
-    }
-  });
