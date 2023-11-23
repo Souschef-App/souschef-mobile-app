@@ -11,7 +11,7 @@ import { CONTEXT_MENU_STATE } from '../../Constants';
 // import { BORDER_LIGHT_COLOR, BORDER_DARK_COLOR } from './constants';
 import isEqual from 'lodash.isequal';
 import { getColor } from './calculations';
-import { ThemeContext } from 'contexts/AppContext';
+import { ThemeContext } from '../../../../contexts/AppContext';
 // import { AnimatedIcon } from '../provider/Provider';
 
 // @ts-ignore

@@ -21,11 +21,11 @@ import {
   HOLD_ITEM_TRANSFORM_DURATION,
   IS_IOS,
   WINDOW_HEIGHT,
-} from '../../constants';
-import {
-  BACKDROP_LIGHT_BACKGROUND_COLOR,
-  BACKDROP_DARK_BACKGROUND_COLOR,
-} from './constants';
+} from '../../Constants';
+// import {
+//   BACKDROP_LIGHT_BACKGROUND_COLOR,
+//   BACKDROP_DARK_BACKGROUND_COLOR,
+// } from './constants';
 import { useInternal } from '../../hooks';
 
 const AnimatedBlurView = IS_IOS
@@ -40,7 +40,7 @@ type Context = {
 };
 
 const BackdropComponent = () => {
-  const { state, theme } = useInternal();
+  const { state } = useInternal();
 
   const tapGestureEvent = useAnimatedGestureHandler<
     TapGestureHandlerGestureEvent,
@@ -102,14 +102,14 @@ const BackdropComponent = () => {
     };
   });
 
-  const animatedInnerContainerStyle = useAnimatedStyle(() => {
-    const backgroundColor =
-      theme.value === 'light'
-        ? BACKDROP_LIGHT_BACKGROUND_COLOR
-        : BACKDROP_DARK_BACKGROUND_COLOR;
+  // const animatedInnerContainerStyle = useAnimatedStyle(() => {
+  //   const backgroundColor = 
+  //     theme.value === 'light'
+  //       ? BACKDROP_LIGHT_BACKGROUND_COLOR
+  //       : BACKDROP_DARK_BACKGROUND_COLOR;
 
-    return { backgroundColor };
-  }, [theme]);
+  //   return { backgroundColor };
+  // }, [theme]);
 
   return (
     <TapGestureHandler onHandlerStateChange={tapGestureEvent}>
@@ -122,7 +122,7 @@ const BackdropComponent = () => {
         <Animated.View
           style={[
             { ...StyleSheet.absoluteFillObject },
-            animatedInnerContainerStyle,
+            // animatedInnerContainerStyle,
           ]}
         />
       </AnimatedBlurView>

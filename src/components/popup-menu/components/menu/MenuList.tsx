@@ -25,7 +25,7 @@ import {
   HOLD_ITEM_TRANSFORM_DURATION,
   IS_IOS,
   CONTEXT_MENU_STATE,
-} from '../../constants';
+} from '../../Constants';
 
 import styles from './styles';
 import { MenuItemProps } from './types';
@@ -36,7 +36,7 @@ import { leftOrRight } from './calculations';
 const AnimatedView = Animated.createAnimatedComponent(BlurView);
 
 const MenuListComponent = () => {
-  const { state, theme, menuProps } = useInternal();
+  const { state, menuProps } = useInternal();
 
   const [itemList, setItemList] = React.useState<MenuItemProps[]>([]);
 
@@ -93,22 +93,22 @@ const MenuListComponent = () => {
     };
   });
 
-  const animatedInnerContainerStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor:
-        theme.value === 'light'
-          ? IS_IOS
-            ? 'rgba(255, 255, 255, .75)'
-            : 'rgba(255, 255, 255, .95)'
-          : IS_IOS
-          ? 'rgba(0,0,0,0.5)'
-          : 'rgba(39, 39, 39, .8)',
-    };
-  }, [theme]);
+  // const animatedInnerContainerStyle = useAnimatedStyle(() => {
+  //   return {
+  //     backgroundColor:
+  //       theme.value === 'light'
+  //         ? IS_IOS
+  //           ? 'rgba(255, 255, 255, .75)'
+  //           : 'rgba(255, 255, 255, .95)'
+  //         : IS_IOS
+  //         ? 'rgba(0,0,0,0.5)'
+  //         : 'rgba(39, 39, 39, .8)',
+  //   };
+  // }, [theme]);
 
-  const animatedProps = useAnimatedProps(() => {
-    return { tint: theme.value };
-  }, [theme]);
+  // const animatedProps = useAnimatedProps(() => {
+  //   return { tint: theme.value };
+  // }, [theme]);
 
   const setter = (items: MenuItemProps[]) => {
     setItemList(items);
@@ -128,14 +128,14 @@ const MenuListComponent = () => {
   return (
     <AnimatedView
       intensity={100}
-      animatedProps={animatedProps}
+      // animatedProps={animatedProps}
       style={[styles.menuContainer, messageStyles]}
     >
       <Animated.View
         style={[
           StyleSheet.absoluteFillObject,
           styles.menuInnerContainer,
-          animatedInnerContainerStyle,
+          // animatedInnerContainerStyle,
         ]}
       >
         <MenuItems items={itemList} />
