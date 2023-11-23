@@ -484,7 +484,7 @@ const makeStyles = (theme: Theme) =>
     },
     highlightEdit:{
       ...ButtonStyle.editable,
-      // alignSelf: "stretch",
+      alignSelf: "stretch",
       backgroundColor: "#2F394A33",
     },
     cancelBTN:{

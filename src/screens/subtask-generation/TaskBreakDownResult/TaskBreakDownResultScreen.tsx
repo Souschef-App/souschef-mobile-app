@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { StyleSheet, Text } from "react-native";
 import { Button, HStack, Icon, IconButton, SafeArea, VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
+import HoldMenuProvider from "../../../components/popup-menu/components/provider"
 
 import { ButtonStyle, InputStyle, TextStyle } from "../../../styles";
 import { Theme } from "../../../styles";
@@ -11,6 +12,9 @@ import TaskEditScreen from "./TaskEditView";
 import { SaveRecipeView } from "./SaveRecipeView";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
 import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
+
+import { useSafeAreaInsets } from "react-native-safe-area-context";  
+import HoldItem from "../../../components/popup-menu/components/hold-item";
 
 export const TaskBreakDownResultScreen = ({
   navigation,
@@ -67,8 +71,27 @@ export const TaskBreakDownResultScreen = ({
   //   bottomSheetModalRef.current?.close();
   // }
 
+
+  const safeAreaInsets = useSafeAreaInsets();
+
+  const onOpen = useCallback(() => {
+    // console.log('App onOpen')
+  }, []);
+
+  const onClose = useCallback(() => {
+    // console.log('App onClose')
+  }, []);
+
   return (
       <SafeArea>
+               
+  <HoldMenuProvider
+            // iconComponent={FeatherIcon}
+            // theme={state.theme}
+            safeAreaInsets={safeAreaInsets}
+            onOpen={onOpen}
+            onClose={onClose}
+          >
       {
         brokenDownRecipe == null || brokenDownRecipe?.length <= 0 ? 
         (
@@ -105,14 +128,25 @@ export const TaskBreakDownResultScreen = ({
                   )
                   :
                   (
-                    <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
-                    {brokenDownRecipe.map(data => (
-                      <TaskEditScreen task={data} />
-                    ))}
-                    </AnimatedSwiper>
+                    <VStack>
+                      <HStack flexMain={false} justifyContent="flex-end">
+                        <HoldItem  items={[
+                          { text: '@enesozt', onPress: () => {} },
+                          { text: 'All Rooms', onPress: () => {} },
+                        ]}>
+                          <Text>HOLD ITEM</Text>
+                        </HoldItem>
+                      </HStack>
+                      <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
+                      {
+                        brokenDownRecipe.map(data => (
+                          <TaskEditScreen task={data} />
+                        ))
+                      }
+                      </AnimatedSwiper>
+                    </VStack>
                     // <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
                   )
-                
               ) : (
                 <VStack>
                   <Text>No Tasks To Edit</Text>
@@ -164,6 +198,7 @@ export const TaskBreakDownResultScreen = ({
           </VStack>
         )
       }
+      </HoldMenuProvider>
       </SafeArea>
   );
 };  

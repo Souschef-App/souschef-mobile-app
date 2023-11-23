@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { AppConfig, AppContext, ThemeContext } from "./src/contexts/AppContext";
 import RootNavigator from "./src/navigation";
 import { theme } from "./src/styles/theme";
@@ -28,14 +28,17 @@ const App = () => {
   }
 
   const appConfig: AppConfig = {
-    useFakeData: false,
+    useFakeData: true,
   };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      
       <AppContext.Provider value={appConfig}>
         <ThemeContext.Provider value={theme}>
-          <RootNavigator />
+
+            <RootNavigator />
+
         </ThemeContext.Provider>
       </AppContext.Provider>
     </GestureHandlerRootView>
