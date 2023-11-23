@@ -203,14 +203,14 @@ const makeStyles = (theme: Theme) =>
     },
     infoText: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
     taskDesc: {
       ...TextStyle.h3,
     },
     dropdownTitle: {
       ...TextStyle.h3,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
     completeBtn: {
       ...ButtonStyle.primary,

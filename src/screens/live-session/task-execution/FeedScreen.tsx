@@ -133,7 +133,7 @@ const makeStyles = (theme: Theme) =>
     },
     feedHeaderTitle: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
       color: "#fff",
     },
     feedItem: {
@@ -143,7 +143,7 @@ const makeStyles = (theme: Theme) =>
     },
     feedItemUser: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
     feedItemDetails: {
       ...TextStyle.body,
