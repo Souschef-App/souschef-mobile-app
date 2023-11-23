@@ -122,15 +122,15 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
                   <Divider color={theme.colors.background2} />
                   <VStack>
                     {task.ingredients.length > 0 ? (
-                      task.ingredients.map((i, index) => (
+                      task.ingredients.map((ingredient, index) => (
                         <HStack
                           key={index}
                           justifyContent="space-between"
                           style={{ height: theme.spacing.xxl }}
                         >
-                          <Text style={TextStyle.h4}>{i.name}</Text>
+                          <Text style={TextStyle.h4}>{ingredient.name}</Text>
                           <Text style={TextStyle.h4}>
-                            {formatIngredientQuantity(i)}
+                            {formatIngredientQuantity(ingredient)}
                           </Text>
                         </HStack>
                       ))
