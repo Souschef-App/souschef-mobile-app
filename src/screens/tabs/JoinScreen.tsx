@@ -49,7 +49,7 @@ const JoinScreen = ({
           style={{ backgroundColor: theme.colors.background }}
         >
           <VStack flexMain={false} align="flex-start">
-            <Text style={[TextStyle.h3, TextStyle.bold]}>Choose</Text>
+            <Text style={[TextStyle.h3, TextStyle.weight.bold]}>Choose</Text>
             <Text style={TextStyle.h4}>your join option</Text>
           </VStack>
           <HStack
@@ -66,7 +66,11 @@ const JoinScreen = ({
               >
                 <Icon name="qr" size={48} color="#fff" />
                 <Text
-                  style={{ ...TextStyle.h4, ...TextStyle.bold, color: "#fff" }}
+                  style={{
+                    ...TextStyle.h4,
+                    ...TextStyle.weight.bold,
+                    color: "#fff",
+                  }}
                 >
                   QR-Code
                 </Text>
@@ -82,7 +86,7 @@ const JoinScreen = ({
                 <Text
                   style={{
                     ...TextStyle.h4,
-                    ...TextStyle.bold,
+                    ...TextStyle.weight.bold,
                     color: theme.colors.background,
                     textAlign: "center",
                   }}

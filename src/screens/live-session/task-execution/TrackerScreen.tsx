@@ -196,7 +196,7 @@ const makeStyles = (theme: Theme) =>
     },
     headerText: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
       color: "#fff",
     },
     feedItem: {
@@ -206,7 +206,7 @@ const makeStyles = (theme: Theme) =>
     },
     feedItemUser: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
     feedItemDetails: {
       ...TextStyle.body,
@@ -223,7 +223,7 @@ const makeStyles = (theme: Theme) =>
       borderRadius: 64,
     },
     doneBtnText: {
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
   });
 

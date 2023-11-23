@@ -1,10 +1,14 @@
 import { COOKING_UNIT } from "./enum";
 
-interface Ingredient {
-  id: string;
-  name: string;
-  quantity: number;
-  unit: COOKING_UNIT;
+export interface Fraction {
+  whole: number;
+  numerator: number;
+  denominator: number;
 }
 
-export default Ingredient;
+export interface Ingredient {
+  id: string;
+  name: string;
+  quantity: Fraction;
+  unit: COOKING_UNIT;
+}

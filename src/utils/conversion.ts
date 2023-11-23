@@ -1,18 +1,19 @@
 import { COOKING_UNIT } from "../data/types";
 
-export const unitToString = {
-  [COOKING_UNIT.Ounces]: "oz",
-  [COOKING_UNIT.Pounds]: "lb",
-  [COOKING_UNIT.Grams]: "g",
-  [COOKING_UNIT.Kilograms]: "kg",
-  [COOKING_UNIT.Teaspoons]: "tsp",
-  [COOKING_UNIT.Tablespoons]: "tbsp",
-  [COOKING_UNIT.Cups]: "cup",
-  [COOKING_UNIT.Pints]: "pt",
-  [COOKING_UNIT.Quarts]: "qt",
-  [COOKING_UNIT.Gallons]: "gal",
-  [COOKING_UNIT.Mililiters]: "mL",
-  [COOKING_UNIT.Liters]: "L",
+export const unitToString: { [key in COOKING_UNIT]: string } = {
+  [COOKING_UNIT.None]: "x",
+  [COOKING_UNIT.Ounces]: " oz",
+  [COOKING_UNIT.Pounds]: " lb",
+  [COOKING_UNIT.Grams]: " g",
+  [COOKING_UNIT.Kilograms]: " kg",
+  [COOKING_UNIT.Teaspoons]: " tsp",
+  [COOKING_UNIT.Tablespoons]: " tbsp",
+  [COOKING_UNIT.Cups]: " cup",
+  [COOKING_UNIT.Pints]: " pt",
+  [COOKING_UNIT.Quarts]: " qt",
+  [COOKING_UNIT.Gallons]: " gal",
+  [COOKING_UNIT.Mililiters]: " mL",
+  [COOKING_UNIT.Liters]: " L",
 };
 
 export type WEIGHT_UNITS =

@@ -4,7 +4,7 @@ const palette: { [key: string]: Color } = {
   white: "#ffffff",
   lightgray: "#e4e4e4",
   blue: "#2E9DFB",
-  green: "#3ddc84",
+  green: "#7ac879",
   darkred: "#e44f49",
   red: "#fb6a69",
   bluegray: "#2F394A",
