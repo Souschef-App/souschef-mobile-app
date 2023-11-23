@@ -14,7 +14,7 @@ import {
   HOLD_ITEM_TRANSFORM_DURATION,
   CONTEXT_MENU_STATE,
   SPRING_CONFIGURATION,
-} from '../../constants';
+} from '../../Constants';
 
 const MenuComponent = () => {
   const { state, menuProps } = useInternal();
