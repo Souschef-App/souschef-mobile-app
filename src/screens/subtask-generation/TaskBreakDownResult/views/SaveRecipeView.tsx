@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import { TextStyle, ButtonStyle, Theme, InputStyle } from "../../../styles";
-import { HStack, TextButton, VStack } from "../../../components"
+import { TextStyle, ButtonStyle, Theme, InputStyle } from "../../../../styles";
+import { HStack, TextButton, VStack } from "../../../../components"
 import {Text, StyleSheet, TextInput, Pressable} from "react-native"
-import { ThemeContext } from "../../../contexts/AppContext";
-import useStore from "../../../data/store";
-import { Modal } from "../../../components/Modal";
+import { ThemeContext } from "../../../../contexts/AppContext";
+import useStore from "../../../../data/store";
+import { Modal } from "../../../../components/Modal";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
+import { ModalButton } from "../components/ModalButton";
 
-const ModalButton = (props : any) =>{
-  
-  return(
-    <Pressable style={props.style} onPress={() => props.onPress()} >
-      <Text>{props.title}</Text>
-    </Pressable>
-  )
-}
+
 
 type SaveRecipeViewProps = {
   navigation : TaskBreakDownResultScreenProp

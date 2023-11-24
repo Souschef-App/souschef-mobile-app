@@ -8,8 +8,8 @@ import { ButtonStyle, InputStyle, TextStyle } from "../../../styles";
 import { Theme } from "../../../styles";
 
 import useStore from "../../../data/store";
-import TaskEditScreen from "./TaskEditView";
-import { SaveRecipeView } from "./SaveRecipeView";
+import TaskEditScreen from "./views/TaskEdit/TaskEditView";
+import { SaveRecipeView } from "./views/SaveRecipeView";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
 import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
 
@@ -83,15 +83,12 @@ export const TaskBreakDownResultScreen = ({
   }, []);
 
   return (
-      <SafeArea>
-               
-  <HoldMenuProvider
-            // iconComponent={FeatherIcon}
-            // theme={state.theme}
-            safeAreaInsets={safeAreaInsets}
-            onOpen={onOpen}
-            onClose={onClose}
-          >
+    <SafeArea>
+      <HoldMenuProvider
+          safeAreaInsets={safeAreaInsets}
+          onOpen={onOpen}
+          onClose={onClose}
+        >
       {
         brokenDownRecipe == null || brokenDownRecipe?.length <= 0 ? 
         (
@@ -107,34 +104,25 @@ export const TaskBreakDownResultScreen = ({
             style={styles.container} 
             pVH={{v: 20, h : 20}} 
             gap={0}>
-            {/* <HStack justifyContent="space-between" >
-              <Text style={styles.title}>Steps</Text>
-
-              <Button style={styles.reGenerateBTN} onPress={()=>{}}>
-                <HStack gap={10} align="center" justifyContent="center">
-                  <Text style={styles.reGenerateBTNText}>Regenerate All</Text>
-                  <Icon name="retry"  color={theme.colors.background} />
-                </HStack>
-              </Button>
-            </HStack> */}
-
             <VStack>
             {
               (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
                 
                   (activeIndex >= brokenDownRecipe.length) ?
                   (
-                      <SaveRecipeView navigation={navigation} />
+                    <SaveRecipeView navigation={navigation} />
                   )
                   :
                   (
                     <VStack>
                       <HStack flexMain={false} justifyContent="flex-end">
-                        <HoldItem  items={[
-                          { text: '@enesozt', onPress: () => console.log('@enesozt') },
-                          { text: 'All Rooms', onPress: () => console.log('All Rooms') },
+                        <HoldItem activateOn="tap" items={[
+                          { text: 'Regenerate All', onPress: () => console.log('@enesozt') },
+                          { text: 'Regenerate Task', onPress: () => console.log('All Rooms') },
+                          { text: 'Add Before', onPress: () => console.log('All Rooms') },
+                          { text: 'Add After', onPress: () => console.log('All Rooms') },
                         ]}>
-                          <Text>HOLD ITEM</Text>
+                          <Icon name="threedots" />
                         </HoldItem>
                       </HStack>
                       <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
@@ -145,7 +133,6 @@ export const TaskBreakDownResultScreen = ({
                       }
                       </AnimatedSwiper>
                     </VStack>
-                    // <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
                   )
               ) : (
                 <VStack>
@@ -154,47 +141,6 @@ export const TaskBreakDownResultScreen = ({
               )
             }
             </VStack>
-            {/* <HStack>
-            <Button
-              onPress={()=>prevTask()}
-              style={{
-                position: "relative",
-                flexDirection: "row",
-                alignItems: "center",
-                columnGap: 8,
-                ...styles.arrowBTN,
-              }}
-            >
-              <Icon
-                name="arrow-left" 
-                color="#fff" 
-                size={30}
-                style={styles.arrowIcon}
-              />
-              <Text style={TextStyle.h3}>Previous</Text>
-            </Button>
-            <VStack>
-                <Text style={TextStyle.h3}> {activeIndex + 1}/{brokenDownRecipe?.length + 1}</Text>
-            </VStack>
-            <Button
-              onPress={()=>nextTask()}
-              style={{
-                position: "relative",
-                flexDirection: "row",
-                alignItems: "center",
-                columnGap: 8,
-                ...styles.arrowBTN2,
-              }}
-            >
-              <Text style={TextStyle.h3}>Next</Text>
-              <Icon
-                name="arrow-right" 
-                color="#fff" 
-                size={30}
-                style={styles.arrowIcon}
-              />
-            </Button>
-            </HStack> */}
           </VStack>
         )
       }
@@ -222,12 +168,6 @@ const makeStyles = (theme: Theme) =>
       padding: 10,
       maxWidth: 300,
       color: theme.colors.background,
-    },
-    stepComponentWrapper: {
-      // backgroundColor: theme.colors.background,
-      // flexGrow: 0,
-      // elevation: 5,
-      // borderRadius: 20
     },
     orgtask: {
       backgroundColor: theme.colors.background2,

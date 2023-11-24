@@ -9,35 +9,27 @@ import {
   Input,
   TextButton,
   VStack,
-} from "../../../components";
+} from "../../../../../components";
 
-import { DIFFICULTY, Ingredient, Kitchenware, Task } from "../../../data/types";
-import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
-import { ThemeContext } from "../../../contexts/AppContext";
-import { Modal } from "../../../components/Modal";
+import { DIFFICULTY, Ingredient, Kitchenware, Task } from "../../../../../data/types";
+import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../../../styles";
+import { ThemeContext } from "../../../../../contexts/AppContext";
+import { Modal } from "../../../../../components/Modal";
 
-import { EditDropdownList } from "./EditDropDownList";
-import useStore from "../../../data/store";
-import ModalIconButton from "./ModalIconButton";
+import { EditItemList, EditRowItem } from "./EditItemList";
+import useStore from "../../../../../data/store";
+import ModalIconButton from "../../components/ModalIconButton";
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; 
 import { ScrollView } from "react-native-gesture-handler";
-import { formatIngredientQuantity } from "../../../utils/format";
+import { formatIngredientQuantity } from "../../../../../utils/format";
 import uuid from 'react-native-uuid';
 import { Picker } from "@react-native-picker/picker";
+import { EditDescriptionModal, EditIngredientModal, EditRatingModal, EditTimerModal, EditTitleModal } from "./Modals";
 
 export type TaskAvailaleProps = {
   task: Task;
 };
-
-const ModalButton = (props : any) =>{
-  
-  return(
-    <Pressable style={props.style} onPress={() => props.onPress()} >
-      <Text style={props.textStyle}>{props.title}</Text>
-    </Pressable>
-  )
-}
 
 const TaskEditView = (props: TaskAvailaleProps) => {
   // Theme
@@ -169,177 +161,74 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           pVH={{ h: theme.spacing.m }}
           gap={isIngredientOpen ? 10 : theme.spacing.l}
         >
-          <EditDropdownList 
-            title="Ingredients"
-            icon="ingredient"
-            theme={theme} 
-            isOpen={isIngredientOpen} 
-            setIsOpen={() => setIsIngredientOpen(!isIngredientOpen)} 
-            items={task.ingredients}
-            styles={styles}
-            onEdit={()=> setIsEditIngredientsVisible(true)}/>
+          <EditItemList title="Ingredients" icon="ingredient">
+              {
+                task.ingredients.map((item : Ingredient, index : number) => (
+                  <EditRowItem key={index} onEdit={()=>setIsEditIngredientsVisible(true)} onDelete={()=>console.log("delete")}>
+                    <HStack justifyContent="flex-start" gap={5}>
+                      <Text>{item.name}</Text>
+                      <Text>{item.quantity}</Text>
+                    </HStack>
+                  </EditRowItem>
+                ))
+              }
+          </EditItemList>
 
-          <EditDropdownList 
-            title="Kitchenware"
-            icon="kitchenware"
-            theme={theme} 
-            isOpen={isKitchenwareOpen}
-            setIsOpen={() => setIsKitchenwareOpen(!isKitchenwareOpen)} 
-            items={task.kitchenware}
-            styles={styles}
-            onEdit={()=> setIsEditIKitchenwareVisible(true)}/>
+          <EditItemList title="Kitchenware" icon="kitchenware">
+              {
+                task.kitchenware.map((item : Kitchenware, index : number) => (
+                  <EditRowItem key={index} onEdit={()=>setIsEditIKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
+                    <HStack justifyContent="flex-start" gap={5}>
+                      <Text>{item.name}</Text>
+                      <Text>{item.quantity}</Text>
+                    </HStack>
+                  </EditRowItem>
+                ))
+              }
+          </EditItemList>
 
-          <EditDropdownList 
+          {/* <EditItemList 
             title="Dependencies"
             icon="clipboard"
-            theme={theme} 
-            isOpen={isDependenciesOpen} 
-            setIsOpen={() => setIsDependenciesOpen(!isDependenciesOpen)} 
-            items={task.dependencies}
-            styles={styles}/>
+            items={task.dependencies}/> */}
         </VStack>
       </VStack>  
 
-      <Modal isVisible={isEditTItleVisible}>
-        <Modal.Container>
-          <Modal.Header title="Edit Title" />
-          <Modal.Body>
-            <TextInput value={taskTitle} onChangeText={setTaskTitle}  />
-          </Modal.Body>
-          <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} />
-              <ModalButton title="Save"  textStyle={styles.btnText} style={styles.saveBTN} onPress={() => updateTitle()} />
-            </HStack>
-          </Modal.Footer>
-        </Modal.Container>
-      </Modal>
-      <Modal isVisible={isEditRatingVisible}>
-        <Modal.Container>
-          <Modal.Header title="Edit Rating" />
-          <Modal.Body>
-            <HStack>
-              <ModalIconButton 
-                icon={
-                  taskDifficulty >= DIFFICULTY.Easy ? "star" : "star-outline"
-                }
-                color={theme.colors.highlight2}
-                onPress={()=>setTaskDifficulty(0)}
-                iconSize={50}
-                />
-              <ModalIconButton 
-                icon={
-                  taskDifficulty > DIFFICULTY.Easy ? "star" : "star-outline"
-                }
-                color={theme.colors.highlight2}
-                onPress={()=>setTaskDifficulty(1)}
-                iconSize={50}
-                />
-              <ModalIconButton 
-                icon={
-                  taskDifficulty > DIFFICULTY.Medium ? "star" : "star-outline"
-                }
-                color={theme.colors.highlight2}
-                onPress={()=>setTaskDifficulty(2)}
-                iconSize={50}
-                />
-            </HStack>
-          </Modal.Body>
-          <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditDifficultyVisible(false)} />
-              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText} title="Save" onPress={updateDifficulty} />
-            </HStack>
-          </Modal.Footer>
-        </Modal.Container>
-      </Modal>
-      <Modal isVisible={isEditDescriptionVisible}>
-        <Modal.Container>
-          <Modal.Header title="Edit Description" />
-          <Modal.Body>
-            <Input value={taskDescription} onChange={setTaskDescription}  />
-          </Modal.Body>
-          <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
-              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={updateDescription} />
-            </HStack>
-          </Modal.Footer>
-        </Modal.Container>
-      </Modal>
-      <TimerPickerModal
-        visible={isEditDurationVisible}
-        setIsVisible={setIsEditDurationVisible}
-        onConfirm={(pickedDuration) => {
-            updateDuration(pickedDuration.minutes);
-        }}
-        modalTitle="Set Duration"
-        onCancel={() => setIsEditDurationVisible(false)}
-        closeOnOverlayPress
-        LinearGradient={LinearGradient}
-        styles={{ 
-            theme: "light",
-        }}
-        hideHours={true}
-        hideSeconds={true}
+      <EditTitleModal 
+        isVisible={isEditTItleVisible} 
+        cancelFunc={() => setIsEditTitleVisible(false)}
+        saveFunc={() => updateTitle()}
+        inputValue={taskTitle}
+        onChangeText={setTaskTitle}/> 
+
+      <EditRatingModal  
+        isVisible={isEditRatingVisible} 
+        cancelFunc={() => setIsEditDifficultyVisible(false)}
+        saveFunc={updateDifficulty} 
+        taskDifficulty={taskDifficulty}
+        setTaskDifficulty={setTaskDifficulty}/>
+
+      <EditDescriptionModal 
+        isVisible={isEditDescriptionVisible} 
+        cancelFunc={() => setIsEditDescriptionVisible(false)}
+        saveFunc={updateDescription} 
+        taskDescription={taskDescription}
+        setTaskDescription={setTaskDescription}
       />
 
-      <Modal isVisible={isEditIngredientsVisible}>
-        <Modal.Container>
-          <Modal.Header title="Edit Ingredients" />
-          <Modal.Body>
-            <VStack p={10}>
-                <ScrollView style={{backgroundColor: theme.colors.background2, height: 300, alignSelf: "stretch"}}>
-                  {
-                    taskIngredients.map((ingredient)=>{
-                      return <EditItem item={ingredient} itemList={taskIngredients} setItemList={setTaskIngredients}  styles={styles} theme={theme} />
-                    })
+      <EditTimerModal  
+        isVisible={isEditDurationVisible} 
+        cancelFunc={() => setIsEditDescriptionVisible(false)}
+        saveFunc={updateDescription}
+        setIsEditDurationVisible={setIsEditDurationVisible}
+        updateDuration={updateDuration} />
 
-                  }
-                </ScrollView>
-                <VStack>
-                  <AddIngredient taskIngredients={taskIngredients} setTaskIngredients={setTaskIngredients} styles={styles} theme={theme} />
-                </VStack>
-            </VStack>
+      <EditIngredientModal 
+        isVisible={isEditIngredientsVisible}
+        cancelFunc={() => setIsEditIngredientsVisible(false)}
+        saveFunc={updateIngredients} />
 
-          </Modal.Body>
-          <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditIngredientsVisible(false)} />
-              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={updateIngredients} />
-            </HStack>
-          </Modal.Footer>
-        </Modal.Container>
-      </Modal>
-
-      <Modal isVisible={isEditKitchenwareVisible}>
-        <Modal.Container>
-          <Modal.Header title="Edit Kitchenware" />
-          <Modal.Body>
-            <VStack p={10}>
-                <ScrollView style={{backgroundColor: theme.colors.background2, height: 300, alignSelf: "stretch"}}>
-                  {
-                    taskKitchenware.map((kitchenware)=>{
-                      return <EditItem item={kitchenware} itemList={taskKitchenware} setItemList={setTaskKitchenware}  styles={styles} theme={theme} />
-                    })
-
-                  }
-                </ScrollView>
-                <VStack>
-                  <AddKitchenware taskKitchenware={taskKitchenware} setTaskKitchenware={setTaskKitchenware} styles={styles} theme={theme} />
-                </VStack>
-            </VStack>
-
-          </Modal.Body>
-          <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditIKitchenwareVisible(false)} />
-              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={updateKitchenware} />
-            </HStack>
-          </Modal.Footer>
-        </Modal.Container>
-      </Modal>
-    </VStack >
+    </VStack>
   );
 };
 
@@ -449,10 +338,6 @@ const makeStyles = (theme: Theme) =>
     taskTitle: {
       ...TextStyle.h1,
       fontSize: 40,
-    },
-    dropdownTitle: {
-      ...TextStyle.h3,
-      fontWeight: "bold",
     },
     completeBtn: {
       ...ButtonStyle.primary,
