@@ -52,6 +52,7 @@ const Icons = {
   reload: require("./reload.svg").default,
   logout: require("./logout.svg").default,
   tracker: require("./tracker.svg").default,
+  "chef-hat": require("./chef-hat.svg").default,
   // Add more mappings for other SVGs
 } as const satisfies Record<string, React.FC<SvgProps>>;
 
