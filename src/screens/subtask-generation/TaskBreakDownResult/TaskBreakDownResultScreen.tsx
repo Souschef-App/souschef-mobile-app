@@ -23,57 +23,17 @@ export const TaskBreakDownResultScreen = ({
 }) =>{
   const theme = useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
+  const safeAreaInsets = useSafeAreaInsets();
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
+  const brokenDownRecipeArray = brokenDownRecipe?.map(data =>  (
+    <TaskEditScreen task={data} />
+  ))
 
-  const [activeIndex, setActiveIndex] = useState<number>(0)
+  const renderArray = brokenDownRecipeArray?.concat(<SaveRecipeView navigation={navigation} />)
 
-  const [editID, setEditID] = useState<number>()
-  // const [ingredients, setIngredients] = useState<string>("")
-  // const [kitchenware, setKitchenware] = useState<string>("")
-  // const [description, setDescription] = useState<string>("")
-
-  const onAccept = () =>{
-
-  }
-
-  const onCancel = () =>{
-    
-  }
-
-  const nextTask = () =>{
-    if(brokenDownRecipe != undefined && activeIndex < brokenDownRecipe?.length)
-    {
-      setActiveIndex(activeIndex + 1)
-    }
-  }
-
-  const prevTask = () =>{
-    if(activeIndex - 1 > -1)
-    {
-      setActiveIndex(activeIndex - 1)
-    }
-  }
-
-  // const onUpdateRecipe = (ID : number) =>{
-  //   const step : RecipeStep = {
-  //     ID: ID,
-  //     Description : description,
-  //     Kitchenware : kitchenware.split(","),
-  //     Ingredients : ingredients.split(","),
-  //     Duration: brokenDownRecipe![ID].Duration,
-  //     Title: brokenDownRecipe![ID].Title,
-  //     Dependencies: brokenDownRecipe![ID].Dependencies,
-  //     Difficulty: brokenDownRecipe![ID].Difficulty,
-  //   }
-  //   updateRecipe(ID, step)
-  //   bottomSheetModalRef.current?.close();
-  // }
-
-
-  const safeAreaInsets = useSafeAreaInsets();
-
+  
   const onOpen = useCallback(() => {
     // console.log('App onOpen')
   }, []);
@@ -107,33 +67,23 @@ export const TaskBreakDownResultScreen = ({
             <VStack>
             {
               (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
-                
-                  (activeIndex >= brokenDownRecipe.length) ?
-                  (
-                    <SaveRecipeView navigation={navigation} />
-                  )
-                  :
-                  (
-                    <VStack>
-                      <HStack flexMain={false} justifyContent="flex-end">
-                        <HoldItem activateOn="tap" items={[
-                          { text: 'Regenerate All', onPress: () => console.log('@enesozt') },
-                          { text: 'Regenerate Task', onPress: () => console.log('All Rooms') },
-                          { text: 'Add Before', onPress: () => console.log('All Rooms') },
-                          { text: 'Add After', onPress: () => console.log('All Rooms') },
-                        ]}>
-                          <Icon name="threedots" />
-                        </HoldItem>
-                      </HStack>
-                      <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
-                      {
-                        brokenDownRecipe.map(data => (
-                          <TaskEditScreen task={data} />
-                        ))
-                      }
-                      </AnimatedSwiper>
-                    </VStack>
-                  )
+                <VStack>
+                  <HStack flexMain={false} justifyContent="flex-end">
+                    <HoldItem activateOn="tap" items={[
+                      { text: 'Regenerate All', onPress: () => console.log('@enesozt') },
+                      { text: 'Regenerate Task', onPress: () => console.log('All Rooms') },
+                      { text: 'Add Before', onPress: () => console.log('All Rooms') },
+                      { text: 'Add After', onPress: () => console.log('All Rooms') },
+                    ]}>
+                      <Icon name="threedots" />
+                    </HoldItem>
+                  </HStack>
+                  <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
+                  {
+                    renderArray
+                  }
+                  </AnimatedSwiper>
+                </VStack>
               ) : (
                 <VStack>
                   <Text>No Tasks To Edit</Text>

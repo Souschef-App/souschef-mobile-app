@@ -197,11 +197,10 @@ export const EditIngredientModal = ({isVisible, cancelFunc, saveFunc} : EditIngr
 }
 
 export interface EditKitchenwareModalProps extends EditModalProps {
-    taskDescription : string,
-    setTaskDescription?: ((text: string) => void) | undefined
+
 }
 
-export const EditKitchenware = ({isVisible, taskDescription, setTaskDescription, cancelFunc, saveFunc} : EditKitchenwareModalProps) =>{
+export const EditKitchenwareModal = ({isVisible, cancelFunc, saveFunc} : EditKitchenwareModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);

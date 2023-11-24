@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput } from "react-native";
+import { StyleSheet, Text, TextInput } from "react-native";
 import {
   Button,
   Divider,
   HStack,
   Icon,
-  IconButton,
-  Input,
   TextButton,
   VStack,
 } from "../../../../../components";
@@ -14,18 +12,14 @@ import {
 import { DIFFICULTY, Ingredient, Kitchenware, Task } from "../../../../../data/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../../../styles";
 import { ThemeContext } from "../../../../../contexts/AppContext";
-import { Modal } from "../../../../../components/Modal";
 
 import { EditItemList, EditRowItem } from "./EditItemList";
 import useStore from "../../../../../data/store";
 import ModalIconButton from "../../components/ModalIconButton";
-import { TimerPickerModal } from "react-native-timer-picker";
-import { LinearGradient } from "expo-linear-gradient"; 
-import { ScrollView } from "react-native-gesture-handler";
 import { formatIngredientQuantity } from "../../../../../utils/format";
 import uuid from 'react-native-uuid';
 import { Picker } from "@react-native-picker/picker";
-import { EditDescriptionModal, EditIngredientModal, EditRatingModal, EditTimerModal, EditTitleModal } from "./Modals";
+import { EditDescriptionModal, EditIngredientModal, EditKitchenwareModal, EditRatingModal, EditTimerModal, EditTitleModal } from "./Modals";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -37,10 +31,6 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   const task = props.task;
-
-  const [isIngredientOpen, setIsIngredientOpen] = useState<boolean>(false);
-  const [isKitchenwareOpen, setIsKitchenwareOpen] = useState<boolean>(false);
-  const [isDependenciesOpen, setIsDependenciesOpen] = useState<boolean>(false);
 
   const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
   const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
@@ -86,8 +76,6 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   }
 
   const updateIngredients = () =>{
-    
-
     const cloneTask = props.task;
     cloneTask.ingredients = taskIngredients
     updateRecipe(cloneTask)
@@ -106,17 +94,11 @@ const TaskEditView = (props: TaskAvailaleProps) => {
     <VStack p={theme.spacing.m}>
       <VStack gap={theme.spacing.xl}>
         <VStack flexMain={false} gap={theme.spacing.s}>
-          {/* <HStack justifyContent="space-between">
-            <IconButton icon="pencil" onPress={()=> setCanEdit(!canEdit)} />
-            <IconButton style={styles.retry} icon="retry" onPress={() => { }} color="#fff" iconSize={30} />
-          </HStack> */}
-          {/* <Text style={styles.taskTitle}>{task.title}</Text> */}
           <TextButton 
             style={styles.highlightEdit} 
             textStyle={styles.taskTitle} 
             title={task.title} 
             onPress={() => setIsEditTitleVisible(true)} />
-
           <HStack
             flexMain={false}
             gap={theme.spacing.m}
@@ -159,7 +141,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         <VStack
           flexMain={false}
           pVH={{ h: theme.spacing.m }}
-          gap={isIngredientOpen ? 10 : theme.spacing.l}
+          gap={theme.spacing.l}
         >
           <EditItemList title="Ingredients" icon="ingredient">
               {
@@ -187,10 +169,17 @@ const TaskEditView = (props: TaskAvailaleProps) => {
               }
           </EditItemList>
 
-          {/* <EditItemList 
-            title="Dependencies"
-            icon="clipboard"
-            items={task.dependencies}/> */}
+          <EditItemList title="Dependencies" icon="clipboard">
+              {
+                task.dependencies.map((item : string, index : number) => (
+                  <EditRowItem key={index} onEdit={()=>setIsEditIKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
+                    <HStack justifyContent="flex-start" gap={5}>
+                      <Text>{item}</Text>
+                    </HStack>
+                  </EditRowItem>
+                ))
+              }
+          </EditItemList>
         </VStack>
       </VStack>  
 
@@ -227,6 +216,11 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         isVisible={isEditIngredientsVisible}
         cancelFunc={() => setIsEditIngredientsVisible(false)}
         saveFunc={updateIngredients} />
+
+      <EditKitchenwareModal 
+        isVisible={isEditKitchenwareVisible}
+        cancelFunc={() => setIsEditIKitchenwareVisible(false)}
+        saveFunc={updateKitchenware} />
 
     </VStack>
   );
