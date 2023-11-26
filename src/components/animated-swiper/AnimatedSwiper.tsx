@@ -13,6 +13,8 @@ interface AnimatedSwiperProps {
   duration?: number;
   dotColor?: string;
   activeDotColor?: string;
+  activeIndex: number,
+  setActiveIndex: (num: number) => void
 }
 
 const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
@@ -21,6 +23,8 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
   duration = 300,
   dotColor = '#777777dd',
   activeDotColor = '#021f6d',
+  activeIndex,
+  setActiveIndex
 }) => {
   const childrenArray: React.ReactNode[] = Array.isArray(children)
     ? children
@@ -30,8 +34,6 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
   const [fadingValues, setFadingValues] = useState<number[]>(
     childrenArray.map((_, index) => (index === 0 ? 1 : 0)),
   );
-
-  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const setFadingValue = useCallback(
     (isNext: boolean) => {
@@ -44,6 +46,7 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
   );
 
   const onSwipeLeftHandler = useCallback(() => {
+    console.log("onSwipeLeftHandler") 
     if (activeIndex > 0) {
       setFadingValue(false);
       setActiveIndex(activeIndex - 1);
@@ -51,6 +54,7 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
   }, [activeIndex]);
 
   const onSwipeRightHandler = useCallback(() => {
+    console.log("onSwipeRightHandler") 
     if (activeIndex < childrenLength - 1) {
       setFadingValue(true);
       setActiveIndex(activeIndex + 1);

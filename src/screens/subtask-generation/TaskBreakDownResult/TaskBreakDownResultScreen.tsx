@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { StyleSheet, Text } from "react-native";
 import { Button, HStack, Icon, IconButton, SafeArea, VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
@@ -15,6 +15,7 @@ import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";  
 import HoldItem from "../../../components/popup-menu/components/hold-item";
+import { EditTitleModal, EditRatingModal, EditDescriptionModal, EditTimerModal, EditIngredientModal, EditKitchenwareModal } from "./views/TaskEdit/Modals";
 
 export const TaskBreakDownResultScreen = ({
   navigation,
@@ -22,16 +23,54 @@ export const TaskBreakDownResultScreen = ({
   navigation: TaskBreakDownResultScreenProp;
 }) =>{
   const theme = useContext(ThemeContext);
-  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const safeAreaInsets = useSafeAreaInsets();
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
-  const brokenDownRecipeArray = brokenDownRecipe?.map(data =>  (
-    <TaskEditScreen task={data} />
-  ))
+  console.log("TaskBreakDownResultScreen reloaded")
 
-  const renderArray = brokenDownRecipeArray?.concat(<SaveRecipeView navigation={navigation} />)
+  const brokenDownRecipeArray = useMemo(() => { 
+    console.log("brokenDownRecipeArray changed")
+    return brokenDownRecipe?.map(data => <TaskEditScreen task={data} />)
+    }, [brokenDownRecipe]);
+  
+  // const renderArray = useMemo(() => brokenDownRecipeArray?.concat(<SaveRecipeView navigation={navigation} />), 
+  // [brokenDownRecipeArray]);
+  
+  const activeIndex = useStore((state) => state.activeIndex);
+  const setActiveIndex = useStore((state) => state.setActiveIndex);
+
+  const swiper =  useMemo(() => {
+
+    console.log("swiper changed ", activeIndex)
+    return <AnimatedSwiper activeIndex={activeIndex} setActiveIndex={setActiveIndex} paginationStyle={{marginBottom: 5}} duration={600}>
+    {
+      brokenDownRecipeArray
+    }
+    </AnimatedSwiper>
+  }
+    , [brokenDownRecipe, activeIndex]);
+
+    const isEditTItleVisible = useStore((state) => state.isEditTItleVisible);
+
+  const isEditDescriptionVisible = useStore((state) => state.isEditDescriptionVisible);
+  const isEditRatingVisible = useStore((state) => state.isEditRatingVisible);
+  const isEditDurationVisible = useStore((state) => state.isEditDurationVisible);
+  const isEditIngredientsVisible = useStore((state) => state.isEditIngredientsVisible);
+  const isEditKitchenwareVisible = useStore((state) => state.isEditKitchenwareVisible);
+  const isEditDependenciesVisible = useStore((state) => state.isEditDependenciesVisible);
+
+  const setIsEditDescriptionVisible = useStore((state) => state.setIsEditDescriptionVisible);
+  const setIsEditDifficultyVisible = useStore((state) => state.setIsEditRatingVisible);
+  const setIsEditDurationVisible = useStore((state) => state.setIsEditDurationVisible);
+  const setIsEditIngredientsVisible = useStore((state) => state.setIsEditIngredientsVisible);
+  const setIsEditKitchenwareVisible = useStore((state) => state.setIsEditKitchenwareVisible);
+  const setIsEditDependencyVisible = useStore((state) => state.setIsEditDependencyVisible);
+
+  const currentTask = useStore((state) => state.currentTask);
+
+  const updateTitle = useStore((state) => state.updateTitle);
 
   
   const onOpen = useCallback(() => {
@@ -41,6 +80,7 @@ export const TaskBreakDownResultScreen = ({
   const onClose = useCallback(() => {
     // console.log('App onClose')
   }, []);
+
 
   return (
     <SafeArea>
@@ -78,11 +118,9 @@ export const TaskBreakDownResultScreen = ({
                       <Icon name="threedots" />
                     </HoldItem>
                   </HStack>
-                  <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
                   {
-                    renderArray
+                    swiper
                   }
-                  </AnimatedSwiper>
                 </VStack>
               ) : (
                 <VStack>
@@ -91,6 +129,26 @@ export const TaskBreakDownResultScreen = ({
               )
             }
             </VStack>
+
+            <EditTitleModal /> 
+            <EditRatingModal />
+            <EditDescriptionModal  />
+          {/* <EditTimerModal  
+            isVisible={isEditDurationVisible} 
+            cancelFunc={() => setIsEditDescriptionVisible(false)}
+            saveFunc={updateDescription}
+            setIsEditDurationVisible={setIsEditDurationVisible}
+            updateDuration={updateDuration} />
+
+          <EditIngredientModal 
+            isVisible={isEditIngredientsVisible}
+            cancelFunc={() => setIsEditIngredientsVisible(false)}
+            saveFunc={updateIngredients} />
+
+          <EditKitchenwareModal 
+            isVisible={isEditKitchenwareVisible}
+            cancelFunc={() => setIsEditKitchenwareVisible(false)}
+            saveFunc={updateKitchenware} />  */}
           </VStack>
         )
       }

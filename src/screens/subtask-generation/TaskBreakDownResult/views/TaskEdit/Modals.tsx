@@ -1,14 +1,21 @@
-import { HStack, ModalButton, ModalIconButton } from "../../../../../components"
-import React from "react"
+import { HStack, Icon, ModalButton, ModalIconButton, VStack } from "../../../../../components"
+import React, { useEffect, useState } from "react"
 import { StyleSheet, TextInput } from "react-native"
 
 import { Modal } from "../../../../../components/Modal"
 import { TimerPickerModal } from "react-native-timer-picker"
-import { DIFFICULTY } from "../../../../../data/types"
 import { LinearGradient } from "react-native-svg"
 
 import { ThemeContext } from "../../../../../contexts/AppContext"
 import { TextStyle, ButtonStyle, Theme } from "../../../../../styles"
+
+import { 
+  formatDifficultyToHex,
+  formatDifficultyToString,
+} from "../../../../../utils/format";
+
+import { Slider } from '@react-native-assets/slider'
+import useStore from "../../../../../data/store"
 
 export type EditModalProps = {
     isVisible : boolean,
@@ -17,26 +24,42 @@ export type EditModalProps = {
 }
 
 export interface EditTitleModalProps extends EditModalProps {
-    inputValue : string,
-    onChangeText?: ((text: string) => void) | undefined
+    inputValue? : string,
 }
 
-export const EditTitleModal = ({isVisible, inputValue, onChangeText, cancelFunc, saveFunc} : EditTitleModalProps) =>{
+export const EditTitleModal = () =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
+    const currentTask = useStore((state) => state.currentTask);
+  
+    const [title, setTitle] = useState(currentTask?.title)
+    const visible = useStore((state) => state.isEditTItleVisible);
+    const setIsEditTitleVisible = useStore((state) => state.setIsEditTItleVisible);
+    const updateTitle = useStore((state) => state.updateTitle);
+
+    const saveChange = () => {
+      if(title)
+        updateTitle(title)
+      setIsEditTitleVisible(false)
+    }
+
+    useEffect(()=>{
+      setTitle(currentTask?.title)
+    },[visible])
+
     return(
-        <Modal isVisible={isVisible}>
+      <Modal isVisible={visible}>
         <Modal.Container>
           <Modal.Header title="Edit Title" />
           <Modal.Body>
-            <TextInput value={inputValue} onChangeText={onChangeText}  />
+            <TextInput value={title} onChangeText={setTitle}  />
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => cancelFunc(false)} />
-              <ModalButton title="Save"  textStyle={styles.btnText} style={styles.saveBTN} onPress={() => saveFunc()} />
+              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} />
+              <ModalButton title="Save"  textStyle={styles.btnText} style={styles.saveBTN} onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -44,52 +67,53 @@ export const EditTitleModal = ({isVisible, inputValue, onChangeText, cancelFunc,
     )
 }
 
-export interface EditRatingModalProps extends EditModalProps {
-    taskDifficulty : number,
-    setTaskDifficulty: (lvl : number) => void
-}
-
-export const EditRatingModal = ({isVisible, taskDifficulty, setTaskDifficulty, cancelFunc, saveFunc} : EditRatingModalProps) =>{
+export const EditRatingModal = () =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
+    const currentTask = useStore((state) => state.currentTask);
+    const [difficulty, setDifficulty] = useState(currentTask?.difficulty || 0)
+    
+    const visible = useStore((state) => state.isEditRatingVisible);
+    const updateDifficulty = useStore((state) => state.updateDifficulty);
+    const setIsEditRatingVisible = useStore((state) => state.setIsEditRatingVisible);
+
+    const saveChange = () => {
+      if(difficulty)
+        updateDifficulty(difficulty)
+    }
+
     return(
-        <Modal isVisible={isVisible}>
+        <Modal isVisible={visible}>
             <Modal.Container>
                 <Modal.Header title="Edit Rating" />
                 <Modal.Body>
-                    <HStack>
-                    <ModalIconButton 
-                        icon={
-                        taskDifficulty >= DIFFICULTY.Easy ? "star" : "star-outline"
-                        }
-                        color={theme.colors.highlight2}
-                        onPress={()=>setTaskDifficulty(0)}
-                        iconSize={50}
-                        />
-                    <ModalIconButton 
-                        icon={
-                        taskDifficulty > DIFFICULTY.Easy ? "star" : "star-outline"
-                        }
-                        color={theme.colors.highlight2}
-                        onPress={()=>setTaskDifficulty(1)}
-                        iconSize={50}
-                        />
-                    <ModalIconButton 
-                        icon={
-                        taskDifficulty > DIFFICULTY.Medium ? "star" : "star-outline"
-                        }
-                        color={theme.colors.highlight2}
-                        onPress={()=>setTaskDifficulty(2)}
-                        iconSize={50}
-                        />
-                    </HStack>
-                </Modal.Body>
+                    <VStack>
+                      <Icon
+                        name={formatDifficultyToString(difficulty)}
+                        color={formatDifficultyToHex(difficulty)}
+                        size={60}
+                      />
+                      <Slider
+                        style={styles.slider}
+                        step={1}
+                        value={0}
+                        minimumValue={0}
+                        maximumValue={2}
+                        minimumTrackTintColor={theme.colors.danger}
+                        maximumTrackTintColor={theme.colors.primary}
+                        trackStyle={styles.track}
+                        thumbSize={30}
+                        thumbTintColor={theme.colors.text}
+                        onValueChange={setDifficulty}
+                      />
+                    </VStack>
+                </Modal.Body> 
                 <Modal.Footer>
                     <HStack gap={15}>
-                    <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => cancelFunc(false)} />
-                    <ModalButton style={styles.saveBTN}   textStyle={styles.btnText} title="Save" onPress={saveFunc} />
+                    <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditRatingVisible(false)} />
+                    <ModalButton style={styles.saveBTN}   textStyle={styles.btnText} title="Save" onPress={saveChange} />
                     </HStack>
                 </Modal.Footer>
             </Modal.Container>
@@ -97,27 +121,41 @@ export const EditRatingModal = ({isVisible, taskDifficulty, setTaskDifficulty, c
     )
 }
 
-export interface EditDescriptionModalProps extends EditModalProps {
-    taskDescription : string,
-    setTaskDescription: ((text: string) => void) | undefined
-}
-
-export const EditDescriptionModal = ({isVisible, taskDescription, setTaskDescription, cancelFunc, saveFunc} : EditDescriptionModalProps) =>{
+export const EditDescriptionModal = () =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
+    const currentIndex = useStore((state) => state.activeIndex);
+    const currentTask = useStore((state) => state.currentTask);
+    const [description, setDescription] = useState(currentTask?.description || "")
+    
+    const visible = useStore((state) => state.isEditDescriptionVisible);
+    const updateDescription = useStore((state) => state.updateDescription);
+    const setIsEditDescriptionVisible = useStore((state) => state.setIsEditDescriptionVisible);
+
+    const saveChange = () => {
+      if(description)
+        updateDescription(description)
+    }
+
+    
+    useEffect(()=>{
+      console.log("currentTask ", currentTask?.description)
+      setDescription(currentTask?.description || "")
+    },[visible])
+
     return(
-        <Modal isVisible={isVisible}>
+        <Modal isVisible={visible}>
         <Modal.Container>
           <Modal.Header title="Edit Description" />
           <Modal.Body>
-            <TextInput value={taskDescription} onChangeText={setTaskDescription}  />
+            <TextInput value={description} onChangeText={setDescription}  />
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => cancelFunc(false)} />
-              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveFunc} />
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
+              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -249,5 +287,13 @@ const makeStyles = (theme: Theme) =>
         ...TextStyle.h2,
         fontWeight: "normal",
         color: "#fff",
+    },
+    slider:{
+      width: 200, 
+      height: 80,
+
+    },
+    track:{
+      height: 20,
     }
   });

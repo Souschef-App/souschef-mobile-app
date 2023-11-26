@@ -10,35 +10,53 @@ import {
   ModalIconButton
 } from "../../../../../components";
 
-import { DIFFICULTY, Ingredient, Kitchenware, Task } from "../../../../../data/types";
+import { Ingredient, Kitchenware, Task } from "../../../../../data/types";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../../../styles";
 import { ThemeContext } from "../../../../../contexts/AppContext";
 
 import { EditItemList, EditRowItem } from "./EditItemList";
 import useStore from "../../../../../data/store";
-import { formatIngredientQuantity } from "../../../../../utils/format";
+import { 
+  formatDifficultyToHex,
+  formatDifficultyToString,
+  formatIngredientQuantity 
+} from "../../../../../utils/format";
 import uuid from 'react-native-uuid';
 import { Picker } from "@react-native-picker/picker";
-import { EditDescriptionModal, EditIngredientModal, EditKitchenwareModal, EditRatingModal, EditTimerModal, EditTitleModal } from "./Modals";
 import Dependency from "data/types/dependency";
+import { unitToString } from "../../../../../utils/conversion";
 
 export type TaskAvailaleProps = {
   task: Task;
 };
 
-const TaskEditView = (props: TaskAvailaleProps) => {
+const TaskEditView = ({task}: TaskAvailaleProps) => {
   // Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  const task = props.task;
+  // const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
+  // const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
+  // const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
+  // const [isEditDurationVisible, setIsEditDurationVisible] = useState(false) 
+  // const [isEditIngredientsVisible, setIsEditIngredientsVisible] = useState(false) 
+  // const [isEditKitchenwareVisible, setIsEditIKitchenwareVisible] = useState(false) 
 
-  const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
-  const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
-  const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
-  const [isEditDurationVisible, setIsEditDurationVisible] = useState(false) 
-  const [isEditIngredientsVisible, setIsEditIngredientsVisible] = useState(false) 
-  const [isEditKitchenwareVisible, setIsEditIKitchenwareVisible] = useState(false) 
+  const isEditTItleVisible = useStore((state) => state.isEditTItleVisible);
+  const isEditDescriptionVisible = useStore((state) => state.isEditDescriptionVisible);
+  const isEditRatingVisible = useStore((state) => state.isEditRatingVisible);
+  const isEditDurationVisible = useStore((state) => state.isEditDurationVisible);
+  const isEditIngredientsVisible = useStore((state) => state.isEditIngredientsVisible);
+  const isEditKitchenwareVisible = useStore((state) => state.isEditKitchenwareVisible);
+  const isEditDependenciesVisible = useStore((state) => state.isEditDependenciesVisible);
+
+  const setIsEditTitleVisible = useStore((state) => state.setIsEditTItleVisible);
+  const setIsEditDescriptionVisible = useStore((state) => state.setIsEditDescriptionVisible);
+  const setIsEditDifficultyVisible = useStore((state) => state.setIsEditRatingVisible);
+  const setIsEditDurationVisible = useStore((state) => state.setIsEditDurationVisible);
+  const setIsEditIngredientsVisible = useStore((state) => state.setIsEditIngredientsVisible);
+  const setIsEditKitchenwareVisible = useStore((state) => state.setIsEditKitchenwareVisible);
+  const setIsEditDependencyVisible = useStore((state) => state.setIsEditDependencyVisible);
 
   const [taskTitle, setTaskTitle]              = useState(task.title)
   const [taskDescription, setTaskDescription]  = useState(task.description)
@@ -47,49 +65,6 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [taskKitchenware, setTaskKitchenware]  = useState(task.kitchenware)
 
   const updateRecipe = useStore((state) => state.updateRecipeTask);
-
-  const updateTitle = () =>{
-    const cloneTask = props.task;
-    cloneTask.title = taskTitle
-    updateRecipe(cloneTask)
-    setIsEditTitleVisible(false)
-  }
-
-  const updateDescription = () =>{
-    const cloneTask = props.task;
-    cloneTask.description = taskDescription
-    updateRecipe(cloneTask)
-    setIsEditDescriptionVisible(false)
-  }
-
-  const updateDifficulty = () =>{
-    const cloneTask = props.task;
-    cloneTask.difficulty = taskDifficulty
-    updateRecipe(cloneTask)
-    setIsEditDifficultyVisible(false)
-  }
-  
-  const updateDuration = (duration : number) =>{
-    const cloneTask = props.task;
-    cloneTask.duration = duration
-    updateRecipe(cloneTask)
-    setIsEditDurationVisible(false);
-  }
-
-  const updateIngredients = () =>{
-    const cloneTask = props.task;
-    cloneTask.ingredients = taskIngredients
-    updateRecipe(cloneTask)
-    setIsEditIngredientsVisible(false);
-  }
-
-  const updateKitchenware = () =>{
-    
-    const cloneTask = props.task;
-    cloneTask.kitchenware = taskKitchenware
-    updateRecipe(cloneTask)
-    setIsEditIKitchenwareVisible(false);
-  }
 
   return (
     <VStack p={theme.spacing.m}>
@@ -105,34 +80,20 @@ const TaskEditView = (props: TaskAvailaleProps) => {
             gap={theme.spacing.m}
             style={{ height: theme.spacing.l }}
           >
-            <HStack flexMain={false} gap={theme.spacing.s}>
-              <Icon name="timer" color={theme.colors.text} size={24} />
-              <Button style={styles.highlightEdit} onPress={() => setIsEditDurationVisible(true)}>
+            <Button style={styles.highlightEdit} onPress={() => setIsEditDurationVisible(true)}>
+              <HStack flexMain={false} gap={theme.spacing.s}>
+                <Icon name="timer" color={theme.colors.text} size={24} />
                 <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
-              </Button>
-            </HStack>
+              </HStack>
+            </Button>
             <Divider thickness={3} color={theme.colors.background2} />
 
             <Button style={styles.highlightEdit} onPress={()=>setIsEditDifficultyVisible(true)}>
-              <HStack flexMain={false} gap={theme.spacing.s}>
-                <Icon name="star" color={theme.colors.highlight2} size={24} />
-                <Icon
-                  name={
-                    task.difficulty > DIFFICULTY.Easy ? "star" : "star-outline"
-                  }
-                  color={theme.colors.highlight2}
+              <Icon
+                  name={formatDifficultyToString(task.difficulty)}
+                  color={formatDifficultyToHex(task.difficulty)}
                   size={24}
                 />
-                <Icon
-                  name={
-                    task.difficulty > DIFFICULTY.Medium
-                      ? "star"
-                      : "star-outline"
-                  }
-                  color={theme.colors.highlight2}
-                  size={24}
-                />
-              </HStack>
             </Button>
           </HStack>
         </VStack>
@@ -151,6 +112,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
                     <HStack justifyContent="flex-start" gap={5}>
                       <Text>{ingredient.name}</Text>
                       <Text>{ingredient.quantity}</Text>
+                      {/* <Text>{unitToString[ingredient.unit]}</Text> */}
                     </HStack>
                   </EditRowItem>
                 ))
@@ -160,7 +122,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           <EditItemList title="Kitchenware" icon="kitchenware">
               {
                 task.kitchenware.map((kitchenitem : Kitchenware, index : number) => (
-                  <EditRowItem key={index} onEdit={()=>setIsEditIKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
+                  <EditRowItem key={index} onEdit={()=>setIsEditKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
                     <HStack justifyContent="flex-start" gap={5}>
                       <Text>{kitchenitem.name}</Text>
                       <Text>{kitchenitem.quantity}</Text>
@@ -173,7 +135,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
           <EditItemList title="Dependencies" icon="clipboard">
               {
                 task.dependencies.map((dependency : Dependency, index : number) => (
-                  <EditRowItem key={index} onEdit={()=>setIsEditIKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
+                  <EditRowItem key={index} onEdit={()=>setIsEditDependencyVisible(true)} onDelete={()=>console.log("delete")}>
                     <HStack justifyContent="flex-start" gap={5}>
                       <Text>{dependency.title}</Text>
                     </HStack>
@@ -184,44 +146,7 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         </VStack>
       </VStack>  
 
-      <EditTitleModal 
-        isVisible={isEditTItleVisible} 
-        cancelFunc={() => setIsEditTitleVisible(false)}
-        saveFunc={() => updateTitle()}
-        inputValue={taskTitle}
-        onChangeText={setTaskTitle}/> 
-
-      <EditRatingModal  
-        isVisible={isEditRatingVisible} 
-        cancelFunc={() => setIsEditDifficultyVisible(false)}
-        saveFunc={updateDifficulty} 
-        taskDifficulty={taskDifficulty}
-        setTaskDifficulty={setTaskDifficulty}/>
-
-      <EditDescriptionModal 
-        isVisible={isEditDescriptionVisible} 
-        cancelFunc={() => setIsEditDescriptionVisible(false)}
-        saveFunc={updateDescription} 
-        taskDescription={taskDescription}
-        setTaskDescription={setTaskDescription}
-      />
-
-      <EditTimerModal  
-        isVisible={isEditDurationVisible} 
-        cancelFunc={() => setIsEditDescriptionVisible(false)}
-        saveFunc={updateDescription}
-        setIsEditDurationVisible={setIsEditDurationVisible}
-        updateDuration={updateDuration} />
-
-      <EditIngredientModal 
-        isVisible={isEditIngredientsVisible}
-        cancelFunc={() => setIsEditIngredientsVisible(false)}
-        saveFunc={updateIngredients} />
-
-      <EditKitchenwareModal 
-        isVisible={isEditKitchenwareVisible}
-        cancelFunc={() => setIsEditIKitchenwareVisible(false)}
-        saveFunc={updateKitchenware} />
+      
 
     </VStack>
   );
@@ -333,6 +258,7 @@ const makeStyles = (theme: Theme) =>
     taskTitle: {
       ...TextStyle.h1,
       fontSize: 40,
+      textAlign: "center"
     },
     completeBtn: {
       ...ButtonStyle.primary,
