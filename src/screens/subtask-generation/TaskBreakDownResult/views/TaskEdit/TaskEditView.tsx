@@ -7,6 +7,7 @@ import {
   Icon,
   TextButton,
   VStack,
+  ModalIconButton
 } from "../../../../../components";
 
 import { DIFFICULTY, Ingredient, Kitchenware, Task } from "../../../../../data/types";
@@ -15,7 +16,6 @@ import { ThemeContext } from "../../../../../contexts/AppContext";
 
 import { EditItemList, EditRowItem } from "./EditItemList";
 import useStore from "../../../../../data/store";
-import ModalIconButton from "../../components/ModalIconButton";
 import { formatIngredientQuantity } from "../../../../../utils/format";
 import uuid from 'react-native-uuid';
 import { Picker } from "@react-native-picker/picker";

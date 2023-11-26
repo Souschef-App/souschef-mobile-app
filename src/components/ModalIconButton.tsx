@@ -1,15 +1,13 @@
 import React from "react";
 import {
   ColorValue,
-  GestureResponderEvent,
   Pressable,
-  Text,
   TextStyle,
   ViewStyle,
 } from "react-native";
-import Icons from "../../../../assets/icons";
-import { ButtonProps } from "../../../../components/primitives/Button";
-import Icon from "../../../../components/primitives/Icon";
+import Icons from "../assets/icons";
+import { ButtonProps } from "./primitives/Button";
+import Icon from "./primitives/Icon";
 
 export type IconButtonProps = ButtonProps & {
   icon: keyof typeof Icons;

@@ -1,14 +1,11 @@
-import { HStack } from "../../../../../components"
+import { HStack, ModalButton, ModalIconButton } from "../../../../../components"
 import React from "react"
 import { StyleSheet, TextInput } from "react-native"
 
-import { ModalButton } from "../../components/ModalButton"
 import { Modal } from "../../../../../components/Modal"
 import { TimerPickerModal } from "react-native-timer-picker"
 import { DIFFICULTY } from "../../../../../data/types"
 import { LinearGradient } from "react-native-svg"
-
-import ModalIconButton from "../../components/ModalIconButton"
 
 import { ThemeContext } from "../../../../../contexts/AppContext"
 import { TextStyle, ButtonStyle, Theme } from "../../../../../styles"
