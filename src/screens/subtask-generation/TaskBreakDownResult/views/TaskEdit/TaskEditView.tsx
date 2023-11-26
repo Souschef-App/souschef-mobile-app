@@ -20,6 +20,7 @@ import { formatIngredientQuantity } from "../../../../../utils/format";
 import uuid from 'react-native-uuid';
 import { Picker } from "@react-native-picker/picker";
 import { EditDescriptionModal, EditIngredientModal, EditKitchenwareModal, EditRatingModal, EditTimerModal, EditTitleModal } from "./Modals";
+import Dependency from "data/types/dependency";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -39,11 +40,11 @@ const TaskEditView = (props: TaskAvailaleProps) => {
   const [isEditIngredientsVisible, setIsEditIngredientsVisible] = useState(false) 
   const [isEditKitchenwareVisible, setIsEditIKitchenwareVisible] = useState(false) 
 
-  const [taskTitle, setTaskTitle]               = useState(task.title)
-  const [taskDescription, setTaskDescription]   = useState(task.description)
-  const [taskDifficulty, setTaskDifficulty]     = useState(task.difficulty)
-  const [taskIngredients, setTaskIngredients]   = useState(task.ingredients)
-  const [taskKitchenware, setTaskKitchenware]   = useState(task.kitchenware)
+  const [taskTitle, setTaskTitle]              = useState(task.title)
+  const [taskDescription, setTaskDescription]  = useState(task.description)
+  const [taskDifficulty, setTaskDifficulty]    = useState(task.difficulty)
+  const [taskIngredients, setTaskIngredients]  = useState(task.ingredients)
+  const [taskKitchenware, setTaskKitchenware]  = useState(task.kitchenware)
 
   const updateRecipe = useStore((state) => state.updateRecipeTask);
 
@@ -145,11 +146,11 @@ const TaskEditView = (props: TaskAvailaleProps) => {
         >
           <EditItemList title="Ingredients" icon="ingredient">
               {
-                task.ingredients.map((item : Ingredient, index : number) => (
+                task.ingredients.map((ingredient : Ingredient, index : number) => (
                   <EditRowItem key={index} onEdit={()=>setIsEditIngredientsVisible(true)} onDelete={()=>console.log("delete")}>
                     <HStack justifyContent="flex-start" gap={5}>
-                      <Text>{item.name}</Text>
-                      <Text>{item.quantity}</Text>
+                      <Text>{ingredient.name}</Text>
+                      <Text>{ingredient.quantity}</Text>
                     </HStack>
                   </EditRowItem>
                 ))
@@ -158,11 +159,11 @@ const TaskEditView = (props: TaskAvailaleProps) => {
 
           <EditItemList title="Kitchenware" icon="kitchenware">
               {
-                task.kitchenware.map((item : Kitchenware, index : number) => (
+                task.kitchenware.map((kitchenitem : Kitchenware, index : number) => (
                   <EditRowItem key={index} onEdit={()=>setIsEditIKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
                     <HStack justifyContent="flex-start" gap={5}>
-                      <Text>{item.name}</Text>
-                      <Text>{item.quantity}</Text>
+                      <Text>{kitchenitem.name}</Text>
+                      <Text>{kitchenitem.quantity}</Text>
                     </HStack>
                   </EditRowItem>
                 ))
@@ -171,10 +172,10 @@ const TaskEditView = (props: TaskAvailaleProps) => {
 
           <EditItemList title="Dependencies" icon="clipboard">
               {
-                task.dependencies.map((item : string, index : number) => (
+                task.dependencies.map((dependency : Dependency, index : number) => (
                   <EditRowItem key={index} onEdit={()=>setIsEditIKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
                     <HStack justifyContent="flex-start" gap={5}>
-                      <Text>{item}</Text>
+                      <Text>{dependency.title}</Text>
                     </HStack>
                   </EditRowItem>
                 ))

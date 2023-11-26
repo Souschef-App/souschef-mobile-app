@@ -1,4 +1,4 @@
-import { HStack, Input, VStack } from "../../../../../components"
+import { HStack } from "../../../../../components"
 import React from "react"
 import { StyleSheet, TextInput } from "react-native"
 
@@ -252,72 +252,5 @@ const makeStyles = (theme: Theme) =>
         ...TextStyle.h2,
         fontWeight: "normal",
         color: "#fff",
-    },
-    // taskTitle: {
-    //     ...TextStyle.h1,
-    //     fontSize: 40,
-    // },
-    // dropdownTitle: {
-    //   ...TextStyle.h3,
-    //   fontWeight: "bold",
-    // },
-    // completeBtn: {
-    //   ...ButtonStyle.primary,
-    //   alignSelf: "stretch",
-    //   backgroundColor: theme.colors.primary,
-    // },
-    // rerollBtn: {
-    //   ...ButtonStyle.primary,
-    //   alignSelf: "stretch",
-    //   backgroundColor: theme.colors.highlight,
-    // },
-    // btnIcon: {
-    //   position: "absolute",
-    //   left: theme.spacing.m,
-    // },
-    // timerText: {
-    //   ...TextStyle.body,
-    //   fontWeight: "bold",
-    // },
-    // retry: {
-    //   backgroundColor: theme.colors.danger,
-    //   borderRadius: 1000,
-    //   padding: 12
-    // },
-    // highlightEdit:{
-    //   ...ButtonStyle.editable,
-    //   alignSelf: "stretch",
-    //   backgroundColor: "#2F394A33",
-    // },
-    // red:{
-    //   backgroundColor: "red"
-    // },
-    // editRowStyle:{
-    //   backgroundColor: theme.colors.background
-    // },
-    // editRowFooterStyle:{
-    //   backgroundColor: theme.colors.highlight,
-    // },
-    // custInput:{
-    //   ...InputStyle.underline,
-    //   backgroundColor: theme.colors.background,
-    //   flexGrow: 1,
-    //   borderRadius: theme.spacing.s
-    // },
-    // custInput2:{
-    //   ...InputStyle.underline,
-    //   backgroundColor: theme.colors.background,
-    //   width: 60,
-    //   borderRadius: theme.spacing.s
-    // },
-    // ok:{
-    //   backgroundColor: theme.colors.background,
-    //   padding: 10,
-    //   borderRadius: theme.spacing.xxl, 
-    //   marginLeft: 10
-    // },
-    // addIngridientTitle:{
-    //   ...TextStyle.h2,
-    //   color: theme.colors.background
-    // }
+    }
   });
