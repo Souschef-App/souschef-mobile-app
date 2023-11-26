@@ -16,6 +16,7 @@ import SafeArea from "./primitives/SafeArea";
 import Skeleton from "./primitives/Skeleton";
 import { HStack, VStack } from "./primitives/Stack";
 import SvgLocal from "./primitives/SvgLocal";
+import Tabs from "./Tabs";
 
 export {
   Button,
@@ -36,5 +37,6 @@ export {
   VStack,
   ValidationInput,
   ModalButton,
-  ModalIconButton
+  ModalIconButton,
+  Tabs,
 };

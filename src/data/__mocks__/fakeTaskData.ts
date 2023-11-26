@@ -11,13 +11,13 @@ const fakeSessionTask: SessionTask = {
     {
       id: "ingredient-123",
       name: "French Baguette",
-      quantity: 1,
+      quantity: { whole: 1, numerator: 0, denominator: 0 },
       unit: COOKING_UNIT.None,
     },
     {
       id: "ingredient-124",
       name: "Water",
-      quantity: 0.33,
+      quantity: { whole: 0, numerator: 1, denominator: 3 },
       unit: COOKING_UNIT.Cups,
     },
   ],

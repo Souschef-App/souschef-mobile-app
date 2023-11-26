@@ -34,17 +34,13 @@ const SessionCodeScreen = ({
   const cleanup = useStore((state) => state.resetSessionSlice);
 
   React.useEffect(() => {
-    setErrorMsg(error || "");
-  }, [error]);
-
-  React.useEffect(() => {
     return () => cleanup();
   }, []);
 
   const handleInputFilled = (otp: string) => {
     if (appConfig.useFakeData) {
-      joinFakeSession();
       navigation.navigate("LiveSession", defaultLiveSessionNavigatorParamList);
+      joinFakeSession();
       return;
     }
 
@@ -54,9 +50,12 @@ const SessionCodeScreen = ({
     }
 
     if (!loading && user) {
-      joinSession(otp, user);
       navigation.navigate("LiveSession", defaultLiveSessionNavigatorParamList);
+      joinSession(otp, user);
+      return;
     }
+
+    setErrorMsg("Something went wrong...");
   };
 
   return (
@@ -78,11 +77,7 @@ const SessionCodeScreen = ({
           gap={theme.spacing.m}
         >
           <VStack style={{ height: theme.spacing.b }}>
-            {loading ? (
-              <ActivityIndicator size="large" />
-            ) : (
-              <Text style={styles.errorMsg}>{errorMsg}</Text>
-            )}
+            <Text style={styles.errorMsg}>{errorMsg}</Text>
           </VStack>
           <OtpInput
             pinCount={5}

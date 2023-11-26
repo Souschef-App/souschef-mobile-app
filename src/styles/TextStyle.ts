@@ -14,24 +14,28 @@ const textCore: { [key: string]: TextStyle } = {
     fontFamily: "RobotoSlab",
     color: theme.colors.text,
   },
+};
+
+type FontWeight = "regular" | "bold";
+
+export const weight: { [key in FontWeight]: TextStyle } = {
+  regular: {
+    fontFamily: "RobotoSlab",
+  },
   bold: {
     fontFamily: "RobotoSlab-Bold",
   },
 };
 
-export const bold: TextStyle = {
-  ...textCore.bold,
-};
-
 export const h1: TextStyle = {
   ...textCore.defaultFont,
-  ...textCore.bold,
+  ...weight.bold,
   fontSize: 36,
 };
 
 export const h2: TextStyle = {
   ...textCore.defaultFont,
-  ...textCore.bold,
+  ...weight.bold,
   fontSize: 24,
 };
 

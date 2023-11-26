@@ -1,7 +1,7 @@
-import { DIFFICULTY, TASK_STATUS } from "./enum";
+import { DIFFICULTY } from "./enum";
 import Dependency from "./dependency";
-import Ingredient from "./ingredient";
 import Kitchenware from "./kitchenware";
+import { Ingredient } from "./ingredient";
 
 interface Task {
   id: string;

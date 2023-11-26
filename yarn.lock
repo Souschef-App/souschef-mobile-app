@@ -3605,6 +3605,11 @@ expo-blur@~12.4.1:
   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-12.4.1.tgz#b391de84914ef9ece0702378e51e09461ad565ab"
   integrity sha512-lGN8FS9LuGUlEriULTC62cCWyg5V7zSVQeJ6Duh1wSq8aAETinZ2/7wrT6o+Uhd/XVVxFNON2T25AGCOtMG6ew==
 
+expo-calendar@~11.3.2:
+  version "11.3.2"
+  resolved "https://registry.yarnpkg.com/expo-calendar/-/expo-calendar-11.3.2.tgz#3062fde239586aecbffee836ba96e622b4769526"
+  integrity sha512-6J+zWT5sX+Dd0puS1nUpqErtCyz20h9OB3AtIDIeZi3R+F07dna7ZYgDyBvSVYt1wHj6B5tTBF3TCXshoArv5Q==
+
 expo-camera@~13.4.4:
   version "13.4.4"
   resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-13.4.4.tgz#e01ead31a3150398d37e94c307f6937480680690"

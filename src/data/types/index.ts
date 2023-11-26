@@ -5,7 +5,7 @@ import {
   SKILL_LEVEL,
   TASK_STATUS,
 } from "./enum";
-import Ingredient from "./ingredient";
+import { Fraction, Ingredient } from "./ingredient";
 import Kitchenware from "./kitchenware";
 import MealPlan from "./mealplan";
 import Recipe from "./recipe";
@@ -27,6 +27,7 @@ export {
   DIFFICULTY,
   FEED_ACTION,
   FeedSnapshot,
+  Fraction,
   Ingredient,
   Kitchenware,
   LiveSession,
