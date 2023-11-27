@@ -16,42 +16,37 @@ import {
 
 import { Slider } from '@react-native-assets/slider'
 import useStore from "../../../../../data/store"
-import { Ingredient } from "../../../../../data/types"
+import { COOKING_UNIT, Fraction, Ingredient, Task } from "../../../../../data/types"
+import { Picker } from "@react-native-picker/picker"
+import { unitToString } from "../../../../../utils/conversion"
 
 export type EditModalProps = {
     isVisible : boolean,
-    cancelFunc : (state : boolean) => void,
-    saveFunc : () => void,
+    task : Task
+    handleModal : (state : boolean) => void,
+    // saveFunc : () => void,
 }
 
 export interface EditTitleModalProps extends EditModalProps {
     inputValue? : string,
 }
 
-export const EditTitleModal = () =>{
+export const EditTitleModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-    const currentTask = useStore((state) => state.currentTask);
-  
-    const [title, setTitle] = useState(currentTask?.title)
-    const visible = useStore((state) => state.isEditTItleVisible);
-    const setIsEditTitleVisible = useStore((state) => state.setIsEditTItleVisible);
+    const [title, setTitle] = useState(props.task.title)
     const updateTitle = useStore((state) => state.updateTitle);
 
     const saveChange = () => {
       if(title)
         updateTitle(title)
-      setIsEditTitleVisible(false)
+        props.handleModal(false)
     }
 
-    useEffect(()=>{
-      setTitle(currentTask?.title)
-    },[visible])
-
     return(
-      <Modal isVisible={visible}>
+      <Modal isVisible={props.isVisible}>
         <Modal.Container>
           <Modal.Header title="Edit Title" />
           <Modal.Body>
@@ -59,7 +54,7 @@ export const EditTitleModal = () =>{
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => setIsEditTitleVisible(false)} />
+              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => props.handleModal(false)} />
               <ModalButton title="Save"  textStyle={styles.btnText} style={styles.saveBTN} onPress={saveChange} />
             </HStack>
           </Modal.Footer>
@@ -68,25 +63,24 @@ export const EditTitleModal = () =>{
     )
 }
 
-export const EditRatingModal = () =>{
+export const EditRatingModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-    const currentTask = useStore((state) => state.currentTask);
-    const [difficulty, setDifficulty] = useState(currentTask?.difficulty || 0)
-    
-    const visible = useStore((state) => state.isEditRatingVisible);
+    const [difficulty, setDifficulty] = useState(props.task.difficulty)
+
     const updateDifficulty = useStore((state) => state.updateDifficulty);
-    const setIsEditRatingVisible = useStore((state) => state.setIsEditRatingVisible);
+
 
     const saveChange = () => {
       if(difficulty)
         updateDifficulty(difficulty)
+      props.handleModal(false)
     }
 
     return(
-        <Modal isVisible={visible}>
+        <Modal isVisible={props.isVisible}>
             <Modal.Container>
                 <Modal.Header title="Edit Rating" />
                 <Modal.Body>
@@ -113,7 +107,7 @@ export const EditRatingModal = () =>{
                 </Modal.Body> 
                 <Modal.Footer>
                     <HStack gap={15}>
-                    <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditRatingVisible(false)} />
+                    <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
                     <ModalButton style={styles.saveBTN}   textStyle={styles.btnText} title="Save" onPress={saveChange} />
                     </HStack>
                 </Modal.Footer>
@@ -164,22 +158,23 @@ export const EditDescriptionModal = () =>{
     )
 }
 
-export interface EditTimerModalProps extends EditModalProps {
-    setIsEditDurationVisible : (state: boolean) => void,
-    updateDuration: (mins : number) => void
-}
+export const EditTimerModal = (props : EditModalProps) =>{
 
-export const EditTimerModal = ({isVisible, setIsEditDurationVisible, updateDuration, cancelFunc, saveFunc} : EditTimerModalProps) =>{
+  const updateDuration = useStore((state) => state.updateDuration);
+
+    const saveChange = (mins : number) => {
+      updateDuration(mins)
+      props.handleModal(false)
+    }
 
     return(
         <TimerPickerModal
-            visible={isVisible}
-            setIsVisible={setIsEditDurationVisible}
-            onConfirm={(pickedDuration) => {
-                updateDuration(pickedDuration.minutes);
-            }}
+            visible={props.isVisible}
+            setIsVisible={props.handleModal}
+            onConfirm={(pickedDuration) => saveChange(pickedDuration.minutes)}
             modalTitle="Set Duration"
-            onCancel={() => cancelFunc(false)}
+            initialMinutes={props.task.duration}
+            onCancel={() => props.handleModal(false)}
             closeOnOverlayPress
             LinearGradient={LinearGradient}
             styles={{ 
@@ -205,24 +200,29 @@ export const EditIngredientModal = () =>{
     const currentTask  = useStore((state) => state.currentTask);
 
     const currentIngredientIndex = useStore((state) => state.currentIngredientIndex);
-    const [ingredient, setIngredient] = useState(currentTask?.ingredients[currentIngredientIndex])
+
     
     const visible = useStore((state) => state.isEditIngredientsVisible);
     const updateIngredient = useStore((state) => state.updateIngredient);
     const setIsEditIngredientsVisible = useStore((state) => state.setIsEditIngredientsVisible);
 
-    const [name, setName] = useState(currentTask?.ingredients[currentIngredientIndex].name)
-    const [quantity, setQuantity] = useState(currentTask?.ingredients[currentIngredientIndex].quantity)
-    const [unit, setUnit] = useState(currentTask?.ingredients[currentIngredientIndex].unit)
+    const [name, setName] = useState("")
+    const [whole, setWhole] = useState("0")
+    const [numerator, setNumerator] = useState("0")
+    const [denominator, setDenominator] = useState("0")
+    const [unit, setUnit] = useState(COOKING_UNIT.None)
+
+    console.log("name", currentTask?.ingredients[currentIngredientIndex].name)
+    console.log("name", name)
 
     const saveChange = () => {
-      if(ingredient)
+      if(currentTask)
       {
         const updatedIngredient : Ingredient = {
-          id : ingredient.id,
-          name : name ? name : ingredient.name,
-          quantity : quantity ? quantity : ingredient.quantity,
-          unit : ingredient.unit //TODO UPDATE
+          id : currentTask.ingredients[currentIngredientIndex].id,
+          name :  name, 
+          quantity : {whole : parseInt(whole), numerator: parseInt(numerator), denominator: parseInt(denominator)}, 
+          unit : unit
         };
 
         updateIngredient(updatedIngredient, currentIngredientIndex)
@@ -230,7 +230,17 @@ export const EditIngredientModal = () =>{
     }
 
     useEffect(()=>{
-      setIngredient(currentTask?.ingredients[currentIngredientIndex])
+      {
+        if(currentTask != null)
+        {
+          setName(currentTask.ingredients[currentIngredientIndex].name)
+          setWhole(currentTask.ingredients[currentIngredientIndex].quantity.whole.toString())
+          setDenominator(currentTask.ingredients[currentIngredientIndex].quantity.numerator.toString())
+          setNumerator(currentTask.ingredients[currentIngredientIndex].quantity.denominator.toString())
+          setUnit(currentTask.ingredients[currentIngredientIndex].unit)
+        }
+      }
+
     },[visible])
 
     return(
@@ -240,17 +250,25 @@ export const EditIngredientModal = () =>{
           <Modal.Body>
             <VStack p={10}>
               <Text style={styles.addIngridientTitle}>Add Ingredients</Text>
-              <TextInput value={name} onChangeText={setName} style={styles.custInput} placeholder="Name" />
-              <HStack justifyContent="space-between">
-                {/* <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput2} placeholder="Quantity" /> */}
-                {/* <Picker
-                    selectedValue="java"
-                    onValueChange={(itemValue, itemIndex) =>
-                      setUnit(itemValue)
-                    }>
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker> */}
+              <TextInput value={name} onChangeText={setName} style={styles.custInput} />
+              <HStack>
+                <Text>Quantity:</Text>
+                <TextInput value={whole} onChangeText={setWhole} style={styles.custInput} />
+                <Text>&</Text>
+                <TextInput value={numerator} onChangeText={setNumerator} style={styles.custInput} />
+                <Text>/</Text>
+                <TextInput value={denominator} onChangeText={setDenominator} style={styles.custInput} />
+              </HStack>
+
+              <HStack justifyContent="space-between" >
+                <Text>Unit:</Text>
+                <Picker style={{backgroundColor: "#fff", width: 200, height: 60}} selectedValue={unit} onValueChange={(itemValue, itemIndex) => setUnit(itemValue)}>
+                  {
+                     Object.entries(unitToString).map((entry, count) =>{
+                      return <Picker.Item key={count} label={entry[1]} value={entry[0]} />
+                     })
+                  }
+                </Picker>
               </HStack>
             </VStack>
           </Modal.Body>

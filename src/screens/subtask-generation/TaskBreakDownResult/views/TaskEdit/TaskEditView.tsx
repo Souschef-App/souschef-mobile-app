@@ -26,6 +26,7 @@ import { Picker } from "@react-native-picker/picker";
 import Dependency from "data/types/dependency";
 import { unitToString } from "../../../../../utils/conversion";
 import { ScrollView } from "react-native-gesture-handler";
+import { EditTitleModal, EditRatingModal, EditDescriptionModal, EditIngredientModal, EditTimerModal } from "./Modals";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -36,28 +37,29 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-  // const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
-  // const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
-  // const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
-  // const [isEditDurationVisible, setIsEditDurationVisible] = useState(false) 
-  // const [isEditIngredientsVisible, setIsEditIngredientsVisible] = useState(false) 
-  // const [isEditKitchenwareVisible, setIsEditIKitchenwareVisible] = useState(false) 
+  const [isEditTItleVisible, setIsEditTitleVisible] = useState(false) 
+  const [isEditDescriptionVisible, setIsEditDescriptionVisible] = useState(false) 
+  const [isEditRatingVisible, setIsEditDifficultyVisible] = useState(false) 
+  const [isEditDurationVisible, setIsEditDurationVisible] = useState(false) 
+  const [isEditIngredientsVisible, setIsEditIngredientsVisible] = useState(false) 
+  const [isEditKitchenwareVisible, setIsEditKitchenwareVisible] = useState(false) 
+  // const [isEditDependenciesVisible, setIsEditKitchenwareVisible] = useState(false) 
 
-  const isEditTItleVisible = useStore((state) => state.isEditTItleVisible);
-  const isEditDescriptionVisible = useStore((state) => state.isEditDescriptionVisible);
-  const isEditRatingVisible = useStore((state) => state.isEditRatingVisible);
-  const isEditDurationVisible = useStore((state) => state.isEditDurationVisible);
-  const isEditIngredientsVisible = useStore((state) => state.isEditIngredientsVisible);
-  const isEditKitchenwareVisible = useStore((state) => state.isEditKitchenwareVisible);
-  const isEditDependenciesVisible = useStore((state) => state.isEditDependenciesVisible);
+  // const isEditTItleVisible = useStore((state) => state.isEditTItleVisible);
+  // const isEditDescriptionVisible = useStore((state) => state.isEditDescriptionVisible);
+  // const isEditRatingVisible = useStore((state) => state.isEditRatingVisible);
+  // const isEditDurationVisible = useStore((state) => state.isEditDurationVisible);
+  // const isEditIngredientsVisible = useStore((state) => state.isEditIngredientsVisible);
+  // const isEditKitchenwareVisible = useStore((state) => state.isEditKitchenwareVisible);
+  // const isEditDependenciesVisible = useStore((state) => state.isEditDependenciesVisible);
 
-  const setIsEditTitleVisible = useStore((state) => state.setIsEditTItleVisible);
-  const setIsEditDescriptionVisible = useStore((state) => state.setIsEditDescriptionVisible);
-  const setIsEditDifficultyVisible = useStore((state) => state.setIsEditRatingVisible);
-  const setIsEditDurationVisible = useStore((state) => state.setIsEditDurationVisible);
-  const setIsEditIngredientsVisible = useStore((state) => state.setIsEditIngredientsVisible);
-  const setIsEditKitchenwareVisible = useStore((state) => state.setIsEditKitchenwareVisible);
-  const setIsEditDependencyVisible = useStore((state) => state.setIsEditDependencyVisible);
+  // const setIsEditTitleVisible = useStore((state) => state.setIsEditTItleVisible);
+  // const setIsEditDescriptionVisible = useStore((state) => state.setIsEditDescriptionVisible);
+  // const setIsEditDifficultyVisible = useStore((state) => state.setIsEditRatingVisible);
+  // const setIsEditDurationVisible = useStore((state) => state.setIsEditDurationVisible);
+  // const setIsEditIngredientsVisible = useStore((state) => state.setIsEditIngredientsVisible);
+  // const setIsEditKitchenwareVisible = useStore((state) => state.setIsEditKitchenwareVisible);
+  // const setIsEditDependencyVisible = useStore((state) => state.setIsEditDependencyVisible);
 
   const [taskTitle, setTaskTitle]              = useState(task.title)
   const [taskDescription, setTaskDescription]  = useState(task.description)
@@ -110,7 +112,7 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
             <EditItemList title="Ingredients" icon="ingredient">
               {
                 task.ingredients.map((ingredient : Ingredient, index : number) => (
-                  <EditRowItem key={index} onEdit={()=>setIsEditIngredientsVisible(true, index)} onDelete={()=>console.log("delete")}>
+                  <EditRowItem key={index} onEdit={()=>setIsEditIngredientsVisible(true)} onDelete={()=>console.log("delete")}>
                     <HStack justifyContent="flex-start" gap={5}>
                       <Text>{ingredient.name}</Text>
                       <Text>{formatIngredientQuantity(ingredient)}</Text>
@@ -123,7 +125,7 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
             <EditItemList title="Kitchenware" icon="kitchenware">
             {
               task.kitchenware.map((kitchenitem : Kitchenware, index : number) => (
-                <EditRowItem key={index} onEdit={()=>setIsEditKitchenwareVisible(true, index)} onDelete={()=>console.log("delete")}>
+                <EditRowItem key={index} onEdit={()=>setIsEditKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
                   <HStack justifyContent="flex-start" gap={5}>
                     <Text>{kitchenitem.name}</Text>
                     <Text>{kitchenitem.quantity}</Text>
@@ -136,7 +138,7 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
             <EditItemList title="Dependencies" icon="clipboard">
             {
               task.dependencies.map((dependency : Dependency, index : number) => (
-                <EditRowItem key={index} onEdit={()=>setIsEditDependencyVisible(true)} onDelete={()=>console.log("delete")}>
+                <EditRowItem key={index} onEdit={()=>{}} onDelete={()=>console.log("delete")}>
                   <HStack justifyContent="flex-start" gap={5}>
                     <Text>{dependency.title}</Text>
                   </HStack>
@@ -147,6 +149,18 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
           </VStack>
         </VStack>  
       </ScrollView>
+
+      <EditTitleModal isVisible={isEditTItleVisible} task={task} handleModal={setIsEditTitleVisible}  /> 
+      <EditTimerModal isVisible={isEditDurationVisible} task={task} handleModal={setIsEditDurationVisible} />
+      <EditRatingModal isVisible={isEditTItleVisible} task={task} handleModal={setIsEditTitleVisible} />
+      <EditDescriptionModal  />
+
+      <EditIngredientModal />
+
+      {/* <EditKitchenwareModal 
+        isVisible={isEditKitchenwareVisible}
+        cancelFunc={() => setIsEditKitchenwareVisible(false)}
+        saveFunc={updateKitchenware} /> */}
     </VStack>
   );
 };

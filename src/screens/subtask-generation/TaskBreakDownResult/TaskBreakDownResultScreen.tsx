@@ -129,24 +129,6 @@ export const TaskBreakDownResultScreen = ({
               )
             }
             </VStack>
-
-            <EditTitleModal /> 
-            <EditRatingModal />
-            <EditDescriptionModal  />
-            {/* <EditTimerModal  
-              isVisible={isEditDurationVisible} 
-              cancelFunc={() => setIsEditDescriptionVisible(false)}
-              saveFunc={updateDescription}
-              setIsEditDurationVisible={setIsEditDurationVisible}
-              updateDuration={updateDuration} /> */}
-
-            <EditIngredientModal />
-
-            {/* <EditKitchenwareModal 
-              isVisible={isEditKitchenwareVisible}
-              cancelFunc={() => setIsEditKitchenwareVisible(false)}
-              saveFunc={updateKitchenware} /> */}
-
           </VStack>
         )
       }
