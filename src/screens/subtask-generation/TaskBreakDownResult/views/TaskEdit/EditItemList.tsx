@@ -59,7 +59,7 @@ export const EditRowItem = ({children, onDelete, onEdit} : PropsWithChildren<Edi
       <Button style={styles.highlightEdit} onPress={onEdit}>
       {children}
       </Button>
-      <IconButton icon="x" iconSize={24} color={theme.colors.danger} onPress={onDelete} />
+      <IconButton icon="garbage" iconSize={24} color={theme.colors.danger} onPress={onDelete} />
     </HStack>
   )
 }

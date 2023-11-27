@@ -25,6 +25,7 @@ import uuid from 'react-native-uuid';
 import { Picker } from "@react-native-picker/picker";
 import Dependency from "data/types/dependency";
 import { unitToString } from "../../../../../utils/conversion";
+import { ScrollView } from "react-native-gesture-handler";
 
 export type TaskAvailaleProps = {
   task: Task;
@@ -68,86 +69,84 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
 
   return (
     <VStack p={theme.spacing.m}>
-      <VStack gap={theme.spacing.xl}>
-        <VStack flexMain={false} gap={theme.spacing.s}>
-          <TextButton 
-            style={styles.highlightEdit} 
-            textStyle={styles.taskTitle} 
-            title={task.title} 
-            onPress={() => setIsEditTitleVisible(true)} />
-          <HStack
-            flexMain={false}
-            gap={theme.spacing.m}
-            style={{ height: theme.spacing.l }}
-          >
-            <Button style={styles.highlightEdit} onPress={() => setIsEditDurationVisible(true)}>
-              <HStack flexMain={false} gap={theme.spacing.s}>
-                <Icon name="timer" color={theme.colors.text} size={24} />
-                <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
-              </HStack>
-            </Button>
-            <Divider thickness={3} color={theme.colors.background2} />
+      <ScrollView>
+        <VStack gap={theme.spacing.xl}>
+          <VStack flexMain={false} gap={theme.spacing.s}>
+            <TextButton 
+              style={styles.highlightEdit} 
+              textStyle={styles.taskTitle} 
+              title={task.title} 
+              onPress={() => setIsEditTitleVisible(true)} />
+              <HStack
+                flexMain={false}
+                gap={theme.spacing.m}
+                style={{ height: theme.spacing.l }}
+              >
+                <Button style={styles.highlightEdit} onPress={() => setIsEditDurationVisible(true)}>
+                  <HStack flexMain={false} gap={theme.spacing.s}>
+                    <Icon name="timer" color={theme.colors.text} size={24} />
+                    <Text style={styles.timerText}>{`~${task.duration} min`}</Text>
+                  </HStack>
+                </Button>
+                <Divider thickness={3} color={theme.colors.background2} />
 
-            <Button style={styles.highlightEdit} onPress={()=>setIsEditDifficultyVisible(true)}>
-              <Icon
-                  name={formatDifficultyToString(task.difficulty)}
-                  color={formatDifficultyToHex(task.difficulty)}
-                  size={24}
-                />
-            </Button>
-          </HStack>
-        </VStack>
-        <Button style={styles.highlightEdit} onPress={() => setIsEditDescriptionVisible(true)}>
-          <Text style={TextStyle.h3}>{task.description}</Text>
-        </Button>
-        <VStack
-          flexMain={false}
-          pVH={{ h: theme.spacing.m }}
-          gap={theme.spacing.l}
-        >
-          <EditItemList title="Ingredients" icon="ingredient">
+                <Button style={styles.highlightEdit} onPress={()=>setIsEditDifficultyVisible(true)}>
+                  <Icon
+                    name={formatDifficultyToString(task.difficulty)}
+                    color={formatDifficultyToHex(task.difficulty)}
+                    size={24}
+                  />
+                </Button>
+              </HStack>
+          </VStack>
+          <Button style={styles.highlightEdit} onPress={() => setIsEditDescriptionVisible(true)}>
+            <Text style={TextStyle.h3}>{task.description}</Text>
+          </Button>
+          <VStack
+            flexMain={false}
+            pVH={{ h: theme.spacing.m }}
+            gap={theme.spacing.l}
+          >
+            <EditItemList title="Ingredients" icon="ingredient">
               {
                 task.ingredients.map((ingredient : Ingredient, index : number) => (
-                  <EditRowItem key={index} onEdit={()=>setIsEditIngredientsVisible(true)} onDelete={()=>console.log("delete")}>
+                  <EditRowItem key={index} onEdit={()=>setIsEditIngredientsVisible(true, index)} onDelete={()=>console.log("delete")}>
                     <HStack justifyContent="flex-start" gap={5}>
                       <Text>{ingredient.name}</Text>
-                      <Text>{ingredient.quantity}</Text>
-                      {/* <Text>{unitToString[ingredient.unit]}</Text> */}
+                      <Text>{formatIngredientQuantity(ingredient)}</Text>
                     </HStack>
                   </EditRowItem>
                 ))
               }
-          </EditItemList>
+            </EditItemList>
 
-          <EditItemList title="Kitchenware" icon="kitchenware">
-              {
-                task.kitchenware.map((kitchenitem : Kitchenware, index : number) => (
-                  <EditRowItem key={index} onEdit={()=>setIsEditKitchenwareVisible(true)} onDelete={()=>console.log("delete")}>
-                    <HStack justifyContent="flex-start" gap={5}>
-                      <Text>{kitchenitem.name}</Text>
-                      <Text>{kitchenitem.quantity}</Text>
-                    </HStack>
-                  </EditRowItem>
-                ))
-              }
-          </EditItemList>
+            <EditItemList title="Kitchenware" icon="kitchenware">
+            {
+              task.kitchenware.map((kitchenitem : Kitchenware, index : number) => (
+                <EditRowItem key={index} onEdit={()=>setIsEditKitchenwareVisible(true, index)} onDelete={()=>console.log("delete")}>
+                  <HStack justifyContent="flex-start" gap={5}>
+                    <Text>{kitchenitem.name}</Text>
+                    <Text>{kitchenitem.quantity}</Text>
+                  </HStack>
+                </EditRowItem>
+              ))
+            }
+            </EditItemList>
 
-          <EditItemList title="Dependencies" icon="clipboard">
-              {
-                task.dependencies.map((dependency : Dependency, index : number) => (
-                  <EditRowItem key={index} onEdit={()=>setIsEditDependencyVisible(true)} onDelete={()=>console.log("delete")}>
-                    <HStack justifyContent="flex-start" gap={5}>
-                      <Text>{dependency.title}</Text>
-                    </HStack>
-                  </EditRowItem>
-                ))
-              }
-          </EditItemList>
-        </VStack>
-      </VStack>  
-
-      
-
+            <EditItemList title="Dependencies" icon="clipboard">
+            {
+              task.dependencies.map((dependency : Dependency, index : number) => (
+                <EditRowItem key={index} onEdit={()=>setIsEditDependencyVisible(true)} onDelete={()=>console.log("delete")}>
+                  <HStack justifyContent="flex-start" gap={5}>
+                    <Text>{dependency.title}</Text>
+                  </HStack>
+                </EditRowItem>
+              ))
+            }
+            </EditItemList>
+          </VStack>
+        </VStack>  
+      </ScrollView>
     </VStack>
   );
 };
@@ -176,49 +175,6 @@ const EditItem = (props : any) =>{
   )
 }
 
-const AddIngredient = (props : any) => {
-
-  const [name, setName] = useState("")
-  const [quantity, setQuantity] = useState("")
-  const [unit, setUnit] = useState("")
-
-  const addIngredient = () =>{
-    const ingredient : Ingredient = {
-      id: uuid.v4().toString(),
-      name: name,
-      quantity: 0,
-      unit: 0
-    }
-
-    const taskIngredientsClone = props.taskIngredients
-
-    taskIngredientsClone.push(ingredient)
-
-    console.log(taskIngredientsClone)
-
-    props.setTaskIngredients([...taskIngredientsClone])
-  }
-
-  return(
-    <VStack  align="flex-start" style={props.styles.editRowFooterStyle} p={10} gap={10}>
-        <Text style={props.styles.addIngridientTitle}>Add Ingredients</Text>
-        <TextInput value={name} onChangeText={setName} style={props.styles.custInput} placeholder="Name" />
-        <HStack justifyContent="space-between">
-          <TextInput value={quantity} onChangeText={setQuantity} style={props.styles.custInput2} placeholder="Quantity" />
-          <Picker
-              selectedValue="java"
-              onValueChange={(itemValue, itemIndex) =>
-                setUnit(itemValue)
-              }>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
-          <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>addIngredient()} />
-        </HStack>
-    </VStack>
-  )
-}
-
 const AddKitchenware = (props : any) => {
 
   const [name, setName] = useState("")
@@ -235,7 +191,7 @@ const AddKitchenware = (props : any) => {
 
     taskKitchenwareClone.push(kitchenware)
 
-    console.log(taskKitchenwareClone)
+    // console.log(taskKitchenwareClone)
 
     props.setTaskKitchenware([...taskKitchenwareClone])
   }

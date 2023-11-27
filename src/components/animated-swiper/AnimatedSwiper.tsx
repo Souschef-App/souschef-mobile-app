@@ -46,7 +46,7 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
   );
 
   const onSwipeLeftHandler = useCallback(() => {
-    console.log("onSwipeLeftHandler") 
+    // console.log("onSwipeLeftHandler") 
     if (activeIndex > 0) {
       setFadingValue(false);
       setActiveIndex(activeIndex - 1);
@@ -54,7 +54,7 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
   }, [activeIndex]);
 
   const onSwipeRightHandler = useCallback(() => {
-    console.log("onSwipeRightHandler") 
+    // console.log("onSwipeRightHandler") 
     if (activeIndex < childrenLength - 1) {
       setFadingValue(true);
       setActiveIndex(activeIndex + 1);

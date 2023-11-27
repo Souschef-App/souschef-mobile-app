@@ -141,11 +141,11 @@ const FavoriteRecipesScreen: React.FC<{ route: FavoriteScreenRouteProp, navigati
     : filteredYourRecipes.slice(0, 3);
 
   useEffect(() => {
-    console.log("Recipes", user?.id);
+    // console.log("Recipes", user?.id);
     fetchFavoriteRecipes(user?.id ?? "").then(res => {
       
       const recipes = res.data.map((r: any) => r.recipe)
-      console.log(res.data, recipes)
+      // console.log(res.data, recipes)
       setAllRecipes(recipes);
       setFilteredFavoriteRecipes(recipes);
     }).catch(err => {

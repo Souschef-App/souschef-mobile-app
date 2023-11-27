@@ -25,24 +25,25 @@ export const EnterRecipeIngredientsScreen = ({
   const [text, setText] = useState("");
 
   const setEnteredRecipe = useStore((state) => state.setEnteredRecipe);
-  const submitForBreakDown = useStore((state) => state.submitForBreakDown);
 
   const getSuggestions = () => {
-    console.log("pressed")
     if(recipeIngredientsList.length <= 0)
     {
       setErrorModalVisible(true)
     }
     else{
       // setEnteredRecipe(recipeIngredientsList) //TODO:Change!!
-      submitForBreakDown();
+      setEnteredRecipe(recipeIngredientsList);
       navigation.navigate("EnterRecipeStepsScreen");
     }
   };
 
   const addIngredientsToList = () => {
-    console.log("adding task to list")
-    recipeIngredientsList.push(text)
+    // console.log("adding task to list")
+    // recipeIngredientsList.push(text)
+
+    setTaskList([...recipeIngredientsList, text])
+
     setText("")
     setModalVisible(!modalVisible)
   } 
@@ -69,7 +70,7 @@ export const EnterRecipeIngredientsScreen = ({
             {
               recipeIngredientsList.map((task, index) =>{
                 return (
-                  <RowItem text={task} index={index} styles={styles} />
+                  <RowItem key={index} text={task} index={index} styles={styles} />
                 )
               })
             }

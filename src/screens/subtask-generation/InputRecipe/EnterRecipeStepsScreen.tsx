@@ -27,7 +27,7 @@ export const EnterRecipeStepsScreen = ({
   const submitForBreakDown = useStore((state) => state.submitForBreakDown);
 
   const getSuggestions = () => {
-    console.log("pressed")
+    // console.log("pressed")
     if(taskList.length <= 0)
     {
       setErrorModalVisible(true)
@@ -40,7 +40,7 @@ export const EnterRecipeStepsScreen = ({
   };
 
   const addTaskToList = () => {
-    console.log("adding task to list")
+    // console.log("adding task to list")
     taskList.push(text)
     setText("")
     setModalVisible(!modalVisible)
@@ -66,9 +66,9 @@ export const EnterRecipeStepsScreen = ({
           (
             <ScrollView style={{ flex: 1, alignSelf: "stretch", padding: 20}}>
             {
-              taskList.map((task , index) =>{
+              taskList.map((task : string, index : number) => {
                 return (
-                  <RowItem index={index} text={task} styles={styles} />
+                  <RowItem key={index} index={index} text={task} styles={styles} />
                 )
               })
             }

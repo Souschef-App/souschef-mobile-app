@@ -28,12 +28,12 @@ export const TaskBreakDownResultScreen = ({
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
-  console.log("TaskBreakDownResultScreen reloaded")
+  // console.log("TaskBreakDownResultScreen reloaded")
 
   const brokenDownRecipeArray = useMemo(() => { 
-    console.log("brokenDownRecipeArray changed")
-    return brokenDownRecipe?.map(data => <TaskEditScreen task={data} />)
-    }, [brokenDownRecipe]);
+    // console.log("brokenDownRecipeArray changed")
+    return brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
+  }, [brokenDownRecipe]);
   
   // const renderArray = useMemo(() => brokenDownRecipeArray?.concat(<SaveRecipeView navigation={navigation} />), 
   // [brokenDownRecipeArray]);
@@ -43,7 +43,7 @@ export const TaskBreakDownResultScreen = ({
 
   const swiper =  useMemo(() => {
 
-    console.log("swiper changed ", activeIndex)
+    // console.log("swiper changed ", activeIndex)
     return <AnimatedSwiper activeIndex={activeIndex} setActiveIndex={setActiveIndex} paginationStyle={{marginBottom: 5}} duration={600}>
     {
       brokenDownRecipeArray
@@ -52,7 +52,7 @@ export const TaskBreakDownResultScreen = ({
   }
     , [brokenDownRecipe, activeIndex]);
 
-    const isEditTItleVisible = useStore((state) => state.isEditTItleVisible);
+  const isEditTItleVisible = useStore((state) => state.isEditTItleVisible);
 
   const isEditDescriptionVisible = useStore((state) => state.isEditDescriptionVisible);
   const isEditRatingVisible = useStore((state) => state.isEditRatingVisible);
@@ -133,22 +133,20 @@ export const TaskBreakDownResultScreen = ({
             <EditTitleModal /> 
             <EditRatingModal />
             <EditDescriptionModal  />
-          {/* <EditTimerModal  
-            isVisible={isEditDurationVisible} 
-            cancelFunc={() => setIsEditDescriptionVisible(false)}
-            saveFunc={updateDescription}
-            setIsEditDurationVisible={setIsEditDurationVisible}
-            updateDuration={updateDuration} />
+            {/* <EditTimerModal  
+              isVisible={isEditDurationVisible} 
+              cancelFunc={() => setIsEditDescriptionVisible(false)}
+              saveFunc={updateDescription}
+              setIsEditDurationVisible={setIsEditDurationVisible}
+              updateDuration={updateDuration} /> */}
 
-          <EditIngredientModal 
-            isVisible={isEditIngredientsVisible}
-            cancelFunc={() => setIsEditIngredientsVisible(false)}
-            saveFunc={updateIngredients} />
+            <EditIngredientModal />
 
-          <EditKitchenwareModal 
-            isVisible={isEditKitchenwareVisible}
-            cancelFunc={() => setIsEditKitchenwareVisible(false)}
-            saveFunc={updateKitchenware} />  */}
+            {/* <EditKitchenwareModal 
+              isVisible={isEditKitchenwareVisible}
+              cancelFunc={() => setIsEditKitchenwareVisible(false)}
+              saveFunc={updateKitchenware} /> */}
+
           </VStack>
         )
       }

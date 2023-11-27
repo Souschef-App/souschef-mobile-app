@@ -2,7 +2,7 @@ import { StateCreator } from "zustand";
 import { StoreState } from "../store";
 import jsonRequest from "../../api/requests";
 import { ApiUrls } from "../../api/constants";
-import { DIFFICULTY, Recipe, Task } from "../types";
+import { DIFFICULTY, Ingredient, Kitchenware, Recipe, Task } from "../types";
 
 export interface RecipeBuilderSlice {
   loading: boolean;
@@ -10,6 +10,9 @@ export interface RecipeBuilderSlice {
   activeIndex: number;
   setActiveIndex: (state: number) => void;
   currentTask: Task | null;
+  currentIngredientIndex: number;
+  //currentIngredientIndex: number;
+
   isEditTItleVisible: boolean;
   isEditDescriptionVisible: boolean;
   isEditRatingVisible: boolean;
@@ -22,8 +25,8 @@ export interface RecipeBuilderSlice {
   setIsEditDescriptionVisible: (state: boolean) => void;
   setIsEditRatingVisible: (state: boolean) => void;
   setIsEditDurationVisible: (state: boolean) => void;
-  setIsEditIngredientsVisible: (state: boolean) => void;
-  setIsEditKitchenwareVisible: (state: boolean) => void;
+  setIsEditIngredientsVisible: (state: boolean, index: number) => void;
+  setIsEditKitchenwareVisible: (state: boolean, index: number) => void;
   setIsEditDependencyVisible: (state: boolean) => void;
 
   enteredRecipe: string[] | null;
@@ -40,6 +43,9 @@ export interface RecipeBuilderSlice {
   updateDescription: (description: string) => void;
   updateDifficulty: (title: DIFFICULTY) => void;
   updateDuration: (duration: number) => void;
+
+  updateIngredient: (ingredient: Ingredient, index: number) => void;
+  updateKitchenware: (kitchenware: Kitchenware, index: number) => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -49,8 +55,9 @@ export const createRecipeBuilderSlice: StateCreator<
   RecipeBuilderSlice
 > = (set, get) => ({
   loading: false,
-  currentTask: null,
   activeIndex: 0,
+  currentTask: null,
+  currentIngredientIndex: 0,
   isEditTItleVisible: false,
   isEditDescriptionVisible: false,
   isEditRatingVisible: false,
@@ -59,18 +66,22 @@ export const createRecipeBuilderSlice: StateCreator<
   isEditKitchenwareVisible: false,
   isEditDependenciesVisible: false,
 
-  enteredRecipe: null,
+  enteredRecipe: [],
   brokenDownRecipe: [],
   saveRecipeError: null,
   saveRecipeSuccess: null,
   setActiveIndex: (num: number) => {
-    console.trace("SET ACTIVE INDEX ", num);
+    // console.trace("SET ACTIVE INDEX ", num);
     let list = get().brokenDownRecipe;
     set({ activeIndex: num });
     set({ currentTask: list ? list[num] : null });
   },
   setEnteredRecipe: (recipe: string[]) => {
-    set({ enteredRecipe: recipe });
+    const list = get().enteredRecipe;
+
+    list?.push(...recipe);
+
+    set({ enteredRecipe: list });
   },
   submitForBreakDown: async () => {
     let result: string = "";
@@ -89,7 +100,7 @@ export const createRecipeBuilderSlice: StateCreator<
 
     if (error !== null || breakdownResult == null) return;
 
-    console.log("BREAKDOWN RESULT" + JSON.stringify(breakdownResult));
+    // console.log("BREAKDOWN RESULT" + JSON.stringify(breakdownResult));
 
     // console.log(JSON.stringify(breakdownResult.tasks));
     set({ brokenDownRecipe: breakdownResult });
@@ -108,7 +119,7 @@ export const createRecipeBuilderSlice: StateCreator<
     set({ brokenDownRecipe: list });
   },
   saveRecipe: async (name: string) => {
-    console.log("saveRecipe");
+    // console.log("saveRecipe");
     const tasks = get().brokenDownRecipe;
     const userID = get().user?.id;
 
@@ -152,11 +163,13 @@ export const createRecipeBuilderSlice: StateCreator<
   setIsEditDurationVisible: (state: boolean) => {
     set({ isEditDurationVisible: state });
   },
-  setIsEditIngredientsVisible: (state: boolean) => {
+  setIsEditIngredientsVisible: (state: boolean, index: number) => {
     set({ isEditIngredientsVisible: state });
+    set({ currentIngredientIndex: index });
   },
-  setIsEditKitchenwareVisible: (state: boolean) => {
+  setIsEditKitchenwareVisible: (state: boolean, index: number) => {
     set({ isEditKitchenwareVisible: state });
+    //set({ currentIngredientIndex: index });
   },
   setIsEditDependencyVisible: (state: boolean) => {
     set({ isEditDependenciesVisible: state });
@@ -200,19 +213,21 @@ export const createRecipeBuilderSlice: StateCreator<
     get().updateRecipeTask(cloneTask);
     get().setIsEditDurationVisible(false);
   },
+  updateIngredient: (ingredient: Ingredient, index: number) => {
+    const cloneTask = get().currentTask;
+    if (!cloneTask) return;
 
-  // updateIngredients:  () =>{
-  //   const cloneTask = task;
-  //   cloneTask.ingredients = taskIngredients
-  //   updateRecipe(cloneTask)
-  //   setIsEditIngredientsVisible(false);
-  // },
+    cloneTask.ingredients[index] = ingredient;
+    get().updateRecipeTask(cloneTask);
+    get().setIsEditIngredientsVisible(false, 0);
+  },
+  updateKitchenware: (kitchenware: Kitchenware, index: number) => {
+    const cloneTask = get().currentTask;
 
-  // updateKitchenware:  () =>{
+    if (!cloneTask) return;
 
-  //   const cloneTask = task;
-  //   cloneTask.kitchenware = taskKitchenware
-  //   updateRecipe(cloneTask)
-  //   setIsEditKitchenwareVisible(false);
-  // }
+    cloneTask.kitchenware[index] = kitchenware;
+    get().updateRecipeTask(cloneTask);
+    get().setIsEditKitchenwareVisible(false, 0);
+  },
 });

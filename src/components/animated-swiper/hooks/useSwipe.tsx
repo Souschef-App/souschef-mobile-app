@@ -14,7 +14,7 @@ const useSwipe = (
   const singleTouchValueThreshold = 2;
 
   function onTouchStart(event: GestureResponderEvent) {
-    console.log("onTouchStart  ", event.nativeEvent.pageX)
+    // console.log("onTouchStart  ", event.nativeEvent.pageX)
     firstTouchPageX = event.nativeEvent.pageX || 0;
   }
 

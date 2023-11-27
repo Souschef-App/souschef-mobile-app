@@ -15,7 +15,7 @@ import {
 import { ThemeContext } from "../../contexts/AppContext";
 import { fakeRecipe } from "../../data/__mocks__";
 import { Recipe } from "../../data/types";
-import { MealNameScreenRouteProp } from "../../navigation/types";
+import { MealNameScreenRouteProp, MealPlanNavigationProp } from "../../navigation/types";
 import { TextStyle, Theme } from "../../styles/";
 import { formatDifficultyToString } from "../../utils/format";
 
@@ -79,7 +79,7 @@ const PublicRecipes = () => {
   return (
     <>
       {publicRecipes.map((recipe, index) => (
-        <RecipeItem recipe={recipe} />
+        <RecipeItem key={index} recipe={recipe} />
       ))}
     </>
   );
@@ -101,7 +101,7 @@ const CustomRecipes = () => {
 const MealPlanScreen = ({
   navigation,
 }: {
-  navigation: MealNameScreenRouteProp;
+  navigation: MealPlanNavigationProp;
 }) => {
   // Theme
   const theme = React.useContext(ThemeContext);
@@ -143,7 +143,7 @@ const MealPlanScreen = ({
           {activeTab === 1 ? (
             <TextButton
               title="Add Custom Recipe"
-              onPress={() => {}}
+              onPress={() => navigation.navigate("EnterRecipeIngredientsScreen")}
               textStyle={styles.newRecipeText}
               style={styles.newRecipeBtn}
             />
