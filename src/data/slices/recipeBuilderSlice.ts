@@ -3,6 +3,7 @@ import { StoreState } from "../store";
 import jsonRequest from "../../api/requests";
 import { ApiUrls } from "../../api/constants";
 import { DIFFICULTY, Ingredient, Kitchenware, Recipe, Task } from "../types";
+import Dependency from "data/types/dependency";
 
 export interface RecipeBuilderSlice {
   loading: boolean;
@@ -49,6 +50,9 @@ export interface RecipeBuilderSlice {
   removeIngredient: (task: Task, index: number | undefined) => void;
   removeKitchenware: (task: Task, index: number | undefined) => void;
   removeDependency: (task: Task, index: number | undefined) => void;
+  addIngredient: (task: Task, ingredient: Ingredient) => void;
+  addKitchenware: (task: Task, kitchenware: Kitchenware) => void;
+  addDependency: (task: Task, dependency: Dependency) => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -235,34 +239,34 @@ export const createRecipeBuilderSlice: StateCreator<
     get().setIsEditKitchenwareVisible(false, 0);
   },
   removeIngredient: (task: Task, index: number | undefined) => {
-    console.log("removeIngredient " + index + " " + task);
     if (!task || index == undefined) return;
 
-    console.log("Task " + task.title);
-
     task.ingredients.splice(index, 1);
-
-    console.log("Updated Task " + JSON.stringify(task));
     get().updateRecipeTask(task);
   },
   removeKitchenware: (task: Task, index: number | undefined) => {
     if (!task || index == undefined) return;
-
-    console.log("Task " + task.title);
-
     task.kitchenware.splice(index, 1);
-
-    console.log("Updated Task " + JSON.stringify(task));
     get().updateRecipeTask(task);
   },
   removeDependency: (task: Task, index: number | undefined) => {
     if (!task || index == undefined) return;
-
-    console.log("Task " + task.title);
-
     task.dependencies.splice(index, 1);
-
-    console.log("Updated Task " + JSON.stringify(task));
+    get().updateRecipeTask(task);
+  },
+  addIngredient: (task: Task, ingredient: Ingredient) => {
+    if (!task) return;
+    task.ingredients.push(ingredient);
+    get().updateRecipeTask(task);
+  },
+  addKitchenware: (task: Task, kitchenware: Kitchenware) => {
+    if (!task) return;
+    task.kitchenware.push(kitchenware);
+    get().updateRecipeTask(task);
+  },
+  addDependency: (task: Task, dependency: Dependency) => {
+    if (!task) return;
+    task.dependencies.push(dependency);
     get().updateRecipeTask(task);
   },
 });

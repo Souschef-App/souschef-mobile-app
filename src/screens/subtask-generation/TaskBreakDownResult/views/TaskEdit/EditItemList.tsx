@@ -10,9 +10,10 @@ import { IconNames } from "../../../../../components/primitives/Icon"
 type EditItemListProps = {
   title : string,
   icon : IconNames,
+  addFunc: () => void,
 }
 
-export const EditItemList = ({title, icon, children } : PropsWithChildren<EditItemListProps>) => {
+export const EditItemList = ({title, icon, addFunc, children } : PropsWithChildren<EditItemListProps>) => {
 
   const theme = useContext(ThemeContext);
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -24,7 +25,7 @@ export const EditItemList = ({title, icon, children } : PropsWithChildren<EditIt
             {icon && <Icon name={icon} color={theme.colors.primary} />}
             <Text style={styles.dropdownTitle}>{title}</Text>
           </HStack>
-          <IconButton icon="plus" iconSize={24} onPress={()=>{}} />
+          <IconButton icon="plus" iconSize={24} onPress={()=>addFunc()} />
         </HStack>
       <HStack
         mAll={{ l: theme.spacing.s, r: theme.spacing.xs }}

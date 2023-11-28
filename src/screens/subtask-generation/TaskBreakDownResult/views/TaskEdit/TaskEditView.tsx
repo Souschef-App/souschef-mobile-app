@@ -32,7 +32,10 @@ import
   EditIngredientModal, 
   EditTimerModal, 
   EditKitchenwareModal, 
-  ConfirmDeleteModal 
+  ConfirmDeleteModal, 
+  AddIngredientModal,
+  AddKitchenwareModal,
+  AddDependencyModal
 } from "./Modals";
 import useStore from "../../../../../data/store";
 
@@ -57,6 +60,9 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
   const [isDeleteIngredientVisible, setIsDeleteIngredientVisible] = useState(false) 
   const [isDeleteKitchenwareVisible, setIsDCeleteKitchenware] = useState(false) 
   const [isDeleteDependencyVisible, setIsDCeleteDependency] = useState(false) 
+  const [isAddIngredientVisible, setIsAddIngredientVisible] = useState(false) 
+  const [isAddKitchenwareVisible, setIsAddKitchenwareVisible] = useState(false) 
+  const [isAddDependencyVisible, setIsAddDependencyVisible] = useState(false) 
   //#endregion 
 
   const [editIngredientIndex, setEditIngredientIndex]   = useState<number>()
@@ -125,7 +131,7 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
             gap={theme.spacing.l}
           >
  
-            <EditItemList title="Ingredients" icon="ingredient">
+            <EditItemList title="Ingredients" icon="ingredient" addFunc={()=>setIsAddIngredientVisible(true)}>
               {
                 task.ingredients.map((ingredient : Ingredient, index : number) => (
                   <EditRowItem key={index} onEdit={()=>setIsEditIngredientVisible(true)} onDelete={()=>requestDeleteIngredient(index)}>
@@ -138,7 +144,7 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
               }
             </EditItemList>
    
-            <EditItemList title="Kitchenware" icon="kitchenware">
+            <EditItemList title="Kitchenware" icon="kitchenware" addFunc={() => setIsAddKitchenwareVisible(true)}>
             {
               task.kitchenware.map((kitchenitem : Kitchenware, index : number) => (
                 <EditRowItem key={index} onEdit={()=>setIsEditKitchenwareVisible(true)} onDelete={()=>requestDeleteKitchenware(index)}>
@@ -152,7 +158,7 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
             </EditItemList>
      
       
-            <EditItemList title="Dependencies" icon="clipboard">
+            <EditItemList title="Dependencies" icon="clipboard" addFunc={() => setIsAddDependencyVisible(true)}>
             {
               task.dependencies.map((dependency : Dependency, index : number) => (
                 <EditRowItem key={index} onEdit={()=>{}} onDelete={()=> requestDeleteDependency(index)}>
@@ -196,6 +202,9 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
         handleModal={setIsDCeleteDependency} 
         deleteFunc={() => removeDependency(task, editDependencyIndex)}
       />
+      <AddIngredientModal isVisible={isAddIngredientVisible} task={task} handleModal={setIsAddIngredientVisible} />
+      <AddKitchenwareModal isVisible={isAddKitchenwareVisible} task={task} handleModal={setIsAddKitchenwareVisible} />
+      <AddDependencyModal isVisible={isAddDependencyVisible} task={task} handleModal={setIsAddDependencyVisible} />
     </VStack>
   );
 };

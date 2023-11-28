@@ -1,3 +1,4 @@
+//#region Imports
 import { HStack, Icon, ModalButton, ModalIconButton, VStack } from "../../../../../components"
 import React, { useEffect, useState } from "react"
 import { StyleSheet, TextInput, Text } from "react-native"
@@ -19,14 +20,18 @@ import useStore from "../../../../../data/store"
 import { COOKING_UNIT, Fraction, Ingredient, Kitchenware, Task } from "../../../../../data/types"
 import { Picker } from "@react-native-picker/picker"
 import { unitToString } from "../../../../../utils/conversion"
+import uuid from 'react-native-uuid';
+import Dependency from "data/types/dependency"
+
+//#endregion
 
 export type EditModalProps = {
     isVisible : boolean,
     task : Task
     handleModal : (state : boolean) => void,
-    // saveFunc : () => void,
 }
 
+//#region EditTitleModal
 export interface EditTitleModalProps extends EditModalProps {
     inputValue? : string,
 }
@@ -62,7 +67,9 @@ export const EditTitleModal = (props : EditModalProps) =>{
       </Modal>
     )
 }
+//#endregion
 
+//#region EditRatingModal
 export const EditRatingModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
@@ -116,7 +123,9 @@ export const EditRatingModal = (props : EditModalProps) =>{
       </Modal>
     )
 }
+//#endregion
 
+//#region EditDescriptionModal
 export const EditDescriptionModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
@@ -148,7 +157,9 @@ export const EditDescriptionModal = (props : EditModalProps) =>{
       </Modal>
     )
 }
+//#endregion
 
+//#region EditTimerModal
 export const EditTimerModal = (props : EditModalProps) =>{
 
   const updateDuration = useStore((state) => state.updateDuration);
@@ -176,7 +187,9 @@ export const EditTimerModal = (props : EditModalProps) =>{
       />
     )
 }
+//#endregion
 
+//#region EditIngredientModal
 export const EditIngredientModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
@@ -261,7 +274,9 @@ export const EditIngredientModal = (props : EditModalProps) =>{
       </Modal>
     )
 }
+//#endregion
 
+//#region EditKitchenwareModal
 export const EditKitchenwareModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
@@ -320,7 +335,9 @@ export const EditKitchenwareModal = (props : EditModalProps) =>{
       </Modal>
     )
 }
+//#endregion
 
+//#region ConfimDeleteModal
 interface ConfirmDeleteItemProps extends EditModalProps {
   title: string,
   deleteFunc : () => void,
@@ -350,6 +367,176 @@ export const ConfirmDeleteModal = (props : ConfirmDeleteItemProps) =>{
     </Modal>
   )
 }
+
+//#endregion
+
+//#region AddIngredientModal
+export const AddIngredientModal = (props : EditModalProps) =>{
+
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  const addIngredient = useStore((state) => state.addIngredient);
+
+  const [name, setName] = useState("")
+  const [whole, setWhole] = useState("0")
+  const [numerator, setNumerator] = useState("0")
+  const [denominator, setDenominator] = useState("0")
+  const [unit, setUnit] = useState(COOKING_UNIT.None)
+
+  const saveChange = () => {
+    if(props.task)
+    {
+      const newIngredient : Ingredient = {
+        id : uuid.v4().toString(),
+        name :  name, 
+        quantity : {whole : parseInt(whole), numerator: parseInt(numerator), denominator: parseInt(denominator)}, 
+        unit : unit
+      };
+
+      addIngredient(props.task, newIngredient)
+      props.handleModal(false)
+    }
+  }
+
+  return(
+      <Modal isVisible={props.isVisible}>
+      <Modal.Container>
+        <Modal.Header title="Add Ingredient" />
+        <Modal.Body>
+          <VStack p={10}>
+            <Text style={styles.addIngridientTitle}>Add Ingredients</Text>
+            <TextInput value={name} onChangeText={setName} style={styles.custInput} />
+            <HStack>
+              <Text>Quantity:</Text>
+              <TextInput value={whole} onChangeText={setWhole} style={styles.custInput} />
+              <Text>&</Text>
+              <TextInput value={numerator} onChangeText={setNumerator} style={styles.custInput} />
+              <Text>/</Text>
+              <TextInput value={denominator} onChangeText={setDenominator} style={styles.custInput} />
+            </HStack>
+
+            <HStack justifyContent="space-between" >
+              <Text>Unit:</Text>
+              <Picker style={{backgroundColor: "#fff", width: 200, height: 60}} selectedValue={unit} onValueChange={(itemValue, itemIndex) => setUnit(itemValue)}>
+                {
+                   Object.entries(unitToString).map((entry, count) =>{
+                    return <Picker.Item key={count} label={entry[1]} value={entry[0]} />
+                   })
+                }
+              </Picker>
+            </HStack>
+          </VStack>
+        </Modal.Body>
+        <Modal.Footer>
+          <HStack gap={15}>
+            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
+            <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          </HStack>
+        </Modal.Footer>
+      </Modal.Container>
+    </Modal>
+  )
+}
+//#endregion
+
+//#region AddKitchenwareModal
+export const AddKitchenwareModal = (props : EditModalProps) =>{
+
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  const [name, setName] = useState("")
+  const [quantity, setQuantity] = useState("0")
+  
+  const addKitchenware = useStore((state) => state.addKitchenware);
+
+  const saveChange = () => {
+
+    const kitchenware : Kitchenware = {
+      id : uuid.v4().toString(),
+      name:name,
+      quantity: parseInt(quantity)
+    }
+
+    if(kitchenware)
+      addKitchenware(props.task, kitchenware)
+
+    props.handleModal(false)
+  }
+
+  return(
+      <Modal isVisible={props.isVisible}>
+      <Modal.Container>
+        <Modal.Header title="Add Kitchenware" />
+        <Modal.Body>
+          <VStack>
+            <TextInput value={name} onChangeText={setName} style={styles.custInput} />
+            <HStack>
+              <Text>Quantity:</Text>
+              <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput} />
+            </HStack>
+          </VStack>
+        </Modal.Body>
+        <Modal.Footer>
+          <HStack gap={15}>
+            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
+            <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          </HStack>
+        </Modal.Footer>
+      </Modal.Container>
+    </Modal>
+  )
+}
+//#endregion
+
+//#region AddDependencyModal
+export const AddDependencyModal = (props : EditModalProps) =>{
+
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  const [dep, setDep] = useState<string>()
+  const addDependency = useStore((state) => state.addDependency);
+
+  const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
+
+  const dict : { [key: string]: string } = {}
+
+  brokenDownRecipe?.map((item)=>{
+    dict[item.id] = item.title
+  })
+
+  const saveChange = () => {
+    if(dep)
+      addDependency(props.task, {id: dep, title: dict[dep] })
+    props.handleModal(false)
+  }
+
+  return(
+      <Modal isVisible={props.isVisible}>
+      <Modal.Container>
+        <Modal.Header title="Add Dependency" />
+        <Modal.Body>
+          <Picker style={{backgroundColor: "#fff", width: 200, height: 60}} selectedValue={dep} onValueChange={(itemValue, itemIndex) => setDep(itemValue)}>
+            {
+              brokenDownRecipe?.map((entry, count) =>{
+                return <Picker.Item key={count} label={entry.title} value={entry.id} />
+              })
+            }
+          </Picker>
+        </Modal.Body>
+        <Modal.Footer>
+          <HStack gap={15}>
+            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
+            <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          </HStack>
+        </Modal.Footer>
+      </Modal.Container>
+    </Modal>
+  )
+}
+//#endregion
 
 const makeStyles = (theme: Theme) =>  
   StyleSheet.create({ 
