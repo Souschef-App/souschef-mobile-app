@@ -16,7 +16,7 @@ import {
 
 import { Slider } from '@react-native-assets/slider'
 import useStore from "../../../../../data/store"
-import { COOKING_UNIT, Fraction, Ingredient, Task } from "../../../../../data/types"
+import { COOKING_UNIT, Fraction, Ingredient, Kitchenware, Task } from "../../../../../data/types"
 import { Picker } from "@react-native-picker/picker"
 import { unitToString } from "../../../../../utils/conversion"
 
@@ -72,6 +72,7 @@ export const EditRatingModal = (props : EditModalProps) =>{
 
     const updateDifficulty = useStore((state) => state.updateDifficulty);
 
+    console.log("props.task.difficulty ", props.task.difficulty)
 
     const saveChange = () => {
       if(difficulty)
@@ -93,7 +94,7 @@ export const EditRatingModal = (props : EditModalProps) =>{
                       <Slider
                         style={styles.slider}
                         step={1}
-                        value={0}
+                        value={props.task.difficulty}
                         minimumValue={0}
                         maximumValue={2}
                         minimumTrackTintColor={theme.colors.danger}
@@ -116,32 +117,22 @@ export const EditRatingModal = (props : EditModalProps) =>{
     )
 }
 
-export const EditDescriptionModal = () =>{
+export const EditDescriptionModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-    const currentIndex = useStore((state) => state.activeIndex);
-    const currentTask = useStore((state) => state.currentTask);
-    const [description, setDescription] = useState(currentTask?.description || "")
-    
-    const visible = useStore((state) => state.isEditDescriptionVisible);
+    const [description, setDescription] = useState(props.task.description)
     const updateDescription = useStore((state) => state.updateDescription);
-    const setIsEditDescriptionVisible = useStore((state) => state.setIsEditDescriptionVisible);
 
     const saveChange = () => {
       if(description)
         updateDescription(description)
+      props.handleModal(false)
     }
 
-    
-    useEffect(()=>{
-      // console.log("currentTask ", currentTask?.description)
-      setDescription(currentTask?.description || "")
-    },[visible])
-
     return(
-        <Modal isVisible={visible}>
+        <Modal isVisible={props.isVisible}>
         <Modal.Container>
           <Modal.Header title="Edit Description" />
           <Modal.Body>
@@ -149,7 +140,7 @@ export const EditDescriptionModal = () =>{
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditDescriptionVisible(false)} />
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
               <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveChange} />
             </HStack>
           </Modal.Footer>
@@ -186,25 +177,15 @@ export const EditTimerModal = (props : EditModalProps) =>{
     )
 }
 
-export interface EditIngredientModalProps extends EditModalProps {
-    // taskDescription : string,
-    // setTaskDescription?: ((text: string) => void) | undefined
-}
-
-export const EditIngredientModal = () =>{
+export const EditIngredientModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-    const currentIndex = useStore((state) => state.activeIndex);
-    const currentTask  = useStore((state) => state.currentTask);
-
     const currentIngredientIndex = useStore((state) => state.currentIngredientIndex);
-
     
     const visible = useStore((state) => state.isEditIngredientsVisible);
     const updateIngredient = useStore((state) => state.updateIngredient);
-    const setIsEditIngredientsVisible = useStore((state) => state.setIsEditIngredientsVisible);
 
     const [name, setName] = useState("")
     const [whole, setWhole] = useState("0")
@@ -212,39 +193,37 @@ export const EditIngredientModal = () =>{
     const [denominator, setDenominator] = useState("0")
     const [unit, setUnit] = useState(COOKING_UNIT.None)
 
-    console.log("name", currentTask?.ingredients[currentIngredientIndex].name)
-    console.log("name", name)
-
     const saveChange = () => {
-      if(currentTask)
+      if(props.task)
       {
         const updatedIngredient : Ingredient = {
-          id : currentTask.ingredients[currentIngredientIndex].id,
+          id : props.task.ingredients[currentIngredientIndex].id,
           name :  name, 
           quantity : {whole : parseInt(whole), numerator: parseInt(numerator), denominator: parseInt(denominator)}, 
           unit : unit
         };
 
         updateIngredient(updatedIngredient, currentIngredientIndex)
+        props.handleModal(false)
       }
     }
 
     useEffect(()=>{
       {
-        if(currentTask != null)
+        if(props.task != null)
         {
-          setName(currentTask.ingredients[currentIngredientIndex].name)
-          setWhole(currentTask.ingredients[currentIngredientIndex].quantity.whole.toString())
-          setDenominator(currentTask.ingredients[currentIngredientIndex].quantity.numerator.toString())
-          setNumerator(currentTask.ingredients[currentIngredientIndex].quantity.denominator.toString())
-          setUnit(currentTask.ingredients[currentIngredientIndex].unit)
+          setName(props.task.ingredients[currentIngredientIndex].name)
+          setWhole(props.task.ingredients[currentIngredientIndex].quantity.whole.toString())
+          setDenominator(props.task.ingredients[currentIngredientIndex].quantity.numerator.toString())
+          setNumerator(props.task.ingredients[currentIngredientIndex].quantity.denominator.toString())
+          setUnit(props.task.ingredients[currentIngredientIndex].unit)
         }
       }
 
     },[visible])
 
     return(
-        <Modal isVisible={visible}>
+        <Modal isVisible={props.isVisible}>
         <Modal.Container>
           <Modal.Header title="Edit Ingredient" />
           <Modal.Body>
@@ -274,7 +253,7 @@ export const EditIngredientModal = () =>{
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditIngredientsVisible(false, currentIngredientIndex)} />
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
               <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
             </HStack>
           </Modal.Footer>
@@ -283,90 +262,93 @@ export const EditIngredientModal = () =>{
     )
 }
 
-// const AddIngredient = (props : any) => {
-
-//   const [name, setName] = useState("")
-//   const [quantity, setQuantity] = useState("")
-//   const [unit, setUnit] = useState("")
-
-//   const addIngredient = () =>{
-//     const ingredient : Ingredient = {
-//       id: uuid.v4().toString(),
-//       name: name,
-//       quantity: {whole: 0, numerator: 0, denominator: 0},
-//       unit: 0
-//     }
-
-//     const taskIngredientsClone = props.taskIngredients
-
-//     taskIngredientsClone.push(ingredient)
-
-//     // console.log(taskIngredientsClone)
-
-//     props.setTaskIngredients([...taskIngredientsClone])
-//   }
-
-//   return(
-
-//   )
-// }
-
-export interface EditKitchenwareModalProps extends EditModalProps {
-
-}
-
-export const EditKitchenwareModal = ({index} : {index : number}) =>{
+export const EditKitchenwareModal = (props : EditModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
+    const currentKitchenwareIndex = useStore((state) => state.currentKitchenwareIndex);
+
+    const [name, setName] = useState("")
+    const [quantity, setQuantity] = useState("0")
     
-    const currentIndex = useStore((state) => state.activeIndex);
-    const currentTask  = useStore((state) => state.currentTask);
-    const [description, setDescription] = useState(currentTask?.description || "")
-    
-    const visible = useStore((state) => state.isEditIngredientsVisible);
-    const updateDescription = useStore((state) => state.updateDescription);
-    const setIsEditKitchenwareVisible = useStore((state) => state.setIsEditKitchenwareVisible);
+    const updateKitchenware = useStore((state) => state.updateKitchenware);
 
     const saveChange = () => {
-      if(description)
-        updateDescription(description)
+
+      const kitchenware : Kitchenware = {
+        id : props.task.kitchenware[currentKitchenwareIndex].id, 
+        name:name,
+        quantity: parseInt(quantity)
+      }
+
+      if(kitchenware)
+        updateKitchenware(kitchenware, currentKitchenwareIndex)
+
+      props.handleModal(false)
     }
 
     useEffect(()=>{
-      setDescription(currentTask?.description || "")
-    },[visible])
+
+      if(props.task.kitchenware.length > currentKitchenwareIndex)
+      {
+        setName(props.task.kitchenware[currentKitchenwareIndex].name)
+        setQuantity(props.task.kitchenware[currentKitchenwareIndex].quantity.toString())
+      }
+    },[props.isVisible])
 
     return(
-        <Modal isVisible={visible}>
+        <Modal isVisible={props.isVisible}>
         <Modal.Container>
           <Modal.Header title="Edit Kitchenware" />
           <Modal.Body>
-            {/* <VStack p={10}>
-                <ScrollView style={{backgroundColor: theme.colors.background2, height: 300, alignSelf: "stretch"}}>
-                  {
-                    taskKitchenware.map((kitchenware)=>{
-                      return <EditItem item={kitchenware} itemList={taskKitchenware} setItemList={setTaskKitchenware}  styles={styles} theme={theme} />
-                    })
-
-                  }
-                </ScrollView>
-                <VStack>
-                  <AddKitchenware taskKitchenware={taskKitchenware} setTaskKitchenware={setTaskKitchenware} styles={styles} theme={theme} />
-                </VStack>
-            </VStack> */}
-
+            <VStack>
+              <TextInput value={name} onChangeText={setName} style={styles.custInput} />
+              <HStack>
+                <Text>Quantity:</Text>
+                <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput} />
+              </HStack>
+            </VStack>
           </Modal.Body>
           <Modal.Footer>
             <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => setIsEditKitchenwareVisible(false, index)} />
+              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
               <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
       </Modal>
     )
+}
+
+interface ConfirmDeleteItemProps extends EditModalProps {
+  title: string,
+  deleteFunc : () => void,
+}
+
+export const ConfirmDeleteModal = (props : ConfirmDeleteItemProps) =>{
+
+  const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  const confirmDelete = () => {
+    props.deleteFunc()
+    props.handleModal(false)
+  }
+
+  return(
+      <Modal isVisible={props.isVisible}>
+      <Modal.Container>
+        <Modal.Header title={props.title} />
+        <Modal.Footer>
+          <HStack gap={15}>
+            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
+            <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Delete" onPress={confirmDelete} />
+          </HStack>
+        </Modal.Footer>
+      </Modal.Container>
+    </Modal>
+  )
 }
 
 const makeStyles = (theme: Theme) =>  

@@ -11,7 +11,7 @@ export interface RecipeBuilderSlice {
   setActiveIndex: (state: number) => void;
   currentTask: Task | null;
   currentIngredientIndex: number;
-  //currentIngredientIndex: number;
+  currentKitchenwareIndex: number;
 
   isEditTItleVisible: boolean;
   isEditDescriptionVisible: boolean;
@@ -46,6 +46,9 @@ export interface RecipeBuilderSlice {
 
   updateIngredient: (ingredient: Ingredient, index: number) => void;
   updateKitchenware: (kitchenware: Kitchenware, index: number) => void;
+  removeIngredient: (task: Task, index: number | undefined) => void;
+  removeKitchenware: (task: Task, index: number | undefined) => void;
+  removeDependency: (task: Task, index: number | undefined) => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -58,6 +61,7 @@ export const createRecipeBuilderSlice: StateCreator<
   activeIndex: 0,
   currentTask: null,
   currentIngredientIndex: 0,
+  currentKitchenwareIndex: 0,
   isEditTItleVisible: false,
   isEditDescriptionVisible: false,
   isEditRatingVisible: false,
@@ -229,5 +233,36 @@ export const createRecipeBuilderSlice: StateCreator<
     cloneTask.kitchenware[index] = kitchenware;
     get().updateRecipeTask(cloneTask);
     get().setIsEditKitchenwareVisible(false, 0);
+  },
+  removeIngredient: (task: Task, index: number | undefined) => {
+    console.log("removeIngredient " + index + " " + task);
+    if (!task || index == undefined) return;
+
+    console.log("Task " + task.title);
+
+    task.ingredients.splice(index, 1);
+
+    console.log("Updated Task " + JSON.stringify(task));
+    get().updateRecipeTask(task);
+  },
+  removeKitchenware: (task: Task, index: number | undefined) => {
+    if (!task || index == undefined) return;
+
+    console.log("Task " + task.title);
+
+    task.kitchenware.splice(index, 1);
+
+    console.log("Updated Task " + JSON.stringify(task));
+    get().updateRecipeTask(task);
+  },
+  removeDependency: (task: Task, index: number | undefined) => {
+    if (!task || index == undefined) return;
+
+    console.log("Task " + task.title);
+
+    task.dependencies.splice(index, 1);
+
+    console.log("Updated Task " + JSON.stringify(task));
+    get().updateRecipeTask(task);
   },
 });
