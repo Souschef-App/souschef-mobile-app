@@ -209,64 +209,6 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
   );
 };
 
-const EditItem = (props : any) =>{
-
-  const deleteItem = () => {
-
-    const itemClone = props.itemList
-
-    const index = itemClone.indexOf(props.item);
-
-    itemClone.splice(index, 1);
-
-    props.setItemList([...itemClone])
-  }
-
-  return(
-    <HStack justifyContent="space-between" style={props.styles.editRowStyle} p={10}>
-      <VStack align="flex-start">
-        <Text style={TextStyle.h2}>{props.item.name}</Text>
-          <Text style={TextStyle.h4}>{formatIngredientQuantity(props.item)}</Text>
-      </VStack>
-      <ModalIconButton icon="x" color={props.theme.colors.danger} onPress={()=>deleteItem()} />
-    </HStack>
-  )
-}
-
-const AddKitchenware = (props : any) => {
-
-  const [name, setName] = useState("")
-  const [quantity, setQuantity] = useState("")
-
-  const addKitchenware = () =>{
-    const kitchenware : Kitchenware = {
-      id: uuid.v4().toString(),
-      name: name,
-      quantity: 0,
-    }
-
-    const taskKitchenwareClone = props.taskKitchenware
-
-    taskKitchenwareClone.push(kitchenware)
-
-    // console.log(taskKitchenwareClone)
-
-    props.setTaskKitchenware([...taskKitchenwareClone])
-  }
-
-  return(
-    <VStack  align="flex-start" style={props.styles.editRowFooterStyle} p={10} gap={10}>
-        <Text style={props.styles.addIngridientTitle}>Add Kitchenware</Text>
-        <TextInput value={name} onChangeText={setName} style={props.styles.custInput} placeholder="Name" />
-        <HStack justifyContent="space-between">
-          <TextInput value={quantity} onChangeText={setQuantity} style={props.styles.custInput2} placeholder="Quantity" />
-          <ModalIconButton style={props.styles.ok} color={props.theme.colors.primary} icon="check" onPress={()=>addKitchenware()} />
-        </HStack>
-    </VStack>
-  )
-}
-
-
 const makeStyles = (theme: Theme) =>  
   StyleSheet.create({ 
     taskTitle: {

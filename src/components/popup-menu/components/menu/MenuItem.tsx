@@ -45,6 +45,9 @@ const MenuItemComponent = ({ item, isLast }: MenuItemComponentProps) => {
   const handleOnPress = useCallback(() => {
     if (!item.isTitle) {
       const params = menuProps.value.actionParams[item.text] || [];
+
+      console.log("item.onPress " + item.onPress)
+
       if (item.onPress) item.onPress(...params);
       state.value = CONTEXT_MENU_STATE.END;
     }

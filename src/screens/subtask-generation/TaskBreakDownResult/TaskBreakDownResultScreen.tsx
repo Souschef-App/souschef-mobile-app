@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text } from "react-native";
-import { Button, HStack, Icon, IconButton, SafeArea, VStack } from "../../../components";
+import {  HStack, Icon, SafeArea, VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 import HoldMenuProvider from "../../../components/popup-menu/components/provider"
 
@@ -9,13 +9,15 @@ import { Theme } from "../../../styles";
 
 import useStore from "../../../data/store";
 import TaskEditScreen from "./views/TaskEdit/TaskEditView";
-import { SaveRecipeView } from "./views/SaveRecipeView";
+
 import { TaskBreakDownResultScreenProp } from "navigation/types";
 import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";  
 import HoldItem from "../../../components/popup-menu/components/hold-item";
-import { EditTitleModal, EditRatingModal, EditDescriptionModal, EditTimerModal, EditIngredientModal, EditKitchenwareModal } from "./views/TaskEdit/Modals";
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
+import { useEvent } from "react-native-reanimated";
+
 
 export const TaskBreakDownResultScreen = ({
   navigation,
@@ -28,10 +30,7 @@ export const TaskBreakDownResultScreen = ({
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
-  // console.log("TaskBreakDownResultScreen reloaded")
-
   const brokenDownRecipeArray = useMemo(() => { 
-    // console.log("brokenDownRecipeArray changed")
     return brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
   }, [brokenDownRecipe]);
   
@@ -40,55 +39,23 @@ export const TaskBreakDownResultScreen = ({
   
   const activeIndex = useStore((state) => state.activeIndex);
   const setActiveIndex = useStore((state) => state.setActiveIndex);
+  
+  useEffect(()=>{
+    setActiveIndex(0)
+  },[])
 
   const swiper =  useMemo(() => {
-
-    // console.log("swiper changed ", activeIndex)
     return <AnimatedSwiper activeIndex={activeIndex} setActiveIndex={setActiveIndex} paginationStyle={{marginBottom: 5}} duration={600}>
     {
       brokenDownRecipeArray
     }
     </AnimatedSwiper>
-  }
-    , [brokenDownRecipe, activeIndex]);
+  }, [brokenDownRecipe, activeIndex]);
 
-  const isEditTItleVisible = useStore((state) => state.isEditTItleVisible);
-
-  const isEditDescriptionVisible = useStore((state) => state.isEditDescriptionVisible);
-  const isEditRatingVisible = useStore((state) => state.isEditRatingVisible);
-  const isEditDurationVisible = useStore((state) => state.isEditDurationVisible);
-  const isEditIngredientsVisible = useStore((state) => state.isEditIngredientsVisible);
-  const isEditKitchenwareVisible = useStore((state) => state.isEditKitchenwareVisible);
-  const isEditDependenciesVisible = useStore((state) => state.isEditDependenciesVisible);
-
-  const setIsEditDescriptionVisible = useStore((state) => state.setIsEditDescriptionVisible);
-  const setIsEditDifficultyVisible = useStore((state) => state.setIsEditRatingVisible);
-  const setIsEditDurationVisible = useStore((state) => state.setIsEditDurationVisible);
-  const setIsEditIngredientsVisible = useStore((state) => state.setIsEditIngredientsVisible);
-  const setIsEditKitchenwareVisible = useStore((state) => state.setIsEditKitchenwareVisible);
-  const setIsEditDependencyVisible = useStore((state) => state.setIsEditDependencyVisible);
-
-  const currentTask = useStore((state) => state.currentTask);
-
-  const updateTitle = useStore((state) => state.updateTitle);
-
-  
-  const onOpen = useCallback(() => {
-    // console.log('App onOpen')
-  }, []);
-
-  const onClose = useCallback(() => {
-    // console.log('App onClose')
-  }, []);
-
+  const submitForRetryTask = useStore((state) => state.submitForRetryTask);
 
   return (
     <SafeArea>
-      <HoldMenuProvider
-          safeAreaInsets={safeAreaInsets}
-          onOpen={onOpen}
-          onClose={onClose}
-        >
       {
         brokenDownRecipe == null || brokenDownRecipe?.length <= 0 ? 
         (
@@ -109,14 +76,37 @@ export const TaskBreakDownResultScreen = ({
               (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
                 <VStack>
                   <HStack flexMain={false} justifyContent="flex-end">
-                    <HoldItem activateOn="tap" items={[
-                      { text: 'Regenerate All', onPress: () => console.log('@enesozt') },
-                      { text: 'Regenerate Task', onPress: () => console.log('All Rooms') },
-                      { text: 'Add Before', onPress: () => console.log('All Rooms') },
-                      { text: 'Add After', onPress: () => console.log('All Rooms') },
-                    ]}>
-                      <Icon name="threedots" />
-                    </HoldItem>
+                    <Menu>
+                      <MenuTrigger  >
+                        <Icon name="threedots" />
+                      </MenuTrigger>
+                      <MenuOptions>
+                        <MenuOption onSelect={() => alert(`Delete`)} >
+                            <HStack>
+
+                              <Text >Regenerate All</Text>
+                            </HStack>
+                          </MenuOption>
+                        <MenuOption onSelect={() => submitForRetryTask()} >
+                          <HStack>
+
+                            <Text >Regenerate Task</Text>
+                          </HStack>
+                        </MenuOption>
+                        <MenuOption onSelect={() => alert(`Delete`)} >
+                          <HStack>
+
+                            <Text >Add Task Before</Text>
+                          </HStack>
+                        </MenuOption>
+                        <MenuOption onSelect={() => alert(`Delete`)} >
+                          <HStack>
+
+                            <Text >Add Task After</Text>
+                          </HStack>
+                        </MenuOption>
+                      </MenuOptions>
+                    </Menu>
                   </HStack>
                   {
                     swiper
@@ -132,7 +122,6 @@ export const TaskBreakDownResultScreen = ({
           </VStack>
         )
       }
-      </HoldMenuProvider>
       </SafeArea>
   );
 };  

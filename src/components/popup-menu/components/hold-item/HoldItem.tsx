@@ -52,6 +52,7 @@ import type { HoldItemProps, GestureHandlerProps } from './types';
 
 import { useInternal } from '../../hooks';
 import { Spacing } from '../../../../styles';
+import Icon from '../../../../components/primitives/Icon';
 //#endregion
 
 type Context = { didMeasureLayout: boolean };
@@ -74,6 +75,8 @@ const HoldItemComponent = ({
   const deviceOrientation = useDeviceOrientation();
   //#endregion
 
+  console.log("items " + JSON.stringify(items))
+
   //#region variables
   const isActive = useSharedValue(false);
   const isAnimationStarted = useSharedValue(false);
@@ -84,6 +87,8 @@ const HoldItemComponent = ({
   const itemRectHeight = useSharedValue<number>(0);
   const itemScale = useSharedValue<number>(1);
   const transformValue = useSharedValue<number>(0);
+
+
 
   const transformOrigin = useSharedValue<TransformOriginAnchorPosition>(
     menuAnchorPosition || 'top-right'
@@ -425,7 +430,7 @@ const HoldItemComponent = ({
     <>
       <GestureHandler>
         <Animated.View ref={containerRef} style={containerStyle}>
-          {children}
+          <Icon name="threedots" />
         </Animated.View>
       </GestureHandler>
 
@@ -436,7 +441,7 @@ const HoldItemComponent = ({
           animatedProps={animatedPortalProps}
         >
           <PortalOverlay />
-          {children}
+          <Icon name="threedots" />
         </Animated.View>
       </Portal>
     </>

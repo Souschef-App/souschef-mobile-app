@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { StyleSheet } from 'react-native';
 
 import Animated, {
@@ -35,10 +35,15 @@ import { leftOrRight } from './calculations';
 
 const AnimatedView = Animated.createAnimatedComponent(BlurView);
 
-const MenuListComponent = () => {
+interface MenuListComponentProps {
+  // itemProps : MenuItemProps[]
+}
+
+const MenuListComponent = (props : PropsWithChildren<MenuListComponentProps>) => {
   const { state, menuProps } = useInternal();
 
   const [itemList, setItemList] = React.useState<MenuItemProps[]>([]);
+
 
   const menuHeight = useDerivedValue(() => {
     const itemsWithSeparator = menuProps.value.items.filter(
@@ -113,6 +118,8 @@ const MenuListComponent = () => {
   const setter = (items: MenuItemProps[]) => {
     setItemList(items);
     prevList.value = items;
+    console.log("itemList HERE" + JSON.stringify(itemList[0].onPress))
+    console.log("itemList " + JSON.stringify(itemList))
   };
 
   useAnimatedReaction(
@@ -124,6 +131,7 @@ const MenuListComponent = () => {
     },
     [menuProps]
   );
+
 
   return (
     <Animated.View style={[styles.menuContainer, messageStyles]}>
@@ -141,7 +149,8 @@ const MenuListComponent = () => {
             animatedInnerContainerStyle,
           ]}
         >
-          <MenuItems items={itemList} />
+          {props.children}
+          {/* <MenuItems items={itemList} /> */}
         </Animated.View>
       </AnimatedView>
     </Animated.View>

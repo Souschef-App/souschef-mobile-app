@@ -79,8 +79,6 @@ export const EditRatingModal = (props : EditModalProps) =>{
 
     const updateDifficulty = useStore((state) => state.updateDifficulty);
 
-    console.log("props.task.difficulty ", props.task.difficulty)
-
     const saveChange = () => {
       if(difficulty)
         updateDifficulty(difficulty)
@@ -197,7 +195,7 @@ export const EditIngredientModal = (props : EditModalProps) =>{
 
     const currentIngredientIndex = useStore((state) => state.currentIngredientIndex);
     
-    const visible = useStore((state) => state.isEditIngredientsVisible);
+    // const visible = useStore((state) => state.isEditIngredientsVisible);
     const updateIngredient = useStore((state) => state.updateIngredient);
 
     const [name, setName] = useState("")
@@ -233,7 +231,7 @@ export const EditIngredientModal = (props : EditModalProps) =>{
         }
       }
 
-    },[visible])
+    },[props.isVisible])
 
     return(
         <Modal isVisible={props.isVisible}>
