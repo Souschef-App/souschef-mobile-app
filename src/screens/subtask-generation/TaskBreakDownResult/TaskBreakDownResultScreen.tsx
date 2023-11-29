@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import HoldItem from "../../../components/popup-menu/components/hold-item";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import { useEvent } from "react-native-reanimated";
+import { SaveRecipeView } from "./views/SaveRecipeView";
 
 
 export const TaskBreakDownResultScreen = ({
@@ -34,8 +35,8 @@ export const TaskBreakDownResultScreen = ({
     return brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
   }, [brokenDownRecipe]);
   
-  // const renderArray = useMemo(() => brokenDownRecipeArray?.concat(<SaveRecipeView navigation={navigation} />), 
-  // [brokenDownRecipeArray]);
+  const renderArray = useMemo(() => brokenDownRecipeArray?.concat(<SaveRecipeView navigation={navigation} />), 
+  [brokenDownRecipeArray]);
   
   const activeIndex = useStore((state) => state.activeIndex);
   const setActiveIndex = useStore((state) => state.setActiveIndex);
@@ -47,7 +48,7 @@ export const TaskBreakDownResultScreen = ({
   const swiper =  useMemo(() => {
     return <AnimatedSwiper activeIndex={activeIndex} setActiveIndex={setActiveIndex} paginationStyle={{marginBottom: 5}} duration={600}>
     {
-      brokenDownRecipeArray
+      renderArray
     }
     </AnimatedSwiper>
   }, [brokenDownRecipe, activeIndex]);

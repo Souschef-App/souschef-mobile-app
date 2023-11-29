@@ -47,13 +47,10 @@ export const SaveRecipeView = ({navigation} : SaveRecipeViewProps) => {
     
     return(
         <VStack style={styles.card} align="flex-start" pVH={{v: 5, h : 40}}>
-            <HStack>
-                <Text style={styles.taskTitle}>Save Recipe</Text>
-            </HStack>
-            <Text>Name</Text>
-            <TextInput onChangeText={setName} style={InputStyle.underline} />
-            <VStack justifyContent="flex-end">
-                <TextButton title="Save" style={styles.saveBTN} onPress={() => saveRecipe(name)}/>
+
+            <VStack justifyContent="center" gap={30}>
+                <Text>Name Of Recipe Here</Text>
+                <TextButton title="Save Recipe" style={styles.saveBTN} onPress={() => saveRecipe(name)}/>
             </VStack>
 
             <Modal isVisible={successModalOpen}>
@@ -95,8 +92,8 @@ const makeStyles = (theme: Theme) =>
       color: "#fff",
     },
     card: {
-      elevation: 6,
-      borderColor: 'red',
+      // elevation: 6,
+      // borderColor: 'red',
     },
     saveBTN:{
       ...ButtonStyle.primary,
