@@ -1,8 +1,7 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { StyleSheet, Text } from "react-native";
 import {  HStack, Icon, SafeArea, VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
-import HoldMenuProvider from "../../../components/popup-menu/components/provider"
 
 import { ButtonStyle, InputStyle, TextStyle } from "../../../styles";
 import { Theme } from "../../../styles";
@@ -14,10 +13,11 @@ import { TaskBreakDownResultScreenProp } from "navigation/types";
 import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";  
-import HoldItem from "../../../components/popup-menu/components/hold-item";
+
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
-import { useEvent } from "react-native-reanimated";
+
 import { SaveRecipeView } from "./views/SaveRecipeView";
+import { BeforeOrAfter } from "../../../data/slices/recipeBuilderSlice";
 
 
 export const TaskBreakDownResultScreen = ({
@@ -32,10 +32,11 @@ export const TaskBreakDownResultScreen = ({
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
   const brokenDownRecipeArray = useMemo(() => { 
+    console.log("brokenDownRecipeArray regen")
     return brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
   }, [brokenDownRecipe]);
   
-  const renderArray = useMemo(() => brokenDownRecipeArray?.concat(<SaveRecipeView navigation={navigation} />), 
+  const renderArray = useMemo(() => brokenDownRecipeArray?.concat(<SaveRecipeView key={brokenDownRecipe?.length} navigation={navigation} />), 
   [brokenDownRecipeArray]);
   
   const activeIndex = useStore((state) => state.activeIndex);
@@ -54,6 +55,7 @@ export const TaskBreakDownResultScreen = ({
   }, [brokenDownRecipe, activeIndex]);
 
   const submitForRetryTask = useStore((state) => state.submitForRetryTask);
+  const addBlankCard = useStore((state) => state.addBlankCard);
 
   return (
     <SafeArea>
@@ -77,35 +79,35 @@ export const TaskBreakDownResultScreen = ({
               (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
                 <VStack>
                   <HStack flexMain={false} justifyContent="flex-end">
-                    <Menu>
+                    <Menu >
                       <MenuTrigger  >
                         <Icon name="threedots" />
                       </MenuTrigger>
-                      <MenuOptions>
-                        <MenuOption onSelect={() => alert(`Delete`)} >
-                            <HStack>
-
-                              <Text >Regenerate All</Text>
-                            </HStack>
-                          </MenuOption>
+                      <MenuOptions optionsContainerStyle={{width: 160}}>
+                        <MenuOption onSelect={() => addBlankCard(BeforeOrAfter.Before)} >
+                          <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                            <Icon color={theme.colors.primary} name="plus"  size={20}/>
+                            <Text >Add Task Before</Text>
+                          </HStack>
+                        </MenuOption>
+                        <MenuOption  onSelect={() => addBlankCard(BeforeOrAfter.After)} >
+                          <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                            <Icon color={theme.colors.primary} name="plus"  size={20}/>
+                            <Text >Add Task After</Text>
+                          </HStack>
+                        </MenuOption>
                         <MenuOption onSelect={() => submitForRetryTask()} >
-                          <HStack>
-
+                          <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                            <Icon color={theme.colors.danger} name="retry"  size={20}/>
                             <Text >Regenerate Task</Text>
                           </HStack>
                         </MenuOption>
                         <MenuOption onSelect={() => alert(`Delete`)} >
-                          <HStack>
-
-                            <Text >Add Task Before</Text>
-                          </HStack>
-                        </MenuOption>
-                        <MenuOption onSelect={() => alert(`Delete`)} >
-                          <HStack>
-
-                            <Text >Add Task After</Text>
-                          </HStack>
-                        </MenuOption>
+                            <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                              <Icon color={theme.colors.danger} name="retry" size={20} />
+                              <Text >Regenerate All</Text>
+                            </HStack>
+                          </MenuOption>
                       </MenuOptions>
                     </Menu>
                   </HStack>

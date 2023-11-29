@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import { TextStyle, ButtonStyle, Theme, InputStyle } from "../../../../styles";
-import { HStack, TextButton, VStack, ModalButton } from "../../../../components"
-import {Text, StyleSheet, TextInput, Pressable} from "react-native"
+import { TextStyle, ButtonStyle, Theme } from "../../../../styles";
+import { TextButton, VStack, ModalButton } from "../../../../components"
+import {Text, StyleSheet} from "react-native"
 import { ThemeContext } from "../../../../contexts/AppContext";
 import useStore from "../../../../data/store";
 import { Modal } from "../../../../components/Modal";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
-
-
 
 type SaveRecipeViewProps = {
   navigation : TaskBreakDownResultScreenProp
@@ -44,9 +42,8 @@ export const SaveRecipeView = ({navigation} : SaveRecipeViewProps) => {
       navigation.navigate("MealPlan")
     }
     
-    
     return(
-        <VStack style={styles.card} align="flex-start" pVH={{v: 5, h : 40}}>
+        <VStack align="flex-start" pVH={{v: 5, h : 40}}>
 
             <VStack justifyContent="center" gap={30}>
                 <Text>Name Of Recipe Here</Text>
@@ -90,10 +87,6 @@ const makeStyles = (theme: Theme) =>
       ...TextStyle.h2,
       fontWeight: "normal",
       color: "#fff",
-    },
-    card: {
-      // elevation: 6,
-      // borderColor: 'red',
     },
     saveBTN:{
       ...ButtonStyle.primary,

@@ -5,6 +5,11 @@ import { ApiUrls } from "../../api/constants";
 import { DIFFICULTY, Ingredient, Kitchenware, Recipe, Task } from "../types";
 import Dependency from "data/types/dependency";
 
+export enum BeforeOrAfter {
+  Before,
+  After,
+}
+
 export interface RecipeBuilderSlice {
   loading: boolean;
 
@@ -13,14 +18,6 @@ export interface RecipeBuilderSlice {
   currentTask: Task | null;
   currentIngredientIndex: number;
   currentKitchenwareIndex: number;
-
-  // isEditTItleVisible: boolean;
-  // isEditDescriptionVisible: boolean;
-  // isEditRatingVisible: boolean;
-  // isEditDurationVisible: boolean;
-  // isEditIngredientsVisible: boolean;
-  // isEditKitchenwareVisible: boolean;
-  // isEditDependenciesVisible: boolean;
 
   enteredRecipe: string[] | null;
   brokenDownRecipe: Task[] | null;
@@ -47,6 +44,8 @@ export interface RecipeBuilderSlice {
   addIngredient: (task: Task, ingredient: Ingredient) => void;
   addKitchenware: (task: Task, kitchenware: Kitchenware) => void;
   addDependency: (task: Task, dependency: Dependency) => void;
+
+  addBlankCard: (beforeOrAfter: BeforeOrAfter) => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -60,13 +59,6 @@ export const createRecipeBuilderSlice: StateCreator<
   currentTask: null,
   currentIngredientIndex: 0,
   currentKitchenwareIndex: 0,
-  // isEditTItleVisible: false,
-  // isEditDescriptionVisible: false,
-  // isEditRatingVisible: false,
-  // isEditDurationVisible: false,
-  // isEditIngredientsVisible: false,
-  // isEditKitchenwareVisible: false,
-  // isEditDependenciesVisible: false,
 
   enteredRecipe: [],
   brokenDownRecipe: [],
@@ -135,7 +127,6 @@ export const createRecipeBuilderSlice: StateCreator<
     set({ brokenDownRecipe: list });
   },
   saveRecipe: async (name: string) => {
-    // console.log("saveRecipe");
     const tasks = get().brokenDownRecipe;
     const userID = get().user?.id;
 
@@ -247,5 +238,33 @@ export const createRecipeBuilderSlice: StateCreator<
     if (!task) return;
     task.dependencies.push(dependency);
     get().updateRecipeTask(task);
+  },
+  addBlankCard: (beforeOrAfter: BeforeOrAfter) => {
+    console.log("addBlankCard " + beforeOrAfter);
+    const recipeClone = get().brokenDownRecipe;
+    const index = get().activeIndex;
+    const newTask: Task = {
+      id: "",
+      title: "",
+      description: "",
+      duration: 0,
+      difficulty: DIFFICULTY.Easy,
+      dependencies: [],
+      ingredients: [],
+      kitchenware: [],
+      isBackground: false,
+    };
+
+    if (recipeClone == null) return;
+
+    if (beforeOrAfter == BeforeOrAfter.Before) {
+      console.log("Before " + recipeClone.length);
+      recipeClone.splice(index - 1, 0, newTask);
+      console.log("Before " + recipeClone.length);
+    } else if (beforeOrAfter == BeforeOrAfter.After) {
+      recipeClone.splice(index, 0, newTask);
+    }
+
+    set({ brokenDownRecipe: recipeClone });
   },
 });

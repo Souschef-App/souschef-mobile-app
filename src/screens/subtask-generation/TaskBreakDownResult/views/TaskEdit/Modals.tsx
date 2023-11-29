@@ -221,13 +221,13 @@ export const EditIngredientModal = (props : EditModalProps) =>{
 
     useEffect(()=>{
       {
-        if(props.task != null)
+        if(props.isVisible && props.task != null)
         {
-          setName(props.task.ingredients[currentIngredientIndex].name)
-          setWhole(props.task.ingredients[currentIngredientIndex].quantity.whole.toString())
-          setDenominator(props.task.ingredients[currentIngredientIndex].quantity.numerator.toString())
-          setNumerator(props.task.ingredients[currentIngredientIndex].quantity.denominator.toString())
-          setUnit(props.task.ingredients[currentIngredientIndex].unit)
+          // setName(props.task.ingredients[currentIngredientIndex].name)
+          // setWhole(props.task.ingredients[currentIngredientIndex].quantity.whole.toString())
+          // setDenominator(props.task.ingredients[currentIngredientIndex].quantity.numerator.toString())
+          // setNumerator(props.task.ingredients[currentIngredientIndex].quantity.denominator.toString())
+          // setUnit(props.task.ingredients[currentIngredientIndex].unit)
         }
       }
 
