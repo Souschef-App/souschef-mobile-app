@@ -44,6 +44,7 @@
     "react-native-svg": "13.9.0",
     "react-native-timer-picker": "^1.2.11",
     "react-native-toast-message": "^2.1.6",
+    "react-native-use-list": "^0.2.1",
     "zustand": "^4.4.3"
   },
   "devDependencies": {

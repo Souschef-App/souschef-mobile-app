@@ -6289,6 +6289,11 @@ react-native-toast-message@^2.1.6:
   resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.1.6.tgz#322827c66901fa22cb3db614c7383cc717f5bbe2"
   integrity sha512-VctXuq20vmRa9AE13acaNZhrLcS3FaBS2zEevS3+vhBsnVZYG0FIlWIis9tVnpnNxUb3ART+BWtwQjzSttXTng==
 
+react-native-use-list@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-use-list/-/react-native-use-list-0.2.1.tgz#576237a11dd96a1dfc837663c0f0bcd5a0a37098"
+  integrity sha512-GvTiErxBYuPNdMK8iKJZtdb97SoQ2PsjTGrPgPKvbumUvr1MHkdSHAh3vvGSqKzrGlrXUm5bDBvXsEUnfAF4jg==
+
 react-native-uuid@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.1.tgz#ed4e2dfb1683eddb66967eb5dca140dfe1abddb9"

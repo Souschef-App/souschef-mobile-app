@@ -3,6 +3,7 @@ import { HStack, VStack } from "../../components/primitives/Stack"
 import React, { ComponentType, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react"
 import { FlatList } from "react-native-gesture-handler"
 import { TaskAvailaleProps } from "../../screens/subtask-generation/TaskBreakDownResult/views/TaskEdit/TaskEditView"
+import { useList } from 'react-native-use-list';
 
 const {width, height} = Dimensions.get("screen")
 
@@ -15,7 +16,7 @@ export type CarouselProps = {
     RenderItem : ComponentType<TaskAvailaleProps>;
 }
 
-const Indicator = ({scrollX, data} : {scrollX : Animated.Value, data : any}) =>{
+const Indicator = ({scrollX, data, activeIndex} : {scrollX : Animated.Value, data : any, activeIndex : number}) =>{
 
     
 
@@ -55,7 +56,7 @@ const Indicator = ({scrollX, data} : {scrollX : Animated.Value, data : any}) =>{
                     })
                 }
             </HStack>
-            <Text>{0 + 1}/{data.length}</Text>   
+            <Text>{activeIndex + 1}/{data.length}</Text>   
         </HStack>
     )
 }
@@ -64,55 +65,13 @@ export const Carousel = ({data, RenderItem}: CarouselProps) => {
    
     const scrollX = useRef(new Animated.Value(0)).current;
 
-    const [activeIndex, setActiveIndex] = useState(0)
-
-    const onViewCallBackPartially = React.useCallback(({ viewableItems }: any) => {
-        // console.log('onViewCallBackPartially', viewableItems);
-      }, []);
-    
-      const onViewCallBack = React.useCallback(({ viewableItems }: any) => {
-        // console.log('onViewCallBack', viewableItems);
-        if(viewableItems && viewableItems[0] && viewableItems[0].index != null)
-        {
-            console.log(viewableItems[0].index)
-        }
-
-      }, []);
-
-    const viewabilityConfigCallbackPairs = React.useRef([{
-        viewabilityConfig: {
-          minimumViewTime: 500,
-          itemVisiblePercentThreshold: 100,
-        },
-        onViewableItemsChanged: onViewCallBack
-      },
-      {
-        viewabilityConfig: {
-          minimumViewTime: 150,
-          itemVisiblePercentThreshold: 10
-        },
-        onViewableItemsChanged: onViewCallBackPartially
-      }
-    ]);
-
-
-    // const [visibleIndex, setVisibleIndex] = useState<number>(0)
-
-    // const changed = ({changed, viewableItems} : {changed: ViewToken[], viewableItems: ViewToken[]}) =>{
-    //     console.log("Visible items are", viewableItems);
-    //     // console.log("Changed in this iteration", changed);
-
-    //     if(viewableItems != null && viewableItems[0] != null && viewableItems[0].index != null)
-    //     {
-    //         const newIndex = viewableItems[0].index
-    //         setVisibleIndex(newIndex)
-
-    //     }
-    // }
+    const ref = useRef(null);
+    const { pageIndex, nextPage, prevPage, indexController } = useList({ ref });
 
     return(
         <VStack>
             <Animated.FlatList 
+                ref={ref}
                 data={data} 
                 keyExtractor={item => item.id}
                 horizontal
@@ -126,10 +85,9 @@ export const Carousel = ({data, RenderItem}: CarouselProps) => {
                 renderItem={({item}) => {
                     return <RenderItem task={item} width={width} />
                 }}
-                viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-                // onViewableItemsChanged={changed}
+                {...indexController}
             />
-            <Indicator scrollX={scrollX} data={data}  />
+            <Indicator scrollX={scrollX} data={data} activeIndex={pageIndex}  />
         </VStack>
     )
 }
