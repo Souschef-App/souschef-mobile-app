@@ -1,23 +1,24 @@
+import { StateCreator, StoreApi } from "zustand";
 import { ApiUrls } from "../../../api/constants";
 import jsonRequest from "../../../api/requests";
-import { StateCreator, StoreApi } from "zustand";
+import { fakeTask, guestSessionUser } from "../../__mocks__";
 import { StoreState } from "../../store";
 import {
+  FEED_ACTION,
   FeedSnapshot,
-  SESSION_CLIENT_CMD,
-  Task,
-  User,
   LiveSession,
-  TASK_STATUS,
+  SESSION_CLIENT_CMD,
+  SessionTask,
   SessionUser,
+  Task,
 } from "../../types";
 import { Client } from "./client";
-import { fakeTask, guestUser } from "../../__mocks__";
 
 type SessionState = {
-  assignedTask: Task | null;
+  tasks: { [key: string]: SessionTask };
+  assignedTask: string | null;
   taskLoading: boolean;
-  connectedUsers: User[];
+  connectedUsers: SessionUser[];
   livefeed: FeedSnapshot[];
   session: LiveSession | null;
   sessionCompleted: boolean;
@@ -27,6 +28,7 @@ type SessionState = {
 };
 
 const initialState: SessionState = {
+  tasks: {},
   assignedTask: null,
   taskLoading: true,
   connectedUsers: [],
@@ -40,14 +42,16 @@ const initialState: SessionState = {
 
 type SessionActions = {
   resetSessionSlice: () => void;
-  joinSession: (code: string, user: SessionUser) => Promise<boolean>;
+  joinSession: (code: string, user: SessionUser | null) => Promise<boolean>;
   joinFakeSession: () => void;
   leaveSession: () => void;
   commands: {
+    setGuestIdentity: (guestname: string) => void;
     startSession: () => void;
     stopSession: () => void;
     completeTask: () => void;
     rerollTask: () => void;
+    completeBackgroundTask: (taskID: string) => void;
   };
 };
 
@@ -65,7 +69,7 @@ export const createSessionSlice: StateCreator<
   return {
     ...initialState,
     resetSessionSlice: () => set(initialState),
-    joinSession: async (code: string, user: SessionUser) => {
+    joinSession: async (code: string, user: SessionUser | null) => {
       set({ sessionLoading: true, sessionError: null });
 
       const query = { code }; // TODO: Convert API to string
@@ -80,6 +84,7 @@ export const createSessionSlice: StateCreator<
       }
 
       set({ session });
+
       client.connect(`ws://${session?.ip}/ws`, user);
       return true;
     },
@@ -87,7 +92,7 @@ export const createSessionSlice: StateCreator<
       set({
         clientConnected: true,
         taskLoading: true,
-        connectedUsers: [guestUser],
+        connectedUsers: [guestSessionUser],
         session: {
           code: 12345,
           ip: "localhost",
@@ -95,13 +100,14 @@ export const createSessionSlice: StateCreator<
       });
       setTimeout(() => {
         set({
-          assignedTask: fakeTask,
+          tasks: {},
+          assignedTask: null,
           taskLoading: false,
           livefeed: [
             {
-              user: guestUser,
+              user: guestSessionUser,
               task: fakeTask,
-              status: TASK_STATUS.Assigned,
+              action: FEED_ACTION.Assignment,
               timestamp: new Date(),
             },
           ],
@@ -110,20 +116,23 @@ export const createSessionSlice: StateCreator<
     },
     leaveSession: () => {
       client.leave();
-      set({
-        session: null,
-        sessionError: null,
-        sessionCompleted: false,
-      });
+      get().resetSessionSlice();
     },
     commands: {
+      setGuestIdentity: (guestname: string) =>
+        client.sendCommandPayload(SESSION_CLIENT_CMD.GuestHandshake, guestname),
       startSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStart),
       stopSession: () => client.sendCommand(SESSION_CLIENT_CMD.SessionStop),
-      completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskComplete),
+      completeTask: () => client.sendCommand(SESSION_CLIENT_CMD.TaskCompleted),
       rerollTask: () => {
         set({ taskLoading: true });
-        client.sendCommand(SESSION_CLIENT_CMD.TaskReroll);
+        client.sendCommand(SESSION_CLIENT_CMD.TaskRerolled);
       },
+      completeBackgroundTask: (taskID: string) =>
+        client.sendCommandPayload(
+          SESSION_CLIENT_CMD.TaskBackgroundCompleted,
+          taskID
+        ),
     },
   };
 };

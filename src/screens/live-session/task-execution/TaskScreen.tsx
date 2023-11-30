@@ -25,7 +25,8 @@ const TaskScreen = ({
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
   // Store
-  const task = useStore((state) => state.assignedTask);
+  const tasks = useStore((state) => state.tasks);
+  const taskID = useStore((state) => state.assignedTask);
   const loading = useStore((state) => state.taskLoading);
   const completed = useStore((state) => state.sessionCompleted);
   const connected = useStore((state) => state.clientConnected);
@@ -37,7 +38,7 @@ const TaskScreen = ({
 
   React.useEffect(() => {
     if (!connected) {
-      navigation.navigate("Tabs", defaultBottomTabNavigatorParamList);
+      navigation.popToTop();
     }
   }, [connected]);
 
@@ -46,8 +47,8 @@ const TaskScreen = ({
       return <MealCompleted />;
     } else if (loading) {
       return <TaskSkeleton />;
-    } else if (task) {
-      return <TaskAvailable task={task!} />;
+    } else if (taskID && tasks[taskID]) {
+      return <TaskAvailable task={tasks[taskID]} />;
     }
 
     return <TaskUnavailable />;

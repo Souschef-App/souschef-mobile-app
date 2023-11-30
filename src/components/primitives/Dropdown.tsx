@@ -4,19 +4,21 @@ import {
   GestureResponderEvent,
   Text,
   TextStyle,
+  ViewStyle,
   View,
 } from "react-native";
 import { HStack, VStack } from "./Stack";
 import Button from "./Button";
-import Icon from "./Icon";
+import Icon, { IconNames } from "./Icon";
 
 export type DropdownProps = {
   isOpen: boolean;
   title: string;
-  onPress: (event: GestureResponderEvent) => void;
-  icon?: string;
+  onPress: () => void;
+  icon?: IconNames;
   iconColor?: ColorValue;
   textStyle?: TextStyle;
+  style?: ViewStyle;
 };
 
 const defaultDropdownProps: DropdownProps = {
@@ -33,9 +35,13 @@ const Dropdown = (propsIn: PropsWithChildren<DropdownProps>) => {
   };
 
   return (
-    <VStack flexMain={false} flexCross={true} gap={8}>
-      <Button onPress={props.onPress} style={{ flexDirection: "row" }}>
-        <HStack>
+    <VStack flexMain={false} flexCross={true}>
+      <Button
+        animation="opacity"
+        onPress={props.onPress}
+        style={{ flexDirection: "row" }}
+      >
+        <HStack style={props.style}>
           <HStack justifyContent="flex-start" colGap={16}>
             {props.icon && <Icon name={props.icon} color={props.iconColor} />}
             <Text style={props.textStyle}>{props.title}</Text>

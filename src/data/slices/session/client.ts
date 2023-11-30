@@ -18,7 +18,7 @@ export class Client extends ZustandStoreAccess {
     this.socket = null;
   }
 
-  connect(url: string, identity: SessionUser) {
+  connect(url: string, identity: SessionUser | null) {
     this.leave(); // Severe any ongoing connection
     this.set({ sessionLoading: true, sessionError: null });
     this.socket = new WebSocket(url);
@@ -41,14 +41,25 @@ export class Client extends ZustandStoreAccess {
     }
   }
 
-  private configureSocket(socket: WebSocket, identity: SessionUser) {
+  sendCommandPayload(commandType: string, payload: any) {
+    if (this.socket?.OPEN) {
+      const command = { type: commandType, payload: payload };
+      this.socket.send(JSON.stringify(command));
+    }
+  }
+
+  private configureSocket(socket: WebSocket, identity: SessionUser | null) {
     socket.onopen = () => {
       this.set({ clientConnected: true, sessionLoading: false });
-      const handshakeMessage = {
-        type: SESSION_CLIENT_CMD.Handshake,
-        payload: identity,
-      };
-      socket.send(JSON.stringify(handshakeMessage));
+
+      // Non-guest
+      if (identity !== null) {
+        const handshakeMessage = {
+          type: SESSION_CLIENT_CMD.Handshake,
+          payload: identity,
+        };
+        socket.send(JSON.stringify(handshakeMessage));
+      }
     };
 
     socket.onmessage = (e) => {
@@ -60,10 +71,10 @@ export class Client extends ZustandStoreAccess {
     };
 
     socket.onerror = (e) => {
-      console.log("WebSocket error", e);
+      // console.log("WebSocket error", e);
       this.set({
         sessionLoading: false,
-        sessionError: "Failed to join session: Please try again",
+        sessionError: "Failed to join session",
       });
     };
 

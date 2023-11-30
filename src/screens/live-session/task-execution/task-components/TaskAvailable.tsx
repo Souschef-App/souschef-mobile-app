@@ -122,15 +122,15 @@ const TaskAvailable = (props: TaskAvailaleProps) => {
                   <Divider color={theme.colors.background2} />
                   <VStack>
                     {task.ingredients.length > 0 ? (
-                      task.ingredients.map((i, index) => (
+                      task.ingredients.map((ingredient, index) => (
                         <HStack
                           key={index}
                           justifyContent="space-between"
                           style={{ height: theme.spacing.xxl }}
                         >
-                          <Text style={TextStyle.h4}>{i.name}</Text>
+                          <Text style={TextStyle.h4}>{ingredient.name}</Text>
                           <Text style={TextStyle.h4}>
-                            {formatIngredientQuantity(i)}
+                            {formatIngredientQuantity(ingredient)}
                           </Text>
                         </HStack>
                       ))
@@ -203,14 +203,14 @@ const makeStyles = (theme: Theme) =>
     },
     infoText: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
     taskDesc: {
       ...TextStyle.h3,
     },
     dropdownTitle: {
       ...TextStyle.h3,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
     completeBtn: {
       ...ButtonStyle.primary,

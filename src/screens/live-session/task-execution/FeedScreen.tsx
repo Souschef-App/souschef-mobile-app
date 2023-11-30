@@ -9,29 +9,12 @@ import {
 } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 import useStore from "../../../data/store";
-import { TASK_STATUS } from "../../../data/types/session/enum";
+import { FEED_ACTION } from "../../../data/types/session/enum";
 import { FeedScreenNavigationProp } from "../../../navigation/types";
 import { TextStyle, Theme } from "../../../styles";
 import { ScrollView } from "react-native-gesture-handler";
+import { formatRelativeTime } from "../../../utils/format";
 
-const formatRelativeTime = (timestamp: Date): string => {
-  const now = new Date();
-  const timeDifference = now.getTime() - timestamp.getTime();
-  const seconds = Math.floor(timeDifference / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 0) {
-    return `${days} day${days > 1 ? "s" : ""} ago`;
-  } else if (hours > 0) {
-    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-  } else if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-  } else {
-    return "just now";
-  }
-};
 const FeedScreen = ({
   navigation,
 }: {
@@ -46,14 +29,14 @@ const FeedScreen = ({
   const users = useStore((state) => state.connectedUsers);
   const livefeed = useStore((state) => state.livefeed);
 
-  const renderActionType = (status: TASK_STATUS) => {
-    switch (status) {
-      case TASK_STATUS.Assigned:
+  const renderActionType = (action: FEED_ACTION) => {
+    switch (action) {
+      case FEED_ACTION.Assignment:
         return <Icon name="clipboard" color={theme.colors.text} />;
-      case TASK_STATUS.Completed:
+      case FEED_ACTION.Completion:
         return <Icon name="check-round" color={theme.colors.success} />;
-      case TASK_STATUS.Rerolled:
-        return <Icon name="dice" color={theme.colors.text} />;
+      case FEED_ACTION.Reroll:
+        return <Icon name="reload" color={theme.colors.text} />;
     }
   };
 
@@ -101,10 +84,10 @@ const FeedScreen = ({
                   justifyContent="space-between"
                   style={styles.feedItem}
                 >
-                  {renderActionType(snapshot.status)}
+                  {renderActionType(snapshot.action)}
                   <VStack align="flex-start">
                     <Text style={styles.feedItemUser}>
-                      {user?.name === snapshot.user.name
+                      {user?.id === snapshot.user.id
                         ? "You"
                         : snapshot.user.name}
                     </Text>
@@ -150,7 +133,7 @@ const makeStyles = (theme: Theme) =>
     },
     feedHeaderTitle: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
       color: "#fff",
     },
     feedItem: {
@@ -160,7 +143,7 @@ const makeStyles = (theme: Theme) =>
     },
     feedItemUser: {
       ...TextStyle.body,
-      ...TextStyle.bold,
+      ...TextStyle.weight.bold,
     },
     feedItemDetails: {
       ...TextStyle.body,

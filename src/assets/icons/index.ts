@@ -35,6 +35,7 @@ const Icons = {
   "back-arrow": require("./back-arrow.svg").default,
   plus: require("./plus.svg").default,
   digit: require("./digit.svg").default,
+  retry: require("./retry.svg").default,
   heart: require("./heart.svg").default,
   briefcase: require("./briefcase.svg").default,
   graduationcap: require("./graduationcap.svg").default,
@@ -50,6 +51,10 @@ const Icons = {
   "frame-thin": require("./frame-thin.svg").default,
   reload: require("./reload.svg").default,
   logout: require("./logout.svg").default,
+  tracker: require("./tracker.svg").default,
+  threedots: require("./dots_icon.svg").default,
+  "chef-hat": require("./chef-hat.svg").default,
+  garbage: require("./garbage.svg").default,
   // Add more mappings for other SVGs
 } as const satisfies Record<string, React.FC<SvgProps>>;
 

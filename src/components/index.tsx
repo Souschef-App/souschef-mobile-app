@@ -1,5 +1,7 @@
 import IconButton from "./IconButton";
 import Logo from "./Logo";
+import { ModalButton } from "./ModalButton";
+import ModalIconButton from "./ModalIconButton";
 import QRScan from "./QRScan";
 import SecureInput from "./SecureInput";
 import TextButton from "./TextButton";
@@ -14,6 +16,7 @@ import SafeArea from "./primitives/SafeArea";
 import Skeleton from "./primitives/Skeleton";
 import { HStack, VStack } from "./primitives/Stack";
 import SvgLocal from "./primitives/SvgLocal";
+import Tabs from "./Tabs";
 
 export {
   Button,
@@ -33,4 +36,7 @@ export {
   TextButton,
   VStack,
   ValidationInput,
+  ModalButton,
+  ModalIconButton,
+  Tabs,
 };

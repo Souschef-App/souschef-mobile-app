@@ -52,3 +52,19 @@ export const floating: ViewStyle = {
   width: theme.spacing.xxl,
   height: theme.spacing.xxl,
 };
+
+export const round: ViewStyle = {
+  ...buttonCore.center,
+  ...padding(0, 16),
+  ...buttonCore.rounded,
+  height: 56,
+  width: 56,
+};
+
+export const editable: ViewStyle = {
+  ...buttonCore.center,
+  ...padding(0, 16),
+  ...buttonCore.curved,
+  margin: 0,
+  // height: 56,
+};

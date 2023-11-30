@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { CalendarScreen, MealplanScreen } from "../screens";
-import { EnterRecipeScreen } from "../screens/subtask-generation/EnterRecipeScreen";
-import { TaskBreakDownResultScreen } from "../screens/subtask-generation/TaskBreakDownResultScreen";
+import { EnterRecipeStepsScreen } from "../screens/subtask-generation/InputRecipe/EnterRecipeStepsScreen";
+import { TaskBreakDownResultScreen } from "../screens/subtask-generation/TaskBreakDownResult/TaskBreakDownResultScreen";
 import { MealPlanNavigatorParamList } from "./types";
 import DateScreen from "../screens/DateScreen";
 import TimeScreen from "../screens/TimeScreen";
@@ -10,6 +10,7 @@ import MealNameScreen from "../screens/MealNameScreen";
 import OccasionScreen from "../screens/OccasionScreen";
 import RecipeSelectorScreen from "../screens/RecipeSelectorScreen";
 import FavoriteScreen from "../screens/tabs/FavoriteScreen";
+import { EnterRecipeIngredientsScreen } from "../screens/subtask-generation/InputRecipe/EnterRecipeIngredientsScreen";
 
 const MealPlanStack = createNativeStackNavigator<MealPlanNavigatorParamList>();
 
@@ -22,8 +23,13 @@ const MealPlanNavigator = () => {
         options={{ headerShown: false }}
       />
       <MealPlanStack.Screen
-        name="EnterDescriptionScreen"
-        component={EnterRecipeScreen}
+        name="EnterRecipeStepsScreen"
+        component={EnterRecipeStepsScreen}
+        options={{ headerShown: false }}
+      />
+      <MealPlanStack.Screen
+        name="EnterRecipeIngredientsScreen"
+        component={EnterRecipeIngredientsScreen}
         options={{ headerShown: false }}
       />
       <MealPlanStack.Screen

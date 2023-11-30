@@ -33,6 +33,7 @@ export type LiveSessionNavigatorParamList = {
 
 export type TaskDrawerNavigatorParamList = {
   Task: undefined;
+  Tracker: undefined;
   Feed: undefined;
   Invite: undefined;
 };
@@ -51,7 +52,8 @@ export type JoinNavigatorParamList = {
 
 export type MealPlanNavigatorParamList = {
   MealPlan: undefined;
-  EnterDescriptionScreen: undefined;
+  EnterRecipeStepsScreen: undefined;
+  EnterRecipeIngredientsScreen: undefined;
   TaskBreakDownResultScreen: undefined;
   DateScreen: undefined;
   TimeScreen: { date: string | null };
@@ -91,7 +93,8 @@ export type MealPlanNavigatorParamList = {
 
 export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealPlan: undefined,
-  EnterDescriptionScreen: undefined,
+  EnterRecipeStepsScreen: undefined,
+  EnterRecipeIngredientsScreen: undefined,
   TaskBreakDownResultScreen: undefined,
   DateScreen: undefined,
   TimeScreen: { date: null },
@@ -144,6 +147,7 @@ export const defaultBottomTabNavigatorParamList: BottomTabNavigatorParamList = {
 export const defaultTaskDrawerNavigatorParamList: TaskDrawerNavigatorParamList =
   {
     Task: undefined,
+    Tracker: undefined,
     Feed: undefined,
     Invite: undefined,
   };
@@ -189,9 +193,20 @@ export type MealPlanNavigationProp = NativeStackNavigationProp<
   "MealPlan"
 >;
 
-export type EnterDescriptionScreenNavigationProp = NativeStackNavigationProp<
+export type EnterRecipeStepsScreenNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
-  "EnterDescriptionScreen"
+  "EnterRecipeStepsScreen"
+>;
+
+export type EnterRecipeIngredientsScreenNavigationProp =
+  NativeStackNavigationProp<
+    MealPlanNavigatorParamList,
+    "EnterRecipeIngredientsScreen"
+  >;
+
+export type TaskBreakDownResultScreenProp = NativeStackNavigationProp<
+  MealPlanNavigatorParamList,
+  "TaskBreakDownResultScreen"
 >;
 
 export type JoinScreenNavigationProp = CompositeNavigationProp<
@@ -227,6 +242,11 @@ export type ConnectedScreenNavigationProp = NativeStackNavigationProp<
 
 export type TaskScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<TaskDrawerNavigatorParamList, "Task">,
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "LiveSession">
+>;
+
+export type TrackerScreenNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<TaskDrawerNavigatorParamList, "Tracker">,
   NativeStackNavigationProp<HomeStackNavigatorParamList, "LiveSession">
 >;
 

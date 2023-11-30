@@ -1,4 +1,5 @@
+import fakeRecipe from "./fakeRecipeData";
 import fakeTask from "./fakeTaskData";
-import guestUser from "./guestUserData";
+import guestSessionUser from "./guestUserData";
 
-export { fakeTask, guestUser };
+export { fakeRecipe, fakeTask, guestSessionUser };

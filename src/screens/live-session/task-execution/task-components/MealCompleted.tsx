@@ -17,8 +17,10 @@ const MealCompleted = () => {
       pVH={{ h: theme.spacing.m }}
       gap={theme.spacing.s}
     >
-      <Text style={TextStyle.h2}>{messageTitle}</Text>
-      <Text style={TextStyle.h4}>{messageDesc}</Text>
+      <Text style={[TextStyle.h2, { textAlign: "center" }]}>
+        {messageTitle}
+      </Text>
+      <Text style={[TextStyle.h4, { textAlign: "center" }]}>{messageDesc}</Text>
     </VStack>
   );
 };

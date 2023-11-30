@@ -1,5 +1,7 @@
 import { API_BASE } from "@env";
 
+console.log(API_BASE);
+
 const baseUrl = `http://${API_BASE}:5000/api`;
 const user = `${baseUrl}/user`;
 const recipe = `${baseUrl}/recipe`;
@@ -15,4 +17,6 @@ export const ApiUrls = {
   getLiveSession: `${liveSession}/get-session`,
   startSubTaskSession: `${subTaskGeneration}/session`,
   subtaskBreakDown: `${subTaskGeneration}/request`,
+  subtaskRetry: `${subTaskGeneration}/retry-task`,
+  saveRecipe: `${recipe}/add-recipe`,
 };
