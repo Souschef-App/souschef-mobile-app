@@ -1,5 +1,9 @@
-import { HStack, VStack } from "../../../components"
-import { Text } from "react-native"
+import { Modal } from "../../../components/Modal"
+import { HStack, ModalButton, VStack } from "../../../components"
+import { Text, StyleSheet } from "react-native"
+import { ButtonStyle, TextStyle, Theme } from "../../../styles"
+import { useContext, useMemo } from "react"
+import { ThemeContext } from "../../../contexts/AppContext"
 
 export type RowItemProps = {
     index: number,
@@ -21,3 +25,54 @@ export const RowItem = ({index, text, styles} : RowItemProps) =>{
         </HStack>
     )
 }
+
+export type ErrorModalProps = {
+    isVisible: boolean,
+    title: string,
+    message: string,
+    okFunc: ()=>void
+}
+
+export const ErrorModal = ({isVisible, title, message, okFunc}: ErrorModalProps) =>{
+
+    const theme = useContext(ThemeContext);
+    const styles = useMemo(() => makeStyles(theme), [theme]);
+    
+    return(
+        <Modal isVisible={isVisible}>
+        <Modal.Container>
+          <Modal.Header titleStyle={styles.title} title={title} />
+          <Modal.Body>
+            <Text style={styles.message}>{message}</Text>
+          </Modal.Body>
+          <Modal.Footer>
+            <HStack gap={15}>
+              <ModalButton style={styles.okBTN}  textStyle={styles.okBTNText}  title="OK" onPress={okFunc} />
+            </HStack>
+          </Modal.Footer>
+        </Modal.Container>
+      </Modal>
+    )
+}
+
+const makeStyles = (theme: Theme) =>
+  StyleSheet.create({
+    okBTN:{
+        ...ButtonStyle.primary,
+        minWidth: 100,
+        backgroundColor: theme.colors.primary
+    },
+    okBTNText:{
+        ...TextStyle.h2,
+        fontWeight: "normal",
+        color: "#fff",
+    },
+    title:{
+        ...TextStyle.h2,
+        color: theme.colors.danger
+    },
+    message:{
+        ...TextStyle.body,
+       textAlign: "center"
+    }
+})

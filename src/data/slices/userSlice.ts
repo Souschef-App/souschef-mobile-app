@@ -3,6 +3,7 @@ import { ApiUrls } from "../../api/constants";
 import jsonRequest from "../../api/requests";
 import { StoreState } from "../store";
 import { guestSessionUser } from "../__mocks__";
+import { User } from "../../data/types";
 
 type UserState = {
   user: User | null;

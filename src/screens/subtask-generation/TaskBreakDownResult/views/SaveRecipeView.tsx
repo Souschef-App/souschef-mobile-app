@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import { TextStyle, ButtonStyle, Theme, InputStyle } from "../../../styles";
-import { HStack, TextButton, VStack } from "../../../components"
-import {Text, StyleSheet, TextInput, Pressable} from "react-native"
-import { ThemeContext } from "../../../contexts/AppContext";
-import useStore from "../../../data/store";
-import { Modal } from "../../../components/Modal";
+import { TextStyle, ButtonStyle, Theme } from "../../../../styles";
+import { TextButton, VStack, ModalButton } from "../../../../components"
+import {Text, StyleSheet} from "react-native"
+import { ThemeContext } from "../../../../contexts/AppContext";
+import useStore from "../../../../data/store";
+import { Modal } from "../../../../components/Modal";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
-
-const ModalButton = (props : any) =>{
-  
-  return(
-    <Pressable style={props.style} onPress={() => props.onPress()} >
-      <Text>{props.title}</Text>
-    </Pressable>
-  )
-}
 
 type SaveRecipeViewProps = {
   navigation : TaskBreakDownResultScreenProp
@@ -51,16 +42,12 @@ export const SaveRecipeView = ({navigation} : SaveRecipeViewProps) => {
       navigation.navigate("MealPlan")
     }
     
-    
     return(
-        <VStack style={styles.card} align="flex-start" pVH={{v: 5, h : 40}}>
-            <HStack>
-                <Text style={styles.taskTitle}>Save Recipe</Text>
-            </HStack>
-            <Text>Name</Text>
-            <TextInput onChangeText={setName} style={InputStyle.underline} />
-            <VStack justifyContent="flex-end">
-                <TextButton title="Save" style={styles.saveBTN} onPress={() => saveRecipe(name)}/>
+        <VStack align="flex-start" pVH={{v: 5, h : 40}}>
+
+            <VStack justifyContent="center" gap={30}>
+                <Text>Name Of Recipe Here</Text>
+                <TextButton title="Save Recipe" style={styles.saveBTN} onPress={() => saveRecipe(name)}/>
             </VStack>
 
             <Modal isVisible={successModalOpen}>
@@ -100,10 +87,6 @@ const makeStyles = (theme: Theme) =>
       ...TextStyle.h2,
       fontWeight: "normal",
       color: "#fff",
-    },
-    card: {
-      elevation: 6,
-      borderColor: 'red',
     },
     saveBTN:{
       ...ButtonStyle.primary,

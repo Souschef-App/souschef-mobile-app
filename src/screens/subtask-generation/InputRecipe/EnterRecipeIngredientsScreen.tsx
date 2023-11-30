@@ -9,7 +9,7 @@ import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
 import useStore from "../../../data/store";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { makeStyles } from "./style";
-import { RowItem } from "./components";
+import { ErrorModal, RowItem } from "./components";
 
 export const EnterRecipeIngredientsScreen = ({
   navigation,
@@ -20,28 +20,30 @@ export const EnterRecipeIngredientsScreen = ({
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
   const [recipeIngredientsList, setTaskList] = useState<string[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   const [text, setText] = useState("");
 
   const setEnteredRecipe = useStore((state) => state.setEnteredRecipe);
-  const submitForBreakDown = useStore((state) => state.submitForBreakDown);
 
   const getSuggestions = () => {
-    console.log("pressed")
     if(recipeIngredientsList.length <= 0)
     {
-      console.log("Add tasks first")
+      setErrorModalVisible(true)
     }
     else{
       // setEnteredRecipe(recipeIngredientsList) //TODO:Change!!
-      submitForBreakDown();
+      setEnteredRecipe(recipeIngredientsList);
       navigation.navigate("EnterRecipeStepsScreen");
     }
   };
 
   const addIngredientsToList = () => {
-    console.log("adding task to list")
-    recipeIngredientsList.push(text)
+    // console.log("adding task to list")
+    // recipeIngredientsList.push(text)
+
+    setTaskList([...recipeIngredientsList, text])
+
     setText("")
     setModalVisible(!modalVisible)
   } 
@@ -68,7 +70,7 @@ export const EnterRecipeIngredientsScreen = ({
             {
               recipeIngredientsList.map((task, index) =>{
                 return (
-                  <RowItem text={task} index={index} styles={styles} />
+                  <RowItem key={index} text={task} index={index} styles={styles} />
                 )
               })
             }
@@ -101,60 +103,11 @@ export const EnterRecipeIngredientsScreen = ({
           </VStack>
 
         </Modal>
+
+        <ErrorModal isVisible={errorModalVisible} title="Ingredient Error" message="Please add at least one Ingredient" okFunc={()=>setErrorModalVisible(false)} />
     
 
       </VStack>
     </SafeArea>
   );
 };
-
-// const makeStyles = (theme: Theme) =>
-//   StyleSheet.create({
-//     button: {
-//       ...ButtonStyle.primary,
-//       paddingHorizontal: 8,
-//       paddingVertical: 4,
-//       height: 32,
-//       backgroundColor: theme.colors.text,
-//       margin: 8,
-//       alignSelf: "stretch"
-//     },
-//     buttonText:{
-//       ...TextStyle.h4,
-//       fontSize: 14,
-//       color: theme.colors.background,
-//     },
-//     input: {
-//       ...InputStyle.multiline,
-//       // maxWidth: 300,
-//       textAlignVertical: "top",
-//       minHeight: 120,
-
-//     },
-//     container: {
-//       backgroundColor: theme.colors.background,
-//     },
-//     title: {
-//       ...TextStyle.h2,
-//       color: theme.colors.background,
-//       margin: 20, 
-//     },
-//     card:{
-//       backgroundColor: theme.colors.background2,
-//       padding: theme.spacing.m
-//     },
-//     listText:{
-//       ...TextStyle.body,
-//       flex: 1
-//     },
-//     red:{
-//       backgroundColor: "red"
-//     },
-//     badge:{
-//       ...ButtonStyle.round,
-//       backgroundColor: theme.colors.primary
-//     },
-//     banner:{
-//       backgroundColor: theme.colors.primary
-//     }
-//   });

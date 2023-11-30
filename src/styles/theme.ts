@@ -12,6 +12,17 @@ const palette: { [key: string]: Color } = {
   gold: "#ffcd3c",
 };
 
+export const Spacing = {
+  xs: 4,
+  s: 8,
+  m: 16,
+  b: 24,
+  l: 32,
+  xl: 48,
+  xxl: 56,
+  xxxl: 64,
+}
+
 export const theme: Theme = {
   colors: {
     primary: palette.green,
@@ -26,14 +37,14 @@ export const theme: Theme = {
     textDisabled: palette.iceblue,
   },
   spacing: {
-    xs: 4,
-    s: 8,
-    m: 16,
-    b: 24,
-    l: 32,
-    xl: 48,
-    xxl: 56,
-    xxxl: 64,
+    xs: Spacing.xs,
+    s: Spacing.s,
+    m: Spacing.m,
+    b: Spacing.b,
+    l: Spacing.l,
+    xl: Spacing.xl,
+    xxl: Spacing.xxl,
+    xxxl: Spacing.xxxl,
   },
 };
 
