@@ -5,6 +5,8 @@ import { ApiUrls } from "../../api/constants";
 import { DIFFICULTY, Ingredient, Kitchenware, Recipe, Task } from "../types";
 import Dependency from "data/types/dependency";
 
+import uuid from "react-native-uuid";
+
 export enum BeforeOrAfter {
   Before,
   After,
@@ -18,6 +20,8 @@ export interface RecipeBuilderSlice {
   currentTask: Task | null;
   currentIngredientIndex: number;
   currentKitchenwareIndex: number;
+
+  getCurrentTask: () => Task | null;
 
   enteredRecipe: string[] | null;
   brokenDownRecipe: Task[] | null;
@@ -65,10 +69,14 @@ export const createRecipeBuilderSlice: StateCreator<
   saveRecipeError: null,
   saveRecipeSuccess: null,
   setActiveIndex: (num: number) => {
-    let list = get().brokenDownRecipe;
+    // let list = get().brokenDownRecipe;
 
     set({ activeIndex: num });
-    set({ currentTask: list ? list[num] : null });
+    // set({ currentTask: list ? list[num] : null });
+  },
+  getCurrentTask: () => {
+    const recipe = get().brokenDownRecipe;
+    return recipe ? recipe[get().activeIndex] : null;
   },
   setEnteredRecipe: (recipe: string[]) => {
     const list = get().enteredRecipe;
@@ -97,8 +105,7 @@ export const createRecipeBuilderSlice: StateCreator<
     set({ brokenDownRecipe: breakdownResult });
   },
   submitForRetryTask: async () => {
-    const recipe = get().brokenDownRecipe;
-    const task = recipe ? recipe[get().activeIndex] : null;
+    const task = get().getCurrentTask();
 
     if (task == null) return;
 
@@ -164,7 +171,7 @@ export const createRecipeBuilderSlice: StateCreator<
     }
   },
   updateTitle: (title: string) => {
-    const cloneTask = get().currentTask;
+    const cloneTask = get().getCurrentTask();
 
     if (!cloneTask) return;
 
@@ -173,7 +180,7 @@ export const createRecipeBuilderSlice: StateCreator<
   },
 
   updateDescription: (description: string) => {
-    const cloneTask = get().currentTask;
+    const cloneTask = get().getCurrentTask();
 
     if (!cloneTask) return;
 
@@ -182,7 +189,7 @@ export const createRecipeBuilderSlice: StateCreator<
   },
 
   updateDifficulty: (difficulty: DIFFICULTY) => {
-    const cloneTask = get().currentTask;
+    const cloneTask = get().getCurrentTask();
 
     if (!cloneTask) return;
 
@@ -191,7 +198,7 @@ export const createRecipeBuilderSlice: StateCreator<
   },
 
   updateDuration: (duration: number) => {
-    const cloneTask = get().currentTask;
+    const cloneTask = get().getCurrentTask();
 
     if (!cloneTask) return;
 
@@ -199,14 +206,14 @@ export const createRecipeBuilderSlice: StateCreator<
     get().updateRecipeTask(cloneTask);
   },
   updateIngredient: (ingredient: Ingredient, index: number) => {
-    const cloneTask = get().currentTask;
+    const cloneTask = get().getCurrentTask();
     if (!cloneTask) return;
 
     cloneTask.ingredients[index] = ingredient;
     get().updateRecipeTask(cloneTask);
   },
   updateKitchenware: (kitchenware: Kitchenware, index: number) => {
-    const cloneTask = get().currentTask;
+    const cloneTask = get().getCurrentTask();
 
     if (!cloneTask) return;
 
@@ -249,7 +256,7 @@ export const createRecipeBuilderSlice: StateCreator<
     const recipeClone = get().brokenDownRecipe;
     const index = get().activeIndex;
     const newTask: Task = {
-      id: "",
+      id: uuid.v4().toString(),
       title: "",
       description: "",
       duration: 0,
@@ -263,11 +270,9 @@ export const createRecipeBuilderSlice: StateCreator<
     if (recipeClone == null) return;
 
     if (beforeOrAfter == BeforeOrAfter.Before) {
-      console.log("Before " + recipeClone.length);
-      recipeClone.splice(index - 1, 0, newTask);
-      console.log("Before " + recipeClone.length);
-    } else if (beforeOrAfter == BeforeOrAfter.After) {
       recipeClone.splice(index, 0, newTask);
+    } else if (beforeOrAfter == BeforeOrAfter.After) {
+      recipeClone.splice(index + 1, 0, newTask);
     }
 
     set({ brokenDownRecipe: recipeClone });

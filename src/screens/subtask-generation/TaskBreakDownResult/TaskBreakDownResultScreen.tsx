@@ -32,13 +32,10 @@ export const TaskBreakDownResultScreen = ({
   const safeAreaInsets = useSafeAreaInsets();
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
-  console.log("brokenDownRecipe @HERE" + JSON.stringify(brokenDownRecipe? brokenDownRecipe[0]?.title : "really"))
-
 
   // const brokenDownRecipeArray = brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
+  // const renderArray = brokenDownRecipeArray?.concat(<SaveRecipeView key={brokenDownRecipe?.length} navigation={navigation} />)
 
-    // const renderArray = brokenDownRecipeArray?.concat(<SaveRecipeView key={brokenDownRecipe?.length} navigation={navigation} />)
-  const activeIndex = useStore((state) => state.activeIndex);
   const setActiveIndex = useStore((state) => state.setActiveIndex);
   
   useEffect(()=>{
@@ -104,14 +101,11 @@ export const TaskBreakDownResultScreen = ({
                       </MenuOptions>
                     </Menu>
                   </HStack>
-                  {/* <AnimatedSwiper activeIndex={activeIndex} setActiveIndex={setActiveIndex} paginationStyle={{marginBottom: 5}} duration={600}>
-            
-                  {
-                    brokenDownRecipe?.map((task, index) => {return <TaskEditScreen key={task.id} task={task} />})
-                  }
-     
-                  </AnimatedSwiper> */}
-                  <Carousel data={brokenDownRecipe} RenderItem={TaskEditScreen} />
+                  <Carousel 
+                    data={brokenDownRecipe} 
+                    RenderItem={TaskEditScreen} 
+                    getActiveIndexCallback={setActiveIndex} 
+                    />
                 </VStack>
               ) : (
                 <VStack>
