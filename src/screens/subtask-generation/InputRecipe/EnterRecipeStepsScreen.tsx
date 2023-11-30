@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../../components";
+import { HStack, IconButton, Input, ModalButton, SafeArea, TextButton, VStack } from "../../../components";
 import { Pressable, Text } from "react-native";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { EnterRecipeStepsScreenNavigationProp } from "../../../navigation/types";
@@ -8,6 +8,7 @@ import useStore from "../../../data/store";
 import { Modal } from "../../../components/Modal";
 import { makeStyles } from "./style";
 import { ErrorModal, RowItem } from "./components";
+import { ButtonStyle, TextStyle } from "../../../styles";
 
 
 export const EnterRecipeStepsScreen = ({
@@ -96,11 +97,29 @@ export const EnterRecipeStepsScreen = ({
         <VStack style={styles.container} gap={20} p={50} flexMain={false}>
           <Text style={styles.title}>Enter a Task</Text>
           <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
-          <Pressable
+          {/* <Pressable
             style={styles.button}
             onPress={addTaskToList}>
               <Text style={styles.buttonText}>Add Task To Recipe</Text>
-          </Pressable>
+          </Pressable> */}
+
+          <VStack justifyContent="flex-end">
+
+            <HStack  gap={12}>
+              <ModalButton 
+                title="Cancel" 
+                onPress={()=>setModalVisible(false)} 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}}
+                textStyle={TextStyle.modalButtonText(theme).text}
+                />
+              <ModalButton 
+                title="Add" 
+                onPress={addTaskToList} 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text}
+                />
+            </HStack>
+          </VStack>
         </VStack>
 
       </Modal>

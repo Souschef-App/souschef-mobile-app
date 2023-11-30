@@ -3,7 +3,7 @@ import {  Pressable, StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { EnterRecipeIngredientsScreenNavigationProp } from "../../../navigation/types";
-import { HStack, IconButton, Input, SafeArea, TextButton, VStack } from "../../../components";
+import { HStack, IconButton, Input, ModalButton, SafeArea, TextButton, VStack } from "../../../components";
 import { Modal } from "../../../components/Modal";
 import { ButtonStyle, InputStyle, TextStyle, Theme } from "../../../styles";
 import useStore from "../../../data/store";
@@ -95,11 +95,24 @@ export const EnterRecipeIngredientsScreen = ({
           <VStack style={styles.container} gap={20} p={50} flexMain={false}>
             <Text style={styles.title}>Enter a Ingredient</Text>
             <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
-            <Pressable
-              style={styles.button}
-              onPress={addIngredientsToList}>
-                <Text style={styles.buttonText}>Add Ingredient</Text>
-            </Pressable>
+            
+            <VStack justifyContent="flex-end">
+
+              <HStack  gap={12}>
+                <ModalButton 
+                  title="Cancel" 
+                  onPress={()=>setModalVisible(false)} 
+                  style={{...ButtonStyle.modal, backgroundColor: "red"}}
+                  textStyle={TextStyle.modalButtonText(theme).text}
+                   />
+                <ModalButton 
+                  title="Add" 
+                  onPress={addIngredientsToList} 
+                  style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                  textStyle={TextStyle.modalButtonText(theme).text}
+                  />
+              </HStack>
+            </VStack>
           </VStack>
 
         </Modal>

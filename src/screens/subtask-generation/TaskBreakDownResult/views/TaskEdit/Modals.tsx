@@ -58,9 +58,16 @@ export const EditTitleModal = (props : EditModalProps) =>{
             <TextInput value={title} onChangeText={setTitle}  />
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => props.handleModal(false)} />
-              <ModalButton title="Save"  textStyle={styles.btnText} style={styles.saveBTN} onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton title="Cancel"  
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                title="Save"  
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -112,9 +119,17 @@ export const EditRatingModal = (props : EditModalProps) =>{
                     </VStack>
                 </Modal.Body> 
                 <Modal.Footer>
-                    <HStack gap={15}>
-                    <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-                    <ModalButton style={styles.saveBTN}   textStyle={styles.btnText} title="Save" onPress={saveChange} />
+                    <HStack gap={15} pVH={{v: 0, h: 50}}>
+                    <ModalButton 
+                      style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                      textStyle={TextStyle.modalButtonText(theme).text} 
+                      title="Cancel" 
+                      onPress={() => props.handleModal(false)} />
+                    <ModalButton 
+                      style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                      textStyle={TextStyle.modalButtonText(theme).text} 
+                      title="Save" 
+                      onPress={saveChange} />
                     </HStack>
                 </Modal.Footer>
             </Modal.Container>
@@ -146,9 +161,17 @@ export const EditDescriptionModal = (props : EditModalProps) =>{
             <TextInput value={description} onChangeText={setDescription}  />
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Cancel" 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Save" 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -263,9 +286,17 @@ export const EditIngredientModal = (props : EditModalProps) =>{
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Cancel" 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Save" 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -324,9 +355,17 @@ export const EditKitchenwareModal = (props : EditModalProps) =>{
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Cancel" 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Save" 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -356,9 +395,17 @@ export const ConfirmDeleteModal = (props : ConfirmDeleteItemProps) =>{
       <Modal.Container>
         <Modal.Header title={props.title} />
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Delete" onPress={confirmDelete} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+          <ModalButton 
+            style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+            textStyle={TextStyle.modalButtonText(theme).text} 
+            title="Cancel" 
+            onPress={() => props.handleModal(false)} />
+          <ModalButton 
+            style={{...ButtonStyle.modal, backgroundColor: "red"}} 
+            textStyle={TextStyle.modalButtonText(theme).text} 
+            title="Delete" 
+            onPress={confirmDelete} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>
@@ -427,9 +474,17 @@ export const AddIngredientModal = (props : EditModalProps) =>{
           </VStack>
         </Modal.Body>
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Cancel" 
+              onPress={() => props.handleModal(false)} />
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Save" 
+              onPress={saveChange} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>
@@ -477,9 +532,17 @@ export const AddKitchenwareModal = (props : EditModalProps) =>{
           </VStack>
         </Modal.Body>
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Cancel" 
+              onPress={() => props.handleModal(false)} />
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Save" 
+              onPress={saveChange} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>
@@ -525,9 +588,17 @@ export const AddDependencyModal = (props : EditModalProps) =>{
           </Picker>
         </Modal.Body>
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Cancel" 
+              onPress={() => props.handleModal(false)} />
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Save" 
+              onPress={saveChange} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>

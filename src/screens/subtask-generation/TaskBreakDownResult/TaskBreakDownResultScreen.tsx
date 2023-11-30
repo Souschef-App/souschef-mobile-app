@@ -42,8 +42,6 @@ export const TaskBreakDownResultScreen = ({
     setActiveIndex(0)
   },[])
 
-  
-
   const submitForRetryTask = useStore((state) => state.submitForRetryTask);
   const addBlankCard = useStore((state) => state.addBlankCard);
 

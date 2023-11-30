@@ -1,13 +1,14 @@
-import { TextStyle } from "react-native";
+import { TextStyle, StyleSheet } from "react-native";
 import { theme } from "./theme";
+import { Theme } from "./types";
 
 export const lineHeight = 20;
 
 export const fontSizes = {
-  xs:16,
+  xs: 16,
   s: 18,
-  m:20
-}
+  m: 20,
+};
 
 const textCore: { [key: string]: TextStyle } = {
   defaultFont: {
@@ -54,14 +55,27 @@ export const body: TextStyle = {
   fontSize: fontSizes.xs,
 };
 
-export const menuTitleText : TextStyle = {
+export const menuTitleText: TextStyle = {
   ...textCore.defaultFont,
   fontSize: fontSizes.m,
-  lineHeight: lineHeight
-}
+  lineHeight: lineHeight,
+};
 
-export const menuText : TextStyle = {
+export const menuText: TextStyle = {
   ...textCore.defaultFont,
   fontSize: fontSizes.xs,
-  lineHeight: lineHeight
-}
+  lineHeight: lineHeight,
+};
+
+// export const modalButtonText: TextStyle = {
+//   ...textCore.defaultFont,
+//   fontSize: fontSizes.s,
+// };
+export const modalButtonText = (theme: Theme) =>
+  StyleSheet.create({
+    text: {
+      ...textCore.defaultFont,
+      fontSize: fontSizes.s,
+      color: theme.colors.background,
+    },
+  });
