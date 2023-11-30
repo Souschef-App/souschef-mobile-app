@@ -105,7 +105,10 @@ export const createRecipeBuilderSlice: StateCreator<
     const [taskResult, error] = await jsonRequest.post<Task>(
       ApiUrls.subtaskRetry,
       {
-        json: task,
+        json: {
+          task: task,
+          prompt: "Improve the description",
+        },
       }
     );
 
@@ -124,7 +127,9 @@ export const createRecipeBuilderSlice: StateCreator<
 
     list.splice(index, 1, updatedTask);
 
-    set({ brokenDownRecipe: list });
+    let cloneList = [...list];
+
+    set({ brokenDownRecipe: cloneList });
   },
   saveRecipe: async (name: string) => {
     const tasks = get().brokenDownRecipe;

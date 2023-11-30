@@ -18,6 +18,8 @@ import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-m
 
 import { SaveRecipeView } from "./views/SaveRecipeView";
 import { BeforeOrAfter } from "../../../data/slices/recipeBuilderSlice";
+import { ScrollView } from "react-native-gesture-handler";
+import { Carousel } from "../../../components/carousel";
 
 
 export const TaskBreakDownResultScreen = ({
@@ -30,15 +32,12 @@ export const TaskBreakDownResultScreen = ({
   const safeAreaInsets = useSafeAreaInsets();
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
+  console.log("brokenDownRecipe @HERE" + JSON.stringify(brokenDownRecipe? brokenDownRecipe[0]?.title : "really"))
 
-  const brokenDownRecipeArray = useMemo(() => { 
-    console.log("brokenDownRecipeArray regen")
-    return brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
-  }, [brokenDownRecipe]);
-  
-  const renderArray = useMemo(() => brokenDownRecipeArray?.concat(<SaveRecipeView key={brokenDownRecipe?.length} navigation={navigation} />), 
-  [brokenDownRecipeArray]);
-  
+
+  // const brokenDownRecipeArray = brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
+
+    // const renderArray = brokenDownRecipeArray?.concat(<SaveRecipeView key={brokenDownRecipe?.length} navigation={navigation} />)
   const activeIndex = useStore((state) => state.activeIndex);
   const setActiveIndex = useStore((state) => state.setActiveIndex);
   
@@ -46,13 +45,7 @@ export const TaskBreakDownResultScreen = ({
     setActiveIndex(0)
   },[])
 
-  const swiper =  useMemo(() => {
-    return <AnimatedSwiper activeIndex={activeIndex} setActiveIndex={setActiveIndex} paginationStyle={{marginBottom: 5}} duration={600}>
-    {
-      renderArray
-    }
-    </AnimatedSwiper>
-  }, [brokenDownRecipe, activeIndex]);
+  
 
   const submitForRetryTask = useStore((state) => state.submitForRetryTask);
   const addBlankCard = useStore((state) => state.addBlankCard);
@@ -72,7 +65,7 @@ export const TaskBreakDownResultScreen = ({
             align="flex-start" 
             justifyContent="flex-start" 
             style={styles.container} 
-            pVH={{v: 20, h : 20}} 
+            pVH={{v: 20, h : 0}} 
             gap={0}>
             <VStack>
             {
@@ -111,9 +104,14 @@ export const TaskBreakDownResultScreen = ({
                       </MenuOptions>
                     </Menu>
                   </HStack>
+                  {/* <AnimatedSwiper activeIndex={activeIndex} setActiveIndex={setActiveIndex} paginationStyle={{marginBottom: 5}} duration={600}>
+            
                   {
-                    swiper
+                    brokenDownRecipe?.map((task, index) => {return <TaskEditScreen key={task.id} task={task} />})
                   }
+     
+                  </AnimatedSwiper> */}
+                  <Carousel data={brokenDownRecipe} RenderItem={TaskEditScreen} />
                 </VStack>
               ) : (
                 <VStack>

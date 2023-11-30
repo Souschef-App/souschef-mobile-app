@@ -43,9 +43,10 @@ import useStore from "../../../../../data/store";
 
 export type TaskAvailaleProps = {
   task: Task;
+  width : number
 };
 
-const TaskEditView = ({task}: TaskAvailaleProps) => {
+const TaskEditView = ({task, width}: TaskAvailaleProps) => {
   //#region Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -91,7 +92,7 @@ const TaskEditView = ({task}: TaskAvailaleProps) => {
   //#endregion
 
   return (
-    <VStack p={theme.spacing.m}>
+    <VStack p={theme.spacing.m} style={{width : width}}>
       <ScrollView>
         <VStack gap={theme.spacing.xl}>
           <VStack flexMain={false} gap={theme.spacing.s}>

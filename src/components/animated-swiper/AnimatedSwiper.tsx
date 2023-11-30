@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, ViewStyle, Text} from 'react-native';
 
 import useSwipe from './hooks/useSwipe';
@@ -30,6 +30,12 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
     ? children
     : [children];
   const childrenLength = childrenArray.length;
+
+  useEffect(()=>{
+    
+    console.log("childrenArray " + childrenArray.length)
+  },[childrenArray])
+
 
   const [fadingValues, setFadingValues] = useState<number[]>(
     childrenArray.map((_, index) => (index === 0 ? 1 : 0)),
@@ -73,6 +79,7 @@ const AnimatedSwiper: React.FC<AnimatedSwiperProps> = ({
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}>
         {childrenArray.map((child, index) => {
+            console.log("RUNNING")
             return (
             <AnimatedSwiperItem
                 key={index}
