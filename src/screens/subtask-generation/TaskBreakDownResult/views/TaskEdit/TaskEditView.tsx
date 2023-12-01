@@ -38,32 +38,37 @@ import
   AddDependencyModal
 } from "./Modals";
 import useStore from "../../../../../data/store";
+import { SaveRecipeView } from "../SaveRecipeView";
+import { TaskBreakDownResultScreenProp } from "../../../../../navigation/types";
 
 //#endregion
 
 export type TaskAvailaleProps = {
   task: Task;
-  width : number
+  width : number,
+  index: number,
+  dataLength : number,
+  navigation: TaskBreakDownResultScreenProp
 };
 
-const TaskEditView = ({task, width}: TaskAvailaleProps) => {
+const TaskEditView = ({task, width, index, dataLength, navigation}: TaskAvailaleProps) => {
   //#region Theme
   const theme = React.useContext(ThemeContext);
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
   //#endregion 
   //#region Modal Visible State
-  const [isEditTitleVisible,        setIsEditTitleVisible] = useState(false) 
-  const [isEditDescriptionVisible,  setIsEditDescriptionVisible] = useState(false) 
-  const [isEditDifficultyVisible,   setIsEditDifficultyVisible] = useState(false) 
-  const [isEditDurationVisible,     setIsEditDurationVisible] = useState(false) 
-  const [isEditIngredientVisible,   setIsEditIngredientVisible] = useState(false) 
-  const [isEditKitchenwareVisible,  setIsEditKitchenwareVisible] = useState(false) 
-  const [isDeleteIngredientVisible, setIsDeleteIngredientVisible] = useState(false) 
+  const [isEditTitleVisible,         setIsEditTitleVisible] = useState(false) 
+  const [isEditDescriptionVisible,   setIsEditDescriptionVisible] = useState(false) 
+  const [isEditDifficultyVisible,    setIsEditDifficultyVisible] = useState(false) 
+  const [isEditDurationVisible,      setIsEditDurationVisible] = useState(false) 
+  const [isEditIngredientVisible,    setIsEditIngredientVisible] = useState(false) 
+  const [isEditKitchenwareVisible,   setIsEditKitchenwareVisible] = useState(false) 
+  const [isDeleteIngredientVisible,  setIsDeleteIngredientVisible] = useState(false) 
   const [isDeleteKitchenwareVisible, setIsDCeleteKitchenware] = useState(false) 
-  const [isDeleteDependencyVisible, setIsDCeleteDependency] = useState(false) 
-  const [isAddIngredientVisible, setIsAddIngredientVisible] = useState(false) 
-  const [isAddKitchenwareVisible, setIsAddKitchenwareVisible] = useState(false) 
-  const [isAddDependencyVisible, setIsAddDependencyVisible] = useState(false) 
+  const [isDeleteDependencyVisible,  setIsDCeleteDependency] = useState(false) 
+  const [isAddIngredientVisible,     setIsAddIngredientVisible] = useState(false) 
+  const [isAddKitchenwareVisible,    setIsAddKitchenwareVisible] = useState(false) 
+  const [isAddDependencyVisible,     setIsAddDependencyVisible] = useState(false) 
   //#endregion 
 
   const [editIngredientIndex, setEditIngredientIndex]   = useState<number>(0)
@@ -105,6 +110,9 @@ const TaskEditView = ({task, width}: TaskAvailaleProps) => {
 
   //#endregion
   return (
+    index == dataLength -1 ? (
+       <SaveRecipeView navigation={navigation} width={width} />
+    ):(
     <VStack p={theme.spacing.m} style={{width : width}}>
       <ScrollView>
         <VStack gap={theme.spacing.xl}>
@@ -219,6 +227,8 @@ const TaskEditView = ({task, width}: TaskAvailaleProps) => {
       <AddKitchenwareModal isVisible={isAddKitchenwareVisible} task={task} handleModal={setIsAddKitchenwareVisible} />
       <AddDependencyModal isVisible={isAddDependencyVisible}   task={task} handleModal={setIsAddDependencyVisible} />
     </VStack>
+
+    )
   );
 };
 

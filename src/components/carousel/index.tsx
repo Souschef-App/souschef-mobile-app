@@ -3,6 +3,9 @@ import { HStack, VStack } from "../../components/primitives/Stack"
 import React, { ComponentType, useEffect, useRef } from "react"
 import { TaskAvailaleProps } from "../../screens/subtask-generation/TaskBreakDownResult/views/TaskEdit/TaskEditView"
 import { useList } from 'react-native-use-list';
+import { SaveRecipeView } from "screens/subtask-generation/TaskBreakDownResult/views/SaveRecipeView";
+import { TaskBreakDownResultScreenProp } from "navigation/types";
+import { DIFFICULTY } from "../../data/types";
 
 const {width, height} = Dimensions.get("screen")
 
@@ -54,9 +57,22 @@ export type CarouselProps = {
     data : any
     RenderItem : ComponentType<TaskAvailaleProps>;
     getActiveIndexCallback: (index : number)=>void;
+    navigation : TaskBreakDownResultScreenProp
 }
 
-export const Carousel = ({data, RenderItem, getActiveIndexCallback}: CarouselProps) => {
+export const Carousel = ({data, RenderItem, getActiveIndexCallback, navigation}: CarouselProps) => {
+
+    data = [...data, {
+        id: "",
+        title: "",
+        description: "",
+        duration: 0,
+        difficulty: DIFFICULTY.Easy,
+        dependencies: [],
+        ingredients: [],
+        kitchenware: [],
+        isBackground: false
+      }]
     
     const scrollX = useRef(new Animated.Value(0)).current;
     
@@ -82,8 +98,8 @@ export const Carousel = ({data, RenderItem, getActiveIndexCallback}: CarouselPro
                     {useNativeDriver: false}
                 )}
                 showsHorizontalScrollIndicator={false} 
-                renderItem={({item}) => {
-                    return <RenderItem task={item} width={width} />
+                renderItem={({item, index}) => {
+                    return <RenderItem index={index} dataLength={data.length} task={item} width={width} navigation={navigation} />
                 }}
                 {...indexController}
             />

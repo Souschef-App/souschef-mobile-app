@@ -9,10 +9,11 @@ import { Modal } from "../../../../components/Modal";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
 
 type SaveRecipeViewProps = {
-  navigation : TaskBreakDownResultScreenProp
+  navigation : TaskBreakDownResultScreenProp,
+  width : number
 }
 
-export const SaveRecipeView = ({navigation} : SaveRecipeViewProps) => {
+export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
@@ -43,11 +44,11 @@ export const SaveRecipeView = ({navigation} : SaveRecipeViewProps) => {
     }
     
     return(
-        <VStack align="flex-start" pVH={{v: 5, h : 40}}>
+        <VStack align="flex-start" style={{width: width}} p={30}>
 
             <VStack justifyContent="center" gap={30}>
                 <Text>Name Of Recipe Here</Text>
-                <TextButton title="Save Recipe" style={styles.saveBTN} onPress={() => saveRecipe(name)}/>
+                <TextButton title="Save Recipe" style={styles.saveBTN} textStyle={styles.btnText} onPress={() => saveRecipe(name)}/>
             </VStack>
 
             <Modal isVisible={successModalOpen}>
