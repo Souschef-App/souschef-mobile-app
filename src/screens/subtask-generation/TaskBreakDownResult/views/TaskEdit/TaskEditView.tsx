@@ -110,7 +110,7 @@ const TaskEditView = ({task, width, index, dataLength, navigation}: TaskAvailale
 
   //#endregion
   return (
-    index == dataLength -1 ? (
+    index == dataLength - 1 ? (
        <SaveRecipeView navigation={navigation} width={width} />
     ):(
     <VStack p={theme.spacing.m} style={{width : width}}>

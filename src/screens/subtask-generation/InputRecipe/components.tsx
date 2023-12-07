@@ -13,13 +13,13 @@ export type RowItemProps = {
 
 export const RowItem = ({index, text, styles} : RowItemProps) =>{
     return(
-        <HStack key={index}  style={styles.card} align="flex-start" justifyContent="center">
+        <HStack mAll={{t: 10}} key={index}  style={styles.card} align="flex-start" justifyContent="center">
             <VStack flexMain={false} justifyContent="flex-start">
                 <VStack style={styles.rowBadge} flexMain={false}>
                     <Text style={styles.badgeText}>{index + 1}</Text>
                 </VStack>
             </VStack>
-            <VStack align="flex-start" justifyContent="center" pVH={{h: 10, v:0}}>
+            <VStack align="flex-start" justifyContent="flex-start" pVH={{h: 10, v:0}} style={{width: "90%"}}>
                 <Text style={styles.listText}>{text}</Text>
             </VStack>
         </HStack>

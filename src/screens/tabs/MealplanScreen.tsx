@@ -15,7 +15,7 @@ import {
 import { ThemeContext } from "../../contexts/AppContext";
 import { fakeRecipe } from "../../data/__mocks__";
 import { Recipe } from "../../data/types";
-import { MealNameScreenRouteProp, MealPlanNavigationProp } from "../../navigation/types";
+import { MealPlanNavigationProp } from "../../navigation/types";
 import { TextStyle, Theme } from "../../styles/";
 import { formatDifficultyToString } from "../../utils/format";
 

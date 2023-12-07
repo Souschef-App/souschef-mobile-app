@@ -30,6 +30,7 @@ export const makeStyles = (theme: Theme) =>
     },
     card:{
       backgroundColor: theme.colors.background2,
+      // backgroundColor: "red",
       marginTsop: 5
     },
     listText:{

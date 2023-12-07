@@ -66,7 +66,7 @@ export const EnterRecipeIngredientsScreen = ({
           </VStack>
           ):
           (
-            <ScrollView style={{ flex: 1, alignSelf: "stretch", paddingTop: 20,}}>
+            <ScrollView style={{ flex: 1, alignSelf: "stretch", paddingTop: 20}}>
             {
               recipeIngredientsList.map((task, index) =>{
                 return (

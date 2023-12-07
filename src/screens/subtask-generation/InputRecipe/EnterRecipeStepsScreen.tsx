@@ -59,8 +59,8 @@ export const EnterRecipeStepsScreen = ({
           taskList.length == 0 ? (
           <VStack>
                 <VStack flexMain={false} >
-                  <Text>Enter Each Step</Text>
-                  <Text>Of Your Recipe</Text>
+                  <Text style={styles.empyMsg}>Enter Each Step</Text>
+                  <Text style={styles.empyMsg}>Of Your Recipe</Text>
                 </VStack>
           </VStack>
           ):
