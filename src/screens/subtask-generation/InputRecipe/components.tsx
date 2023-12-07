@@ -19,7 +19,7 @@ export const RowItem = ({index, text, styles} : RowItemProps) =>{
                     <Text style={styles.badgeText}>{index + 1}</Text>
                 </VStack>
             </VStack>
-            <VStack align="flex-start" justifyContent="flex-start" pVH={{h: 10, v:0}} style={{width: "90%"}}>
+            <VStack align="flex-start" justifyContent="flex-start" pVH={{h: 10, v:0}} style={{width: "80%"}}>
                 <Text style={styles.listText}>{text}</Text>
             </VStack>
         </HStack>

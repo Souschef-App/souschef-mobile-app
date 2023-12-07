@@ -52,6 +52,7 @@ export type JoinNavigatorParamList = {
 
 export type MealPlanNavigatorParamList = {
   MealPlan: undefined;
+  NameRecipeScreen: undefined;
   EnterRecipeStepsScreen: undefined;
   EnterRecipeIngredientsScreen: undefined;
   TaskBreakDownResultScreen: undefined;
@@ -93,6 +94,7 @@ export type MealPlanNavigatorParamList = {
 
 export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
   MealPlan: undefined,
+  NameRecipeScreen: undefined,
   EnterRecipeStepsScreen: undefined,
   EnterRecipeIngredientsScreen: undefined,
   TaskBreakDownResultScreen: undefined,
@@ -103,7 +105,7 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
     time: null,
     mealName: "",
     recipes: [],
-    occasion: 1
+    occasion: 1,
   },
   RecipeSelectorScreen: {
     date: null,
@@ -111,7 +113,7 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
     mealName: "",
     recipes: [],
     occasion: 1,
-    mealType: "Appetizer"
+    mealType: "Appetizer",
   },
   OccasionScreen: {
     date: null,
@@ -123,13 +125,13 @@ export const defaultMealPlanNavigatorParamList: MealPlanNavigatorParamList = {
     mealName: "",
     recipes: [],
     occasion: 1,
-    mealType: "Appetizer"
+    mealType: "Appetizer",
   },
   CalendarScreen: {
     date: null,
     time: null,
-    mealName: ""
-  }
+    mealName: "",
+  },
 };
 
 export const defaultJoinNavigatorParamList: JoinNavigatorParamList = {
@@ -165,7 +167,7 @@ export const defaultHomeStackNavigatorParamList: HomeStackNavigatorParamList = {
   LiveSession: defaultLiveSessionNavigatorParamList,
   SessionStartScreen: {
     session: null,
-  }
+  },
 };
 
 export type WelcomeScreenNavigationProp = NativeStackNavigationProp<
@@ -191,6 +193,11 @@ export type HomeScreenNavigationProp = BottomTabNavigationProp<
 export type MealPlanNavigationProp = NativeStackNavigationProp<
   MealPlanNavigatorParamList,
   "MealPlan"
+>;
+
+export type NameRecipeScreenNavigationProp = NativeStackNavigationProp<
+  MealPlanNavigatorParamList,
+  "NameRecipeScreen"
 >;
 
 export type EnterRecipeStepsScreenNavigationProp = NativeStackNavigationProp<
@@ -230,10 +237,9 @@ export type ConnectingScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export type SessionStartScreenRouteProp = RouteProp<
-HomeStackNavigatorParamList,
-'SessionStartScreen'
->
-
+  HomeStackNavigatorParamList,
+  "SessionStartScreen"
+>;
 
 export type ConnectedScreenNavigationProp = NativeStackNavigationProp<
   LiveSessionNavigatorParamList,
@@ -306,19 +312,19 @@ export type OccasionScreenRouteProp = RouteProp<
 >;
 
 export type MealNameScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'MealNameScreen'
->
+  MealPlanNavigatorParamList,
+  "MealNameScreen"
+>;
 
 export type FavoriteScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'FavoriteScreen'
->
+  MealPlanNavigatorParamList,
+  "FavoriteScreen"
+>;
 
 export type RecipeSelectorScreenRouteProp = RouteProp<
-MealPlanNavigatorParamList,
-'RecipeSelectorScreen'
->
+  MealPlanNavigatorParamList,
+  "RecipeSelectorScreen"
+>;
 
 export type CalendarScreenRouteProp = RouteProp<
   MealPlanNavigatorParamList,

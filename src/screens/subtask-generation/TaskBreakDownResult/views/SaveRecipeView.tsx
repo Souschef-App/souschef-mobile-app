@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { TextStyle, ButtonStyle, Theme } from "../../../../styles";
 import { TextButton, VStack, ModalButton } from "../../../../components"
 import {Text, StyleSheet} from "react-native"
@@ -44,33 +43,32 @@ export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
     }
     
     return(
-        <VStack align="flex-start" style={{width: width}} p={30}>
-
-            <VStack justifyContent="center" gap={30}>
-                <Text>Name Of Recipe Here</Text>
-                <TextButton title="Save Recipe" style={styles.saveBTN} textStyle={styles.btnText} onPress={() => saveRecipe(name)}/>
-            </VStack>
-
-            <Modal isVisible={successModalOpen}>
-              <Modal.Container>
-                <Modal.Header title="Recipe Added!" />
-                <Modal.Body>
-
-                </Modal.Body>
-                <Modal.Footer>
-                  <ModalButton title="Close" onPress={()=> setSuccessModalOpen(false)} />
-                </Modal.Footer>
-              </Modal.Container>
-            </Modal>
-            <Modal isVisible={errorModalOpen}>
-              <Modal.Container>
-                <Modal.Header title="Recipe Save Error" />
-                <Modal.Footer>
-                  <ModalButton title="Ok" onPress={()=> recipeAddedOk()} />
-                </Modal.Footer>
-              </Modal.Container>
-            </Modal>
+      <VStack align="flex-start" style={{width: width}} p={30}>
+        <VStack justifyContent="center" gap={30}>
+            <Text style={styles.taskTitle}>Name Of Recipe Here</Text>
+            <TextButton title="Save Recipe" style={styles.saveBTN} textStyle={styles.btnText} onPress={() => saveRecipe(name)}/>
         </VStack>
+
+        <Modal isVisible={successModalOpen}>
+          <Modal.Container>
+            <Modal.Header title="Recipe Added!" />
+            <Modal.Body>
+
+            </Modal.Body>
+            <Modal.Footer>
+              <ModalButton title="Close" onPress={()=> setSuccessModalOpen(false)} />
+            </Modal.Footer>
+          </Modal.Container>
+        </Modal>
+        <Modal isVisible={errorModalOpen}>
+          <Modal.Container>
+            <Modal.Header title="Recipe Save Error" />
+            <Modal.Footer>
+              <ModalButton title="Ok" onPress={()=> recipeAddedOk()} />
+            </Modal.Footer>
+          </Modal.Container>
+        </Modal>
+      </VStack>
     )
 }
 
@@ -78,7 +76,7 @@ const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     taskTitle: {
       ...TextStyle.h1,
-      fontSize: 40,
+      fontSize: 30,
     },
     Icon: {
       position: "absolute",

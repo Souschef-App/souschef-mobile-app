@@ -102,7 +102,7 @@ export const EnterRecipeIngredientsScreen = ({
                 <ModalButton 
                   title="Cancel" 
                   onPress={()=>setModalVisible(false)} 
-                  style={{...ButtonStyle.modal, backgroundColor: "red"}}
+                  style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}}
                   textStyle={TextStyle.modalButtonText(theme).text}
                    />
                 <ModalButton 

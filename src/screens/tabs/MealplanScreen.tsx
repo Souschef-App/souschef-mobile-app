@@ -143,7 +143,7 @@ const MealPlanScreen = ({
           {activeTab === 1 ? (
             <TextButton
               title="Add Custom Recipe"
-              onPress={() => navigation.navigate("EnterRecipeIngredientsScreen")}
+              onPress={() => navigation.navigate("NameRecipeScreen")}
               textStyle={styles.newRecipeText}
               style={styles.newRecipeBtn}
             />
