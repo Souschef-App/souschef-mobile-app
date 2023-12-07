@@ -20,6 +20,7 @@ export interface RecipeBuilderSlice {
   currentTask: Task | null;
   currentIngredientIndex: number;
   currentKitchenwareIndex: number;
+  recipeTitle: string;
 
   getCurrentTask: () => Task | null;
 
@@ -27,6 +28,8 @@ export interface RecipeBuilderSlice {
   brokenDownRecipe: Task[] | null;
   saveRecipeError: string | null;
   saveRecipeSuccess: string | null;
+
+  setRecipeTitle: (title: string) => void;
 
   setEnteredRecipe: (recipe: string[]) => void;
   submitForBreakDown: () => void;
@@ -63,7 +66,7 @@ export const createRecipeBuilderSlice: StateCreator<
   currentTask: null,
   currentIngredientIndex: 0,
   currentKitchenwareIndex: 0,
-
+  recipeTitle: "",
   enteredRecipe: [],
   brokenDownRecipe: [],
   saveRecipeError: null,
@@ -84,6 +87,9 @@ export const createRecipeBuilderSlice: StateCreator<
     list?.push(...recipe);
 
     set({ enteredRecipe: list });
+  },
+  setRecipeTitle: (title: string) => {
+    set({ recipeTitle: title });
   },
   submitForBreakDown: async () => {
     let result: string = "";

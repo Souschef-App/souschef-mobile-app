@@ -78,11 +78,11 @@ export const EnterRecipeIngredientsScreen = ({
           )
         }
         <TextButton
-              style={styles.button}
-              textStyle={styles.buttonText}
-              onPress={getSuggestions}
-              title="Finished"
-            />
+            style={styles.button}
+            textStyle={styles.buttonText}
+            onPress={getSuggestions}
+            title="Finished"
+          />
         </VStack>
 
         <Modal

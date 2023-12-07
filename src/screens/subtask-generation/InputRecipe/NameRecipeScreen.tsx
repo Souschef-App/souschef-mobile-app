@@ -6,6 +6,7 @@ import {  NameRecipeScreenNavigationProp } from "../../../navigation/types";
 import { makeStyles } from "./style";
 import { ErrorModal } from "./components";
 import { InputStyle } from "../../../styles";
+import useStore from "../../../data/store";
 
 
 export const NameRecipeScreen = ({
@@ -17,18 +18,18 @@ export const NameRecipeScreen = ({
   const styles = React.useMemo(() => makeStyles(theme), [theme]);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
 
-  const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
 
-  //const setEnteredRecipe = useStore((state) => state.setEnteredRecipe); //TODO
+  const setRecipeTitle = useStore((state) => state.setRecipeTitle);
 
 
   const saveRecipeName = () => {
-    if(text == "")
+    if(title == "")
     {
       setErrorModalVisible(true)
     }
     else{
-      //setEnteredRecipe(taskList)
+        setRecipeTitle(title)
       navigation.navigate("EnterRecipeIngredientsScreen");
     }
   };
@@ -41,7 +42,7 @@ export const NameRecipeScreen = ({
         </HStack>
 
         <VStack>
-            <TextInput value={text} style={InputStyle.underline} onChangeText={setText} />
+            <TextInput value={title} style={InputStyle.underline} onChangeText={setTitle} />
         </VStack>
 
         <TextButton

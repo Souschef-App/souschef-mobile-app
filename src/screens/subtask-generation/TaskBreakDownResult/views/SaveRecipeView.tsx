@@ -3,9 +3,9 @@ import { TextStyle, ButtonStyle, Theme } from "../../../../styles";
 import { TextButton, VStack, ModalButton } from "../../../../components"
 import {Text, StyleSheet} from "react-native"
 import { ThemeContext } from "../../../../contexts/AppContext";
-import useStore from "../../../../data/store";
 import { Modal } from "../../../../components/Modal";
 import { TaskBreakDownResultScreenProp } from "navigation/types";
+import useStore from "../../../../data/store";
 
 type SaveRecipeViewProps = {
   navigation : TaskBreakDownResultScreenProp,
@@ -21,7 +21,7 @@ export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
     const saveRecipeSuccess = useStore((state) => state.saveRecipeSuccess);
     const saveRecipeError = useStore((state) => state.saveRecipeError);
 
-    const [name, setName] = useState<string>("");
+    const recipeTitle = useStore((state) => state.recipeTitle);
 
     const [successModalOpen, setSuccessModalOpen] = useState(false)
     const [errorModalOpen, setErrorModalOpen] = useState(false)
@@ -45,8 +45,8 @@ export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
     return(
       <VStack align="flex-start" style={{width: width}} p={30}>
         <VStack justifyContent="center" gap={30}>
-            <Text style={styles.taskTitle}>Name Of Recipe Here</Text>
-            <TextButton title="Save Recipe" style={styles.saveBTN} textStyle={styles.btnText} onPress={() => saveRecipe(name)}/>
+            <Text style={styles.taskTitle}>{recipeTitle}</Text>
+            <TextButton title="Save Recipe" style={styles.saveBTN} textStyle={styles.btnText} onPress={() => saveRecipe(recipeTitle)}/>
         </VStack>
 
         <Modal isVisible={successModalOpen}>
