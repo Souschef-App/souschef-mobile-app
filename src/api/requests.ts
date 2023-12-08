@@ -7,6 +7,8 @@ export const get = async <T>(
       method: "GET",
     });
 
+    console.log("RESPONSE " + JSON.stringify(response));
+
     // Request is successful
     if (response.ok) {
       const result: T = await response.json();

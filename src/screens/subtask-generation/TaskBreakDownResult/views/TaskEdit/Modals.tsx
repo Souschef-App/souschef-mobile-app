@@ -1,5 +1,5 @@
 //#region Imports
-import { HStack, Icon, ModalButton, ModalIconButton, VStack } from "../../../../../components"
+import { HStack, Icon, ModalButton, VStack } from "../../../../../components"
 import React, { useEffect, useState } from "react"
 import { StyleSheet, TextInput, Text } from "react-native"
 
@@ -17,7 +17,7 @@ import {
 
 import { Slider } from '@react-native-assets/slider'
 import useStore from "../../../../../data/store"
-import { COOKING_UNIT, Fraction, Ingredient, Kitchenware, Task } from "../../../../../data/types"
+import { COOKING_UNIT, Ingredient, Kitchenware, Task } from "../../../../../data/types"
 import { Picker } from "@react-native-picker/picker"
 import { unitToString } from "../../../../../utils/conversion"
 import uuid from 'react-native-uuid';
@@ -266,11 +266,11 @@ export const EditIngredientModal = (props : EditListModalProps) =>{
               <TextInput value={name} onChangeText={setName} style={styles.custInput} />
               <HStack>
                 <Text>Quantity:</Text>
-                <TextInput value={whole} onChangeText={setWhole} style={styles.numberInput} />
+                <TextInput value={whole} onChangeText={setWhole} style={styles.numberInput} keyboardType="number-pad" />
                 <Text>&</Text>
-                <TextInput value={numerator} onChangeText={setNumerator} style={styles.numberInput} />
+                <TextInput value={numerator} onChangeText={setNumerator} style={styles.numberInput} keyboardType="number-pad" />
                 <Text>/</Text>
-                <TextInput value={denominator} onChangeText={setDenominator} style={styles.numberInput} />
+                <TextInput value={denominator} onChangeText={setDenominator} style={styles.numberInput} keyboardType="number-pad" />
               </HStack>
 
               <HStack justifyContent="space-between" >
@@ -350,7 +350,7 @@ export const EditKitchenwareModal = (props : EditListModalProps) =>{
               <TextInput value={name} onChangeText={setName} style={styles.custInput} />
               <HStack>
                 <Text>Quantity:</Text>
-                <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput} />
+                <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput} keyboardType="number-pad" />
               </HStack>
             </VStack>
           </Modal.Body>

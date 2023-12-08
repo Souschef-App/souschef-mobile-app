@@ -29,6 +29,8 @@ export interface RecipeBuilderSlice {
   saveRecipeError: string | null;
   saveRecipeSuccess: string | null;
 
+  customRecipes: Recipe[] | null;
+
   setRecipeTitle: (title: string) => void;
 
   setEnteredRecipe: (recipe: string[]) => void;
@@ -53,6 +55,8 @@ export interface RecipeBuilderSlice {
   addDependency: (task: Task, dependency: Dependency) => void;
 
   addBlankCard: (beforeOrAfter: BeforeOrAfter) => void;
+
+  getCustomRecipe: () => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -66,6 +70,7 @@ export const createRecipeBuilderSlice: StateCreator<
   currentTask: null,
   currentIngredientIndex: 0,
   currentKitchenwareIndex: 0,
+  customRecipes: [],
   recipeTitle: "",
   enteredRecipe: [],
   brokenDownRecipe: [],
@@ -282,5 +287,20 @@ export const createRecipeBuilderSlice: StateCreator<
     }
 
     set({ brokenDownRecipe: recipeClone });
+  },
+  getCustomRecipe: async () => {
+    console.log("getCustomRecipe " + get().user?.id);
+    const [customRecipes, error] = await jsonRequest.get<Recipe[]>(
+      ApiUrls.getMyRecipes,
+      {
+        _ownerId: get().user?.id,
+      }
+    );
+
+    if (error !== null || customRecipes == null) {
+      console.log("Get custom recipce error " + error);
+    }
+
+    set({ customRecipes: customRecipes });
   },
 });
