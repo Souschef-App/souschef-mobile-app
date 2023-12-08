@@ -153,6 +153,8 @@ export const createRecipeBuilderSlice: StateCreator<
     const tasks = get().brokenDownRecipe;
     const userID = get().user?.id;
 
+    console.log("NEW TASKS " + JSON.stringify(tasks));
+
     if (tasks != null && name != null && userID != null) {
       const recipe: Recipe = {
         id: "",
@@ -173,11 +175,14 @@ export const createRecipeBuilderSlice: StateCreator<
       });
 
       if (error) {
+        console.log(error);
         set({ saveRecipeError: error });
       } else {
+        console.log("Success");
         set({ saveRecipeSuccess: "Success" });
       }
     } else {
+      console.log("No Recipe");
       set({ saveRecipeError: "No Recipe" });
     }
   },
