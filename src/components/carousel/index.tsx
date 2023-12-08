@@ -1,25 +1,22 @@
-import { Animated, Dimensions, Text, View, ViewToken } from "react-native"
+import { Animated, Dimensions, Text } from "react-native"
 import { HStack, VStack } from "../../components/primitives/Stack"
-import React, { ComponentType, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react"
-import { FlatList } from "react-native-gesture-handler"
+import React, { ComponentType, useEffect, useRef } from "react"
 import { TaskAvailaleProps } from "../../screens/subtask-generation/TaskBreakDownResult/views/TaskEdit/TaskEditView"
 import { useList } from 'react-native-use-list';
+import { SaveRecipeView } from "screens/subtask-generation/TaskBreakDownResult/views/SaveRecipeView";
+import { TaskBreakDownResultScreenProp } from "navigation/types";
+import { DIFFICULTY } from "../../data/types";
 
 const {width, height} = Dimensions.get("screen")
 
-export type CarouselPropsItemProps<T> = {
-
-}
-
-
 const Indicator = ({scrollX, data, activeIndex} : {scrollX : Animated.Value, data : any, activeIndex : number}) =>{
-    
     
     return(
         <HStack justifyContent="space-between"  p={16} >
             <HStack gap={10} flexMain={false}>
                 {
-                    data.map((item : any, index : number) =>{
+                    data.slice(0,5).map((item : any, index : number) =>{
+                        
                         const inputRange = [(index - 1) * width, index * width, (index + 1) * width]
                         
                         const scale = scrollX.interpolate({
@@ -35,19 +32,19 @@ const Indicator = ({scrollX, data, activeIndex} : {scrollX : Animated.Value, dat
                         })
                         
                         return <Animated.View 
-                        key={`indicator-${index}`} 
-                        style={{
-                            height: 10, 
-                            width: 10, 
-                            backgroundColor: "#777777", 
-                            borderRadius: 5,
-                            opacity,
-                            transform:[
-                                {
-                                    scale
-                                }
-                            ]
-                        }} />
+                            key={`indicator-${index}`} 
+                            style={{
+                                height: 10, 
+                                width: 10, 
+                                backgroundColor: "#777777", 
+                                borderRadius: 5,
+                                opacity,
+                                transform:[
+                                    {
+                                        scale
+                                    }
+                                ]
+                            }} />
                     })
                 }
             </HStack>
@@ -60,8 +57,22 @@ export type CarouselProps = {
     data : any
     RenderItem : ComponentType<TaskAvailaleProps>;
     getActiveIndexCallback: (index : number)=>void;
+    navigation : TaskBreakDownResultScreenProp
 }
-export const Carousel = ({data, RenderItem, getActiveIndexCallback}: CarouselProps) => {
+
+export const Carousel = ({data, RenderItem, getActiveIndexCallback, navigation}: CarouselProps) => {
+
+    data = [...data, {
+        id: "",
+        title: "",
+        description: "",
+        duration: 0,
+        difficulty: DIFFICULTY.Easy,
+        dependencies: [],
+        ingredients: [],
+        kitchenware: [],
+        isBackground: false
+      }]
     
     const scrollX = useRef(new Animated.Value(0)).current;
     
@@ -77,6 +88,7 @@ export const Carousel = ({data, RenderItem, getActiveIndexCallback}: CarouselPro
             <Animated.FlatList 
                 ref={ref}
                 data={data} 
+                extraData={data}
                 keyExtractor={item => item.id}
                 horizontal
                 pagingEnabled
@@ -86,8 +98,8 @@ export const Carousel = ({data, RenderItem, getActiveIndexCallback}: CarouselPro
                     {useNativeDriver: false}
                 )}
                 showsHorizontalScrollIndicator={false} 
-                renderItem={({item}) => {
-                    return <RenderItem task={item} width={width} />
+                renderItem={({item, index}) => {
+                    return <RenderItem index={index} dataLength={data.length} task={item} width={width} navigation={navigation} />
                 }}
                 {...indexController}
             />

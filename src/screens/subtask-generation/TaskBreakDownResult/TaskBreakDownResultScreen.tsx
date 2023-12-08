@@ -10,16 +10,12 @@ import useStore from "../../../data/store";
 import TaskEditScreen from "./views/TaskEdit/TaskEditView";
 
 import { TaskBreakDownResultScreenProp } from "navigation/types";
-import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
-
 import { useSafeAreaInsets } from "react-native-safe-area-context";  
-
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 
-import { SaveRecipeView } from "./views/SaveRecipeView";
 import { BeforeOrAfter } from "../../../data/slices/recipeBuilderSlice";
-import { ScrollView } from "react-native-gesture-handler";
 import { Carousel } from "../../../components/carousel";
+import { DIFFICULTY } from "../../../data/types";
 
 
 export const TaskBreakDownResultScreen = ({
@@ -41,8 +37,6 @@ export const TaskBreakDownResultScreen = ({
   useEffect(()=>{
     setActiveIndex(0)
   },[])
-
-  
 
   const submitForRetryTask = useStore((state) => state.submitForRetryTask);
   const addBlankCard = useStore((state) => state.addBlankCard);
@@ -105,6 +99,7 @@ export const TaskBreakDownResultScreen = ({
                     data={brokenDownRecipe} 
                     RenderItem={TaskEditScreen} 
                     getActiveIndexCallback={setActiveIndex} 
+                    navigation={navigation}
                     />
                 </VStack>
               ) : (

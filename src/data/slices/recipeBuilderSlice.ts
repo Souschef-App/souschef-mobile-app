@@ -20,6 +20,7 @@ export interface RecipeBuilderSlice {
   currentTask: Task | null;
   currentIngredientIndex: number;
   currentKitchenwareIndex: number;
+  recipeTitle: string;
 
   getCurrentTask: () => Task | null;
 
@@ -27,6 +28,10 @@ export interface RecipeBuilderSlice {
   brokenDownRecipe: Task[] | null;
   saveRecipeError: string | null;
   saveRecipeSuccess: string | null;
+
+  customRecipes: Recipe[] | null;
+
+  setRecipeTitle: (title: string) => void;
 
   setEnteredRecipe: (recipe: string[]) => void;
   submitForBreakDown: () => void;
@@ -50,6 +55,8 @@ export interface RecipeBuilderSlice {
   addDependency: (task: Task, dependency: Dependency) => void;
 
   addBlankCard: (beforeOrAfter: BeforeOrAfter) => void;
+
+  getCustomRecipe: () => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -63,7 +70,8 @@ export const createRecipeBuilderSlice: StateCreator<
   currentTask: null,
   currentIngredientIndex: 0,
   currentKitchenwareIndex: 0,
-
+  customRecipes: [],
+  recipeTitle: "",
   enteredRecipe: [],
   brokenDownRecipe: [],
   saveRecipeError: null,
@@ -84,6 +92,9 @@ export const createRecipeBuilderSlice: StateCreator<
     list?.push(...recipe);
 
     set({ enteredRecipe: list });
+  },
+  setRecipeTitle: (title: string) => {
+    set({ recipeTitle: title });
   },
   submitForBreakDown: async () => {
     let result: string = "";
@@ -142,6 +153,8 @@ export const createRecipeBuilderSlice: StateCreator<
     const tasks = get().brokenDownRecipe;
     const userID = get().user?.id;
 
+    console.log("NEW TASKS " + JSON.stringify(tasks));
+
     if (tasks != null && name != null && userID != null) {
       const recipe: Recipe = {
         id: "",
@@ -162,11 +175,14 @@ export const createRecipeBuilderSlice: StateCreator<
       });
 
       if (error) {
+        console.log(error);
         set({ saveRecipeError: error });
       } else {
+        console.log("Success");
         set({ saveRecipeSuccess: "Success" });
       }
     } else {
+      console.log("No Recipe");
       set({ saveRecipeError: "No Recipe" });
     }
   },
@@ -276,5 +292,20 @@ export const createRecipeBuilderSlice: StateCreator<
     }
 
     set({ brokenDownRecipe: recipeClone });
+  },
+  getCustomRecipe: async () => {
+    console.log("getCustomRecipe " + get().user?.id);
+    const [customRecipes, error] = await jsonRequest.get<Recipe[]>(
+      ApiUrls.getMyRecipes,
+      {
+        _ownerId: get().user?.id,
+      }
+    );
+
+    if (error !== null || customRecipes == null) {
+      console.log("Get custom recipce error " + error);
+    }
+
+    set({ customRecipes: customRecipes });
   },
 });

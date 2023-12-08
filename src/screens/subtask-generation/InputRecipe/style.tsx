@@ -7,7 +7,8 @@ export const makeStyles = (theme: Theme) =>
       ...ButtonStyle.primary,
       backgroundColor: theme.colors.primary,
       margin: 5,
-      alignSelf: "stretch"
+      alignSelf: "stretch",
+      // width: 100
     },
     buttonText:{
       ...TextStyle.h3,
@@ -22,12 +23,14 @@ export const makeStyles = (theme: Theme) =>
     },
     container: {
       backgroundColor: theme.colors.background,
+      borderRadius: 16
     },
     title: {
       ...TextStyle.h3,
     },
     card:{
       backgroundColor: theme.colors.background2,
+      // backgroundColor: "red",
       marginTsop: 5
     },
     listText:{
