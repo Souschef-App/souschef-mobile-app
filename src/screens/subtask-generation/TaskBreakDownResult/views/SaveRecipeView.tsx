@@ -21,6 +21,9 @@ export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
     const saveRecipeSuccess = useStore((state) => state.saveRecipeSuccess);
     const saveRecipeError = useStore((state) => state.saveRecipeError);
 
+    const clearSaveRecipeSuccess = useStore((state) => state.clearSaveRecipeSuccess);
+    const clearSaveRecipeError = useStore((state) => state.clearSaveRecipeError);
+
     const recipeTitle = useStore((state) => state.recipeTitle);
 
     const [successModalOpen, setSuccessModalOpen] = useState(false)
@@ -29,16 +32,18 @@ export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
     useEffect(()=>{
       if(saveRecipeSuccess == "Success")
         setSuccessModalOpen(true)
+        clearSaveRecipeSuccess()
     },[saveRecipeSuccess])
 
     useEffect(()=>{
       if(saveRecipeError != null)
-      setErrorModalOpen(true)
+        setErrorModalOpen(true)
+        clearSaveRecipeError()
     },[saveRecipeSuccess])
 
 
     const recipeAddedOk = () =>{
-      setErrorModalOpen(false)
+      setSuccessModalOpen(false)
       navigation.navigate("MealPlan")
     }
     
@@ -56,7 +61,7 @@ export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
 
             </Modal.Body>
             <Modal.Footer>
-              <ModalButton title="Close" onPress={()=> setSuccessModalOpen(false)} />
+              <ModalButton title="Close" onPress={()=> recipeAddedOk()} />
             </Modal.Footer>
           </Modal.Container>
         </Modal>
@@ -64,7 +69,7 @@ export const SaveRecipeView = ({navigation, width} : SaveRecipeViewProps) => {
           <Modal.Container>
             <Modal.Header title="Recipe Save Error" />
             <Modal.Footer>
-              <ModalButton title="Ok" onPress={()=> recipeAddedOk()} />
+              <ModalButton title="Ok" onPress={()=> setErrorModalOpen(false)} />
             </Modal.Footer>
           </Modal.Container>
         </Modal>

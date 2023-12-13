@@ -57,6 +57,8 @@ export interface RecipeBuilderSlice {
   addBlankCard: (beforeOrAfter: BeforeOrAfter) => void;
 
   getCustomRecipe: () => void;
+  clearSaveRecipeSuccess: () => void;
+  clearSaveRecipeError: () => void;
 }
 
 export const createRecipeBuilderSlice: StateCreator<
@@ -94,6 +96,7 @@ export const createRecipeBuilderSlice: StateCreator<
     set({ enteredRecipe: list });
   },
   setRecipeTitle: (title: string) => {
+    set({ enteredRecipe: [] });
     set({ recipeTitle: title });
   },
   submitForBreakDown: async () => {
@@ -154,6 +157,8 @@ export const createRecipeBuilderSlice: StateCreator<
     const userID = get().user?.id;
 
     console.log("NEW TASKS " + JSON.stringify(tasks));
+    console.log("NEW name " + name);
+    console.log("NEW userID " + userID);
 
     if (tasks != null && name != null && userID != null) {
       const recipe: Recipe = {
@@ -307,5 +312,11 @@ export const createRecipeBuilderSlice: StateCreator<
     }
 
     set({ customRecipes: customRecipes });
+  },
+  clearSaveRecipeSuccess: () => {
+    set({ saveRecipeSuccess: null });
+  },
+  clearSaveRecipeError: () => {
+    set({ saveRecipeError: null });
   },
 });
