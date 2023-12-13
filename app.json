@@ -11,15 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#E44F49"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access camera.",
-        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -28,10 +22,7 @@
       },
       "androidNavigationBar": {
         "visible": "immersive"
-      },
-      "permissions": [
-        "android.permission.CAMERA"
-      ]
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,13 +32,13 @@
         "expo-barcode-scanner",
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
+        },
+        "@react-native-voice/voice",
+        {
+          "microphonePermission" : "Allow SousChef to access the microphone",
+          "speechRecognitionPermission" : "Allow SousChef to securely recognize user speech"
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "0ecd9141-8569-4024-9323-c744b8518250"
-      }
-    }
+    ]
   }
 }
