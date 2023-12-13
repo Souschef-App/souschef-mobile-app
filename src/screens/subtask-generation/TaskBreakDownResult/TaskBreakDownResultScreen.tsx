@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text , Image} from "react-native";
 import {  HStack, Icon, SafeArea, VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 
@@ -46,8 +46,9 @@ export const TaskBreakDownResultScreen = ({
       {
         brokenDownRecipe == null || brokenDownRecipe?.length <= 0 ? 
         (
-          <VStack>
-            <Text>No Tasks yet! Waiting for Response...</Text>
+          <VStack style={{backgroundColor: theme.colors.primary}}>
+            <Icon name="logo" size={120} />
+            <Text style={[TextStyle.h2, {color: theme.colors.background, textAlign: "center"}]}>No Tasks yet! Waiting for Response...</Text>
           </VStack>
         )
         :
