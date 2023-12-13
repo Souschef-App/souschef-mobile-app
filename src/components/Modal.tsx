@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text, Button, TextStyle } from "react-native";
 import RNModal from "react-native-modal";
 type ModalProps = {
   isVisible: boolean;
@@ -28,9 +28,9 @@ const ModalContainer = ({ children }: { children: React.ReactNode }) => (
   <View style={styles.container}>{children}</View>
 );
 
-const ModalHeader = ({ title }: { title: string }) => (
+const ModalHeader = ({ title, titleStyle }: { title: string, titleStyle? : TextStyle }) => (
   <View style={styles.header}>
-    <Text style={styles.text}>{title}</Text>
+    <Text style={titleStyle ? titleStyle : styles.text}>{title}</Text>
   </View>
 );
 

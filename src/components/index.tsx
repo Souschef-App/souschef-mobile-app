@@ -1,5 +1,7 @@
 import IconButton from "./IconButton";
 import Logo from "./Logo";
+import { ModalButton } from "./ModalButton";
+import ModalIconButton from "./ModalIconButton";
 import QRScan from "./QRScan";
 import SecureInput from "./SecureInput";
 import TextButton from "./TextButton";
@@ -34,5 +36,7 @@ export {
   TextButton,
   VStack,
   ValidationInput,
+  ModalButton,
+  ModalIconButton,
   Tabs,
 };

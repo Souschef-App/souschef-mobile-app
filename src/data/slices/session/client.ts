@@ -71,7 +71,7 @@ export class Client extends ZustandStoreAccess {
     };
 
     socket.onerror = (e) => {
-      console.log("WebSocket error", e);
+      // console.log("WebSocket error", e);
       this.set({
         sessionLoading: false,
         sessionError: "Failed to join session",

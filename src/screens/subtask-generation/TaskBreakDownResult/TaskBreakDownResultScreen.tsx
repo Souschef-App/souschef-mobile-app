@@ -1,16 +1,22 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { StyleSheet, Text } from "react-native";
-import { Button, HStack, Icon, IconButton, SafeArea, VStack } from "../../../components";
+import {  HStack, Icon, SafeArea, VStack } from "../../../components";
 import { ThemeContext } from "../../../contexts/AppContext";
 
 import { ButtonStyle, InputStyle, TextStyle } from "../../../styles";
 import { Theme } from "../../../styles";
 
 import useStore from "../../../data/store";
-import TaskEditScreen from "./TaskEditView";
-import { SaveRecipeView } from "./SaveRecipeView";
+import TaskEditScreen from "./views/TaskEdit/TaskEditView";
+
 import { TaskBreakDownResultScreenProp } from "navigation/types";
-import AnimatedSwiper from "../../../components/animated-swiper/AnimatedSwiper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";  
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
+
+import { BeforeOrAfter } from "../../../data/slices/recipeBuilderSlice";
+import { Carousel } from "../../../components/carousel";
+import { DIFFICULTY } from "../../../data/types";
+
 
 export const TaskBreakDownResultScreen = ({
   navigation,
@@ -18,57 +24,25 @@ export const TaskBreakDownResultScreen = ({
   navigation: TaskBreakDownResultScreenProp;
 }) =>{
   const theme = useContext(ThemeContext);
-  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+  const safeAreaInsets = useSafeAreaInsets();
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
+  // const brokenDownRecipeArray = brokenDownRecipe?.map((data, index) => <TaskEditScreen key={index} task={data} />)
+  // const renderArray = brokenDownRecipeArray?.concat(<SaveRecipeView key={brokenDownRecipe?.length} navigation={navigation} />)
 
-  const [activeIndex, setActiveIndex] = useState<number>(0)
+  const setActiveIndex = useStore((state) => state.setActiveIndex);
+  
+  useEffect(()=>{
+    setActiveIndex(0)
+  },[])
 
-  const [editID, setEditID] = useState<number>()
-  // const [ingredients, setIngredients] = useState<string>("")
-  // const [kitchenware, setKitchenware] = useState<string>("")
-  // const [description, setDescription] = useState<string>("")
-
-  const onAccept = () =>{
-
-  }
-
-  const onCancel = () =>{
-    
-  }
-
-  const nextTask = () =>{
-    if(brokenDownRecipe != undefined && activeIndex < brokenDownRecipe?.length)
-    {
-      setActiveIndex(activeIndex + 1)
-    }
-  }
-
-  const prevTask = () =>{
-    if(activeIndex - 1 > -1)
-    {
-      setActiveIndex(activeIndex - 1)
-    }
-  }
-
-  // const onUpdateRecipe = (ID : number) =>{
-  //   const step : RecipeStep = {
-  //     ID: ID,
-  //     Description : description,
-  //     Kitchenware : kitchenware.split(","),
-  //     Ingredients : ingredients.split(","),
-  //     Duration: brokenDownRecipe![ID].Duration,
-  //     Title: brokenDownRecipe![ID].Title,
-  //     Dependencies: brokenDownRecipe![ID].Dependencies,
-  //     Difficulty: brokenDownRecipe![ID].Difficulty,
-  //   }
-  //   updateRecipe(ID, step)
-  //   bottomSheetModalRef.current?.close();
-  // }
+  const submitForRetryTask = useStore((state) => state.submitForRetryTask);
+  const addBlankCard = useStore((state) => state.addBlankCard);
 
   return (
-      <SafeArea>
+    <SafeArea>
       {
         brokenDownRecipe == null || brokenDownRecipe?.length <= 0 ? 
         (
@@ -82,37 +56,52 @@ export const TaskBreakDownResultScreen = ({
             align="flex-start" 
             justifyContent="flex-start" 
             style={styles.container} 
-            pVH={{v: 20, h : 20}} 
+            pVH={{v: 20, h : 0}} 
             gap={0}>
-            {/* <HStack justifyContent="space-between" >
-              <Text style={styles.title}>Steps</Text>
-
-              <Button style={styles.reGenerateBTN} onPress={()=>{}}>
-                <HStack gap={10} align="center" justifyContent="center">
-                  <Text style={styles.reGenerateBTNText}>Regenerate All</Text>
-                  <Icon name="retry"  color={theme.colors.background} />
-                </HStack>
-              </Button>
-            </HStack> */}
-
             <VStack>
             {
               (brokenDownRecipe != null && brokenDownRecipe.length > 0) ? (
-                
-                  (activeIndex >= brokenDownRecipe.length) ?
-                  (
-                      <SaveRecipeView navigation={navigation} />
-                  )
-                  :
-                  (
-                    <AnimatedSwiper paginationStyle={{marginBottom: 5}} duration={600}>
-                    {brokenDownRecipe.map(data => (
-                      <TaskEditScreen task={data} />
-                    ))}
-                    </AnimatedSwiper>
-                    // <TaskEditScreen task={brokenDownRecipe[activeIndex]} />
-                  )
-                
+                <VStack>
+                  <HStack flexMain={false} justifyContent="flex-end">
+                    <Menu >
+                      <MenuTrigger  >
+                        <Icon name="threedots" />
+                      </MenuTrigger>
+                      <MenuOptions optionsContainerStyle={{width: 160}}>
+                        <MenuOption onSelect={() => addBlankCard(BeforeOrAfter.Before)} >
+                          <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                            <Icon color={theme.colors.primary} name="plus"  size={20}/>
+                            <Text >Add Task Before</Text>
+                          </HStack>
+                        </MenuOption>
+                        <MenuOption  onSelect={() => addBlankCard(BeforeOrAfter.After)} >
+                          <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                            <Icon color={theme.colors.primary} name="plus"  size={20}/>
+                            <Text >Add Task After</Text>
+                          </HStack>
+                        </MenuOption>
+                        <MenuOption onSelect={() => submitForRetryTask()} >
+                          <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                            <Icon color={theme.colors.danger} name="retry"  size={20}/>
+                            <Text >Regenerate Task</Text>
+                          </HStack>
+                        </MenuOption>
+                        <MenuOption onSelect={() => alert(`Delete`)} >
+                            <HStack pVH={{v: 2, h: 5}} justifyContent="flex-start" gap={5}>
+                              <Icon color={theme.colors.danger} name="retry" size={20} />
+                              <Text >Regenerate All</Text>
+                            </HStack>
+                          </MenuOption>
+                      </MenuOptions>
+                    </Menu>
+                  </HStack>
+                  <Carousel 
+                    data={brokenDownRecipe} 
+                    RenderItem={TaskEditScreen} 
+                    getActiveIndexCallback={setActiveIndex} 
+                    navigation={navigation}
+                    />
+                </VStack>
               ) : (
                 <VStack>
                   <Text>No Tasks To Edit</Text>
@@ -120,47 +109,6 @@ export const TaskBreakDownResultScreen = ({
               )
             }
             </VStack>
-            {/* <HStack>
-            <Button
-              onPress={()=>prevTask()}
-              style={{
-                position: "relative",
-                flexDirection: "row",
-                alignItems: "center",
-                columnGap: 8,
-                ...styles.arrowBTN,
-              }}
-            >
-              <Icon
-                name="arrow-left" 
-                color="#fff" 
-                size={30}
-                style={styles.arrowIcon}
-              />
-              <Text style={TextStyle.h3}>Previous</Text>
-            </Button>
-            <VStack>
-                <Text style={TextStyle.h3}> {activeIndex + 1}/{brokenDownRecipe?.length + 1}</Text>
-            </VStack>
-            <Button
-              onPress={()=>nextTask()}
-              style={{
-                position: "relative",
-                flexDirection: "row",
-                alignItems: "center",
-                columnGap: 8,
-                ...styles.arrowBTN2,
-              }}
-            >
-              <Text style={TextStyle.h3}>Next</Text>
-              <Icon
-                name="arrow-right" 
-                color="#fff" 
-                size={30}
-                style={styles.arrowIcon}
-              />
-            </Button>
-            </HStack> */}
           </VStack>
         )
       }
@@ -187,12 +135,6 @@ const makeStyles = (theme: Theme) =>
       padding: 10,
       maxWidth: 300,
       color: theme.colors.background,
-    },
-    stepComponentWrapper: {
-      // backgroundColor: theme.colors.background,
-      // flexGrow: 0,
-      // elevation: 5,
-      // borderRadius: 20
     },
     orgtask: {
       backgroundColor: theme.colors.background2,

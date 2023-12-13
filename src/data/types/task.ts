@@ -1,6 +1,7 @@
-import { DIFFICULTY, TASK_STATUS } from "./enum";
-import { Ingredient } from "./ingredient";
+import { DIFFICULTY } from "./enum";
+import Dependency from "./dependency";
 import Kitchenware from "./kitchenware";
+import { Ingredient } from "./ingredient";
 
 interface Task {
   id: string;
@@ -8,7 +9,7 @@ interface Task {
   description: string;
   duration: number;
   difficulty: DIFFICULTY;
-  dependencies: string[];
+  dependencies: Dependency[];
   ingredients: Ingredient[]; // Change to list of ingredients
   kitchenware: Kitchenware[]; // Change to list of kitchenware
   isBackground: boolean;

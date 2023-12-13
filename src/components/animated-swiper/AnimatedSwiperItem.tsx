@@ -32,6 +32,11 @@ const AnimatedSwiperItem: React.FC<AnimatedSwiperItemProps> = ({
     fadingAnimationValue.value = fadingValue;
   }, [fadingValue]);
 
+  
+  // useEffect(() => {
+  //   console.log(children?.valueOf())
+  // }, [children]);
+
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
       {children}
@@ -40,8 +45,11 @@ const AnimatedSwiperItem: React.FC<AnimatedSwiperItemProps> = ({
 };
 
 export default memo(AnimatedSwiperItem, (prev, next) => {
+
   return prev.fadingValue === next.fadingValue;
 });
+
+// export default AnimatedSwiperItem
 
 const styles = StyleSheet.create({
   container: {

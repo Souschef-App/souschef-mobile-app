@@ -14,6 +14,7 @@ const useSwipe = (
   const singleTouchValueThreshold = 2;
 
   function onTouchStart(event: GestureResponderEvent) {
+    // console.log("onTouchStart  ", event.nativeEvent.pageX)
     firstTouchPageX = event.nativeEvent.pageX || 0;
   }
 
@@ -21,17 +22,17 @@ const useSwipe = (
     try {
       const positionX = event.nativeEvent.pageX || 0;
 
-      const isSingleTouch =
-        Math.abs(positionX - firstTouchPageX) < singleTouchValueThreshold;
+      // const isSingleTouch =
+      //   Math.abs(positionX - firstTouchPageX) < singleTouchValueThreshold;
 
-      if (isSingleTouch) {
-        onSingleTouchHandle(positionX);
-        return;
-      }
+      // if (isSingleTouch) {
+      //   onSingleTouchHandle(positionX);
+      //   return;
+      // }
 
       if (positionX < firstTouchPageX) {
         onSwipeRight();
-      } else {
+      } else if (positionX > firstTouchPageX) {
         onSwipeLeft();
       }
     } catch (error) {

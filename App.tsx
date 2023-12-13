@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { AppConfig, AppContext, ThemeContext } from "./src/contexts/AppContext";
 import RootNavigator from "./src/navigation";
 import { theme } from "./src/styles/theme";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+
+import { MenuProvider } from 'react-native-popup-menu';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,9 +35,12 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+       
       <AppContext.Provider value={appConfig}>
         <ThemeContext.Provider value={theme}>
-          <RootNavigator />
+          <MenuProvider>
+            <RootNavigator />
+          </MenuProvider>
         </ThemeContext.Provider>
       </AppContext.Provider>
     </GestureHandlerRootView>
