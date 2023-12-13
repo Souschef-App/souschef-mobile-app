@@ -1,5 +1,5 @@
 import { DIFFICULTY } from "./enum";
-import Ingredient from "./ingredient";
+import { Ingredient } from "./ingredient";
 import Kitchenware from "./kitchenware";
 import Task from "./task";
 
