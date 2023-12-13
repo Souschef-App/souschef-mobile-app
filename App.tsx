@@ -5,8 +5,9 @@ import { theme } from "./src/styles/theme";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { RootSiblingParent } from "react-native-root-siblings";
 
-import { MenuProvider } from 'react-native-popup-menu';
+import { MenuProvider } from "react-native-popup-menu";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,14 +36,15 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
-       
-      <AppContext.Provider value={appConfig}>
-        <ThemeContext.Provider value={theme}>
-          <MenuProvider>
-            <RootNavigator />
-          </MenuProvider>
-        </ThemeContext.Provider>
-      </AppContext.Provider>
+      <RootSiblingParent>
+        <AppContext.Provider value={appConfig}>
+          <ThemeContext.Provider value={theme}>
+            <MenuProvider>
+              <RootNavigator />
+            </MenuProvider>
+          </ThemeContext.Provider>
+        </AppContext.Provider>
+      </RootSiblingParent>
     </GestureHandlerRootView>
   );
 };
