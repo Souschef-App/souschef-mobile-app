@@ -70,19 +70,26 @@ export const EnterRecipeStepsScreen = ({
   const stopSpeechToText = async () => {
     setStarted(false);
     await Voice.stop();
-
-    console.log("RES " + results)
-
-    let newText = ""
-    results.map(result => {
-      newText += `${result} `
-    })
-  
-    setText(`${text} ${newText}`)
   };
 
   const onSpeechResults = (result : any) => {
-    setResults(result.value);
+    if(result.value != "")
+    {
+      // setResults(result.value);
+      console.log("onSpeechResults " + result.value)
+
+      // console.log("RES " + result.value)
+      
+      let newText = ""
+      result.value.map((result : any) => {
+        console.log(result)
+        newText += `${result} `
+      })
+
+      console.log("newText  " + newText)
+    
+      setText(newText)
+    }
   };
 
   const onSpeechError = (error : any) => {

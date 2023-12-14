@@ -36,6 +36,7 @@ export const EnterRecipeIngredientsScreen = ({
     else{
       // setEnteredRecipe(recipeIngredientsList) //TODO:Change!!
       setEnteredRecipe(recipeIngredientsList);
+      destroy()
       navigation.navigate("EnterRecipeStepsScreen");
     }
   };
@@ -53,49 +54,71 @@ export const EnterRecipeIngredientsScreen = ({
   let [started, setStarted] = useState(false);
   let [results, setResults] = useState([]);
 
+  const destroy = async () =>{
+    await Voice.destroy().then(Voice.removeAllListeners);
+    console.log("Destroyed")
+  }
+
   useEffect(() => {
     Voice.onSpeechError = onSpeechError;
     Voice.onSpeechResults = onSpeechResults;
 
     return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
+      destroy()
     }
   }, []);
 
   const startSpeechToText = async () => {
     await Voice.start("en-US");
     setStarted(true);
-    console.log("Starting" + started)
+    console.log("Started")
   };
 
   const stopSpeechToText = async () => {
     setStarted(false);
     await Voice.stop();
-
-    console.log("RES " + results)
-
-    let newText = ""
-    results.map(result => {
-      newText += `${result} `
-    })
+  };
   
-    setText(`${text} ${newText}`)
+  const onSpeechResults = (result : any) => {
+    if(result.value != "")
+    {
+      // setResults(result.value);
+      console.log("onSpeechResults " + result.value)
+
+      // console.log("RES " + result.value)
+      
+      let newText = ""
+      result.value.map((result : any) => {
+        newText += `${result} `
+      })
+
+      console.log("Text " + text)
+    
+      setText(newText)
+    }
+  
   };
 
-  const onSpeechResults = (result : any) => {
-    setResults(result.value);
-  };
+  useEffect(()=>{
+    console.log("Text Changed " + text)
+  },[text])
 
   const onSpeechError = (error : any) => {
     console.log(error);
   };
+
+  const openAddModal =()=>{
+    setModalVisible(true)
+    setText("")
+    console.log("Text? " + text)
+  }
 
   return (
     <SafeArea>
       <VStack  mVH={{h: 20, v: 20}}>
         <HStack align="flex-start" justifyContent="space-between" flexMain={false} >
           <Text  style={styles.title}>Enter Recipe Ingredients</Text> 
-          <IconButton icon="plus" color={theme.colors.text}onPress={() => setModalVisible(true)} />
+          <IconButton icon="plus" color={theme.colors.text}onPress={() => openAddModal()} />
         </HStack>
         <VStack>
         {

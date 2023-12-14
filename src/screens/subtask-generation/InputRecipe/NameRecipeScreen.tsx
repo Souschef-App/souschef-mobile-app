@@ -31,6 +31,7 @@ export const NameRecipeScreen = ({
     }
     else{
         setRecipeTitle(title)
+        destroy()
       navigation.navigate("EnterRecipeIngredientsScreen");
     }
   };
@@ -38,12 +39,17 @@ export const NameRecipeScreen = ({
   let [started, setStarted] = useState(false);
   let [results, setResults] = useState([]);
 
+  const destroy = async () =>{
+    await Voice.destroy().then(Voice.removeAllListeners);
+    console.log("Destroyed")
+  }
+
   useEffect(() => {
     Voice.onSpeechError = onSpeechError;
     Voice.onSpeechResults = onSpeechResults;
 
     return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
+      destroy()
     }
   }, []);
 
