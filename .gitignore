@@ -37,3 +37,8 @@ yarn-error.*
 
 *_active.uusver
 .vscode/
+
+*.apk
+*.tar.gz
+
+SousChef.app

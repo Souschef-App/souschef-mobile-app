@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { HStack, IconButton, Input, ModalButton, SafeArea, TextButton, VStack } from "../../../components";
+import React, { useContext, useEffect, useState } from "react";
+import { HStack, IconButton, Input, ModalButton, ModalIconButton, SafeArea, TextButton, VStack } from "../../../components";
 import { Pressable, Text } from "react-native";
 import { ThemeContext } from "../../../contexts/AppContext";
 import { EnterRecipeStepsScreenNavigationProp } from "../../../navigation/types";
@@ -9,6 +9,8 @@ import { Modal } from "../../../components/Modal";
 import { makeStyles } from "./style";
 import { ErrorModal, RowItem } from "./components";
 import { ButtonStyle, TextStyle } from "../../../styles";
+
+import Voice from '@react-native-voice/voice';
 
 
 export const EnterRecipeStepsScreen = ({
@@ -46,6 +48,46 @@ export const EnterRecipeStepsScreen = ({
     setText("")
     setModalVisible(!modalVisible)
   } 
+
+  let [started, setStarted] = useState(false);
+  let [results, setResults] = useState([]);
+
+  useEffect(() => {
+    Voice.onSpeechError = onSpeechError;
+    Voice.onSpeechResults = onSpeechResults;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    }
+  }, []);
+
+  const startSpeechToText = async () => {
+    await Voice.start("en-US");
+    setStarted(true);
+    console.log("Starting" + started)
+  };
+
+  const stopSpeechToText = async () => {
+    setStarted(false);
+    await Voice.stop();
+
+    console.log("RES " + results)
+
+    let newText = ""
+    results.map(result => {
+      newText += `${result} `
+    })
+  
+    setText(`${text} ${newText}`)
+  };
+
+  const onSpeechResults = (result : any) => {
+    setResults(result.value);
+  };
+
+  const onSpeechError = (error : any) => {
+    console.log(error);
+  };
 
   return (
     <SafeArea>
@@ -96,6 +138,15 @@ export const EnterRecipeStepsScreen = ({
         }}>
         <VStack style={styles.container} gap={20} p={50} flexMain={false}>
           <Text style={styles.title}>Enter a Task</Text>
+          <HStack justifyContent="flex-start">
+            {
+              started ? (
+                <ModalIconButton icon="mic" onPress={()=>stopSpeechToText()} iconSize={20} />
+              ) : (
+                <ModalIconButton icon="mic-off" onPress={()=>startSpeechToText()} iconSize={20} />
+              )
+            }
+          </HStack>
           <Input textStyle={styles.input} multiline={true} onChange={setText} value={text} placeholder="Enter Recipe Task" />
           {/* <Pressable
             style={styles.button}

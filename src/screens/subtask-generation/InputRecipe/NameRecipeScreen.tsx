@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { HStack, SafeArea, TextButton, VStack } from "../../../components";
+import React, { useContext, useEffect, useState } from "react";
+import { HStack, ModalIconButton, SafeArea, TextButton, VStack } from "../../../components";
 import { Text, TextInput } from "react-native";
 import { ThemeContext } from "../../../contexts/AppContext";
 import {  NameRecipeScreenNavigationProp } from "../../../navigation/types";
@@ -8,6 +8,7 @@ import { ErrorModal } from "./components";
 import { InputStyle } from "../../../styles";
 import useStore from "../../../data/store";
 
+import Voice from '@react-native-voice/voice';
 
 export const NameRecipeScreen = ({
   navigation,
@@ -34,6 +35,44 @@ export const NameRecipeScreen = ({
     }
   };
 
+  let [started, setStarted] = useState(false);
+  let [results, setResults] = useState([]);
+
+  useEffect(() => {
+    Voice.onSpeechError = onSpeechError;
+    Voice.onSpeechResults = onSpeechResults;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    }
+  }, []);
+
+  const startSpeechToText = async () => {
+    await Voice.start("en-US");
+    setStarted(true);
+    console.log("Starting" + started)
+  };
+
+  const stopSpeechToText = async () => {
+    setStarted(false);
+    await Voice.stop();
+
+    let newText = ""
+    results.map(result => {
+      newText += `${result} `
+    })
+  
+    setTitle(newText)
+  };
+
+  const onSpeechResults = (result : any) => {
+    setResults(result.value);
+  };
+
+  const onSpeechError = (error : any) => {
+    console.log(error);
+  };
+
   return (
     <SafeArea>
       <VStack m={20}>
@@ -42,7 +81,16 @@ export const NameRecipeScreen = ({
         </HStack>
 
         <VStack>
-            <TextInput value={title} style={InputStyle.underline} onChangeText={setTitle} />
+          <HStack justifyContent="flex-start" flexMain={false} p={5}>
+              {
+                started ? (
+                  <ModalIconButton icon="mic" onPress={()=>stopSpeechToText()} iconSize={20} />
+                ) : (
+                  <ModalIconButton icon="mic-off" onPress={()=>startSpeechToText()} iconSize={20} />
+                )
+              }
+            </HStack>
+            <TextInput value={title} style={InputStyle.outline} onChangeText={setTitle} placeholder="Recipe Name" />
         </VStack>
 
         <TextButton

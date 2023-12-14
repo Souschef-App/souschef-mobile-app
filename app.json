@@ -11,9 +11,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#E44F49"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access camera.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
+      },
+      "bundleIdentifier": "com.sethclim.souschef"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +29,12 @@
       },
       "androidNavigationBar": {
         "visible": "immersive"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.sethclim.souschef"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,13 +44,20 @@
         "expo-barcode-scanner",
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
-        },
+        }
+      ],
+      [
         "@react-native-voice/voice",
         {
-          "microphonePermission" : "Allow SousChef to access the microphone",
-          "speechRecognitionPermission" : "Allow SousChef to securely recognize user speech"
+          "microphonePermission": "Allow SousChef to access the microphone",
+          "speechRecognitionPermission": "Allow SousChef to securely recognize user speech"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0ecd9141-8569-4024-9323-c744b8518250"
+      }
+    }
   }
 }

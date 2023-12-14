@@ -30,7 +30,7 @@ const App = () => {
   }
 
   const appConfig: AppConfig = {
-    useFakeData: false,
+    useFakeData: true,
   };
 
   return (
