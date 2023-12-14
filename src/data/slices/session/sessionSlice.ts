@@ -18,6 +18,7 @@ type SessionState = {
   tasks: { [key: string]: SessionTask };
   assignedTask: string | null;
   taskLoading: boolean;
+  taskOverdue: boolean;
   connectedUsers: SessionUser[];
   livefeed: FeedSnapshot[];
   session: LiveSession | null;
@@ -31,6 +32,7 @@ const initialState: SessionState = {
   tasks: {},
   assignedTask: null,
   taskLoading: true,
+  taskOverdue: false,
   connectedUsers: [],
   livefeed: [],
   session: null,
@@ -45,6 +47,7 @@ type SessionActions = {
   joinSession: (code: string, user: SessionUser | null) => Promise<boolean>;
   joinFakeSession: () => void;
   leaveSession: () => void;
+  markTaskOverdue: (status: boolean) => void;
   commands: {
     setGuestIdentity: (guestname: string) => void;
     startSession: () => void;
@@ -68,6 +71,7 @@ export const createSessionSlice: StateCreator<
 
   return {
     ...initialState,
+    markTaskOverdue: (status: boolean) => set({ taskOverdue: status }),
     resetSessionSlice: () => set(initialState),
     joinSession: async (code: string, user: SessionUser | null) => {
       set({ sessionLoading: true, sessionError: null });

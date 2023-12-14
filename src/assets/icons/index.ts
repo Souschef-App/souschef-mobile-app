@@ -55,6 +55,7 @@ const Icons = {
   threedots: require("./dots_icon.svg").default,
   "chef-hat": require("./chef-hat.svg").default,
   garbage: require("./garbage.svg").default,
+  share: require("./share.svg").default,
   // Add more mappings for other SVGs
 } as const satisfies Record<string, React.FC<SvgProps>>;
 
