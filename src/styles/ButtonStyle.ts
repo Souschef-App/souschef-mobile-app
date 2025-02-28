@@ -68,3 +68,12 @@ export const editable: ViewStyle = {
   margin: 0,
   // height: 56,
 };
+
+export const modal: ViewStyle = {
+  ...buttonCore.center,
+  ...buttonCore.rounded,
+  ...padding(8, 16),
+  height: 40,
+  flexGrow: 1,
+  width: "50%",
+};

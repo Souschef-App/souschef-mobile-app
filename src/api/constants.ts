@@ -19,4 +19,5 @@ export const ApiUrls = {
   subtaskBreakDown: `${subTaskGeneration}/request`,
   subtaskRetry: `${subTaskGeneration}/retry-task`,
   saveRecipe: `${recipe}/add-recipe`,
+  getMyRecipes: `${recipe}/get-my-recipes`,
 };

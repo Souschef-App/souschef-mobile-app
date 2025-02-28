@@ -13,7 +13,7 @@ type EditItemListProps = {
   addFunc: () => void,
 }
 
-export const EditItemList = ({title, icon, addFunc, children } : PropsWithChildren<EditItemListProps>) => {
+export const EditItemList = ({title, icon, addFunc,  children } : PropsWithChildren<EditItemListProps>) => {
 
   const theme = useContext(ThemeContext);
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -47,19 +47,29 @@ export const EditItemList = ({title, icon, addFunc, children } : PropsWithChildr
 
 type EditRowItemProps = {
   onEdit : () => void,
-  onDelete : () => void
+  onDelete : () => void,
+  clickable?: boolean
 }
 
-export const EditRowItem = ({children, onDelete, onEdit} : PropsWithChildren<EditRowItemProps>) =>{
+export const EditRowItem = ({children, onDelete, onEdit, clickable = true} : PropsWithChildren<EditRowItemProps>) =>{
 
   const theme = useContext(ThemeContext);
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
   return(
     <HStack align="stretch">
-      <Button style={styles.highlightEdit} onPress={onEdit}>
-      {children}
-      </Button>
+      {
+        clickable ? (
+        <Button style={styles.highlightEdit} onPress={onEdit}>
+          {children}
+        </Button>
+
+        ) : (
+          <>
+          {children}
+          </>
+        )
+      }
       <IconButton icon="garbage" iconSize={24} color={theme.colors.danger} onPress={onDelete} />
     </HStack>
   )

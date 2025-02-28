@@ -1,5 +1,5 @@
 import { TabItem } from "components/Tabs";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
@@ -15,9 +15,11 @@ import {
 import { ThemeContext } from "../../contexts/AppContext";
 import { fakeRecipe } from "../../data/__mocks__";
 import { Recipe } from "../../data/types";
-import { MealNameScreenRouteProp, MealPlanNavigationProp } from "../../navigation/types";
+import { MealPlanNavigationProp } from "../../navigation/types";
 import { TextStyle, Theme } from "../../styles/";
 import { formatDifficultyToString } from "../../utils/format";
+import useStore from "../../data/store";
+import { useFocusEffect } from "@react-navigation/native";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
@@ -78,7 +80,7 @@ const RecipeItem = ({ recipe }: { recipe: Recipe }) => {
 const PublicRecipes = () => {
   return (
     <>
-      {publicRecipes.map((recipe, index) => (
+      {publicRecipes.map((recipe : Recipe, index : number) => (
         <RecipeItem key={index} recipe={recipe} />
       ))}
     </>
@@ -88,12 +90,39 @@ const PublicRecipes = () => {
 const CustomRecipes = () => {
   // Theme
   const theme = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => makeStyles(theme), [theme]);
+
+  const customRecipes = useStore((state) => state.customRecipes);
+  const getCustomRecipe = useStore((state) => state.getCustomRecipe);
+
+  useEffect(()=>{
+    console.log("get cust recipe")
+    getCustomRecipe();                         
+  },[])
 
   return (
-    <VStack style={{ height: 48 }}>
-      <Text style={[TextStyle.body, { color: theme.colors.textDisabled }]}>
-        You have 0 custom recipes.
-      </Text>
+    <VStack pAll={{t:10}} style={{ height: 48 }}>
+      {
+        customRecipes?.length == undefined || customRecipes?.length <= 0 ? 
+        (
+          <VStack>
+            <Text style={[TextStyle.body, { color: theme.colors.textDisabled }]}>
+              You have 0 custom recipes.
+            </Text>
+          </VStack>
+        )
+        :
+        (
+          <ScrollView style={styles.scroll}>
+            {
+              customRecipes.map((recipe : Recipe, index : number) => (
+                <RecipeItem key={index} recipe={recipe} />
+              ))
+
+            }
+          </ScrollView>
+        )
+      }
     </VStack>
   );
 };
@@ -143,15 +172,22 @@ const MealPlanScreen = ({
           {activeTab === 1 ? (
             <TextButton
               title="Add Custom Recipe"
-              onPress={() => navigation.navigate("EnterRecipeIngredientsScreen")}
+              onPress={() => navigation.navigate("NameRecipeScreen")}
               textStyle={styles.newRecipeText}
               style={styles.newRecipeBtn}
             />
           ) : null}
         </VStack>
-        <ScrollView style={styles.scroll}>
-          {activeTab === 0 ? <PublicRecipes /> : <CustomRecipes />}
-        </ScrollView>
+          {
+            activeTab === 0 ? 
+            ( 
+              <ScrollView style={styles.scroll}> 
+                <PublicRecipes /> 
+              </ScrollView> 
+            )
+            :
+            <CustomRecipes />
+          }
       </VStack>
     </SafeArea>
   );

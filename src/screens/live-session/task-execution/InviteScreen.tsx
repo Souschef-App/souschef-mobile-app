@@ -13,6 +13,7 @@ import { InviteScreenNavigationProp } from "../../../navigation/types";
 import { TextStyle, Theme } from "../../../styles";
 import useStore from "../../../data/store";
 import QRCode from "react-native-qrcode-svg";
+import { Share } from "react-native";
 
 // TODO: Convert code to string for leading zero cases
 const InviteScreen = ({
@@ -26,11 +27,22 @@ const InviteScreen = ({
 
   const session = useStore((state) => state.session);
 
+  const shareSessionCode = async () => {
+    try {
+      const sessionCode = session?.code.toString() ?? "00000";
+      await Share.share({
+        message: `Ready to cook? Enter the session code ${sessionCode} in Sous Chef to join.`,
+      });
+    } catch (error) {
+      console.error("Error sharing session code:", error);
+    }
+  };
+
   return (
     <SafeArea backgroundColor={theme.colors.primary}>
       <HStack
         flexMain={false}
-        justifyContent="flex-start"
+        justifyContent="space-between"
         style={styles.appBar}
       >
         <IconButton
@@ -38,6 +50,13 @@ const InviteScreen = ({
           color={theme.colors.text}
           iconSize={24}
           onPress={() => navigation.goBack()}
+          style={styles.appBarBtn}
+        />
+        <IconButton
+          icon="share"
+          color={theme.colors.text}
+          iconSize={24}
+          onPress={shareSessionCode}
           style={styles.appBarBtn}
         />
       </HStack>

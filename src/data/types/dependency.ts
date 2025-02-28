@@ -1,5 +1,6 @@
 interface Dependency {
   id: string;
+  dependencyID: string;
   title: string;
 }
 

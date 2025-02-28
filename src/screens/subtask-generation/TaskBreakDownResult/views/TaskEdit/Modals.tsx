@@ -1,5 +1,5 @@
 //#region Imports
-import { HStack, Icon, ModalButton, ModalIconButton, VStack } from "../../../../../components"
+import { HStack, Icon, ModalButton, VStack } from "../../../../../components"
 import React, { useEffect, useState } from "react"
 import { StyleSheet, TextInput, Text } from "react-native"
 
@@ -17,11 +17,10 @@ import {
 
 import { Slider } from '@react-native-assets/slider'
 import useStore from "../../../../../data/store"
-import { COOKING_UNIT, Fraction, Ingredient, Kitchenware, Task } from "../../../../../data/types"
+import { COOKING_UNIT, Ingredient, Kitchenware, Task } from "../../../../../data/types"
 import { Picker } from "@react-native-picker/picker"
 import { unitToString } from "../../../../../utils/conversion"
 import uuid from 'react-native-uuid';
-import Dependency from "data/types/dependency"
 
 //#endregion
 
@@ -55,12 +54,19 @@ export const EditTitleModal = (props : EditModalProps) =>{
         <Modal.Container>
           <Modal.Header title="Edit Title" />
           <Modal.Body>
-            <TextInput value={title} onChangeText={setTitle}  />
+            <TextInput style={InputStyle.underline} value={title} onChangeText={setTitle}  />
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton title="Cancel" textStyle={styles.btnText} style={styles.cancelBTN} onPress={() => props.handleModal(false)} />
-              <ModalButton title="Save"  textStyle={styles.btnText} style={styles.saveBTN} onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton title="Cancel"  
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                title="Save"  
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -112,9 +118,17 @@ export const EditRatingModal = (props : EditModalProps) =>{
                     </VStack>
                 </Modal.Body> 
                 <Modal.Footer>
-                    <HStack gap={15}>
-                    <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-                    <ModalButton style={styles.saveBTN}   textStyle={styles.btnText} title="Save" onPress={saveChange} />
+                    <HStack gap={15} pVH={{v: 0, h: 50}}>
+                    <ModalButton 
+                      style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                      textStyle={TextStyle.modalButtonText(theme).text} 
+                      title="Cancel" 
+                      onPress={() => props.handleModal(false)} />
+                    <ModalButton 
+                      style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                      textStyle={TextStyle.modalButtonText(theme).text} 
+                      title="Save" 
+                      onPress={saveChange} />
                     </HStack>
                 </Modal.Footer>
             </Modal.Container>
@@ -146,9 +160,17 @@ export const EditDescriptionModal = (props : EditModalProps) =>{
             <TextInput value={description} onChangeText={setDescription}  />
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-              <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Cancel" 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Save" 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -187,15 +209,16 @@ export const EditTimerModal = (props : EditModalProps) =>{
 }
 //#endregion
 
+interface EditListModalProps extends EditModalProps  {
+  activeIndex: number
+}
+
 //#region EditIngredientModal
-export const EditIngredientModal = (props : EditModalProps) =>{
+export const EditIngredientModal = (props : EditListModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-    const currentIngredientIndex = useStore((state) => state.currentIngredientIndex);
-    
-    // const visible = useStore((state) => state.isEditIngredientsVisible);
     const updateIngredient = useStore((state) => state.updateIngredient);
 
     const [name, setName] = useState("")
@@ -208,13 +231,13 @@ export const EditIngredientModal = (props : EditModalProps) =>{
       if(props.task)
       {
         const updatedIngredient : Ingredient = {
-          id : props.task.ingredients[currentIngredientIndex].id,
+          id : props.task.ingredients[props.activeIndex].id,
           name :  name, 
           quantity : {whole : parseInt(whole), numerator: parseInt(numerator), denominator: parseInt(denominator)}, 
           unit : unit
         };
 
-        updateIngredient(updatedIngredient, currentIngredientIndex)
+        updateIngredient(updatedIngredient, props.activeIndex)
         props.handleModal(false)
       }
     }
@@ -223,11 +246,11 @@ export const EditIngredientModal = (props : EditModalProps) =>{
       {
         if(props.isVisible && props.task != null)
         {
-          // setName(props.task.ingredients[currentIngredientIndex].name)
-          // setWhole(props.task.ingredients[currentIngredientIndex].quantity.whole.toString())
-          // setDenominator(props.task.ingredients[currentIngredientIndex].quantity.numerator.toString())
-          // setNumerator(props.task.ingredients[currentIngredientIndex].quantity.denominator.toString())
-          // setUnit(props.task.ingredients[currentIngredientIndex].unit)
+          setName(props.task.ingredients[props.activeIndex].name)
+          setWhole(props.task.ingredients[props.activeIndex].quantity.whole.toString())
+          setDenominator(props.task.ingredients[props.activeIndex].quantity.numerator.toString())
+          setNumerator(props.task.ingredients[props.activeIndex].quantity.denominator.toString())
+          setUnit(props.task.ingredients[props.activeIndex].unit)
         }
       }
 
@@ -243,11 +266,11 @@ export const EditIngredientModal = (props : EditModalProps) =>{
               <TextInput value={name} onChangeText={setName} style={styles.custInput} />
               <HStack>
                 <Text>Quantity:</Text>
-                <TextInput value={whole} onChangeText={setWhole} style={styles.custInput} />
+                <TextInput value={whole} onChangeText={setWhole} style={styles.numberInput} keyboardType="number-pad" />
                 <Text>&</Text>
-                <TextInput value={numerator} onChangeText={setNumerator} style={styles.custInput} />
+                <TextInput value={numerator} onChangeText={setNumerator} style={styles.numberInput} keyboardType="number-pad" />
                 <Text>/</Text>
-                <TextInput value={denominator} onChangeText={setDenominator} style={styles.custInput} />
+                <TextInput value={denominator} onChangeText={setDenominator} style={styles.numberInput} keyboardType="number-pad" />
               </HStack>
 
               <HStack justifyContent="space-between" >
@@ -263,9 +286,17 @@ export const EditIngredientModal = (props : EditModalProps) =>{
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Cancel" 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Save" 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -275,12 +306,12 @@ export const EditIngredientModal = (props : EditModalProps) =>{
 //#endregion
 
 //#region EditKitchenwareModal
-export const EditKitchenwareModal = (props : EditModalProps) =>{
+export const EditKitchenwareModal = (props : EditListModalProps) =>{
 
     const theme = React.useContext(ThemeContext);
     const styles = React.useMemo(() => makeStyles(theme), [theme]);
 
-    const currentKitchenwareIndex = useStore((state) => state.currentKitchenwareIndex);
+    // const currentKitchenwareIndex = useStore((state) => state.currentKitchenwareIndex);
 
     const [name, setName] = useState("")
     const [quantity, setQuantity] = useState("0")
@@ -290,23 +321,23 @@ export const EditKitchenwareModal = (props : EditModalProps) =>{
     const saveChange = () => {
 
       const kitchenware : Kitchenware = {
-        id : props.task.kitchenware[currentKitchenwareIndex].id, 
+        id : props.task.kitchenware[props.activeIndex].id, 
         name:name,
         quantity: parseInt(quantity)
       }
 
       if(kitchenware)
-        updateKitchenware(kitchenware, currentKitchenwareIndex)
+        updateKitchenware(kitchenware, props.activeIndex)
 
       props.handleModal(false)
     }
 
     useEffect(()=>{
 
-      if(props.task.kitchenware.length > currentKitchenwareIndex)
+      if(props.task.kitchenware.length > props.activeIndex)
       {
-        setName(props.task.kitchenware[currentKitchenwareIndex].name)
-        setQuantity(props.task.kitchenware[currentKitchenwareIndex].quantity.toString())
+        setName(props.task.kitchenware[props.activeIndex].name)
+        setQuantity(props.task.kitchenware[props.activeIndex].quantity.toString())
       }
     },[props.isVisible])
 
@@ -319,14 +350,22 @@ export const EditKitchenwareModal = (props : EditModalProps) =>{
               <TextInput value={name} onChangeText={setName} style={styles.custInput} />
               <HStack>
                 <Text>Quantity:</Text>
-                <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput} />
+                <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput} keyboardType="number-pad" />
               </HStack>
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <HStack gap={15}>
-              <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-              <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+            <HStack gap={15} pVH={{v: 0, h: 50}}>
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Cancel" 
+                onPress={() => props.handleModal(false)} />
+              <ModalButton 
+                style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+                textStyle={TextStyle.modalButtonText(theme).text} 
+                title="Save" 
+                onPress={saveChange} />
             </HStack>
           </Modal.Footer>
         </Modal.Container>
@@ -356,9 +395,17 @@ export const ConfirmDeleteModal = (props : ConfirmDeleteItemProps) =>{
       <Modal.Container>
         <Modal.Header title={props.title} />
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Delete" onPress={confirmDelete} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+          <ModalButton 
+            style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+            textStyle={TextStyle.modalButtonText(theme).text} 
+            title="Cancel" 
+            onPress={() => props.handleModal(false)} />
+          <ModalButton 
+            style={{...ButtonStyle.modal, backgroundColor: "red"}} 
+            textStyle={TextStyle.modalButtonText(theme).text} 
+            title="Delete" 
+            onPress={confirmDelete} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>
@@ -407,11 +454,11 @@ export const AddIngredientModal = (props : EditModalProps) =>{
             <TextInput value={name} onChangeText={setName} style={styles.custInput} />
             <HStack>
               <Text>Quantity:</Text>
-              <TextInput value={whole} onChangeText={setWhole} style={styles.custInput} />
+              <TextInput value={whole} onChangeText={setWhole} style={styles.numberInput} />
               <Text>&</Text>
-              <TextInput value={numerator} onChangeText={setNumerator} style={styles.custInput} />
+              <TextInput value={numerator} onChangeText={setNumerator} style={styles.numberInput} />
               <Text>/</Text>
-              <TextInput value={denominator} onChangeText={setDenominator} style={styles.custInput} />
+              <TextInput value={denominator} onChangeText={setDenominator} style={styles.numberInput} />
             </HStack>
 
             <HStack justifyContent="space-between" >
@@ -427,9 +474,17 @@ export const AddIngredientModal = (props : EditModalProps) =>{
           </VStack>
         </Modal.Body>
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Cancel" 
+              onPress={() => props.handleModal(false)} />
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Save" 
+              onPress={saveChange} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>
@@ -472,14 +527,22 @@ export const AddKitchenwareModal = (props : EditModalProps) =>{
             <TextInput value={name} onChangeText={setName} style={styles.custInput} />
             <HStack>
               <Text>Quantity:</Text>
-              <TextInput value={quantity} onChangeText={setQuantity} style={styles.custInput} />
+              <TextInput value={quantity} onChangeText={setQuantity} style={styles.numberInput} />
             </HStack>
           </VStack>
         </Modal.Body>
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}  textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Cancel" 
+              onPress={() => props.handleModal(false)} />
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Save" 
+              onPress={saveChange} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>
@@ -499,7 +562,7 @@ export const AddDependencyModal = (props : EditModalProps) =>{
 
   const brokenDownRecipe = useStore((state) => state.brokenDownRecipe);
 
-  const dict : { [key: string]: string } = {}
+  const dict : { [key: string]: string } = { }
 
   brokenDownRecipe?.map((item)=>{
     dict[item.id] = item.title
@@ -516,18 +579,26 @@ export const AddDependencyModal = (props : EditModalProps) =>{
       <Modal.Container>
         <Modal.Header title="Add Dependency" />
         <Modal.Body>
-          <Picker style={{backgroundColor: "#fff", width: 200, height: 60}} selectedValue={dep} onValueChange={(itemValue, itemIndex) => setDep(itemValue)}>
+          <Picker style={{backgroundColor: "#fff", width: 200, height: 60,}} selectedValue={dep} onValueChange={(itemValue, itemIndex) => setDep(itemValue)}>
             {
               brokenDownRecipe?.map((entry, count) =>{
-                return <Picker.Item key={count} label={entry.title} value={entry.id} />
+                return <Picker.Item  key={count} label={entry.title} value={entry.id} />
               })
             }
           </Picker>
         </Modal.Body>
         <Modal.Footer>
-          <HStack gap={15}>
-            <ModalButton style={styles.cancelBTN} textStyle={styles.btnText} title="Cancel" onPress={() => props.handleModal(false)} />
-            <ModalButton style={styles.saveBTN}   textStyle={styles.btnText}  title="Save" onPress={saveChange} />
+          <HStack gap={15} pVH={{v: 0, h: 50}}>
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.danger}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Cancel" 
+              onPress={() => props.handleModal(false)} />
+            <ModalButton 
+              style={{...ButtonStyle.modal, backgroundColor: theme.colors.primary}} 
+              textStyle={TextStyle.modalButtonText(theme).text} 
+              title="Save" 
+              onPress={saveChange} />
           </HStack>
         </Modal.Footer>
       </Modal.Container>
@@ -576,5 +647,14 @@ const makeStyles = (theme: Theme) =>
     addIngridientTitle:{
       ...TextStyle.h2,
       color: theme.colors.background
-    }
+    },
+    numberInput:{
+      ...InputStyle.underline,
+      backgroundColor: theme.colors.background,
+      width: 40,
+      alignSelf: "auto",
+      borderRadius: theme.spacing.s,
+      justifyContent: "center",
+      textAlign: "center"
+    },
   });
