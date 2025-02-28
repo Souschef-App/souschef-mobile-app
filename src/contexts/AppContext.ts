@@ -2,11 +2,11 @@ import React from "react";
 import { theme } from "../styles/theme";
 
 export type AppConfig = {
-  useFakeData: boolean;
+    useFakeData: boolean;
 };
 
 export const defaultConfig: AppConfig = {
-  useFakeData: false,
+    useFakeData: false,
 };
 
 export const AppContext = React.createContext(defaultConfig);
