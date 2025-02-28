@@ -1,4 +1,4 @@
-import { BarCodeEvent, BarCodeScanner } from "expo-barcode-scanner";
+// import { BarCodeEvent, BarCodeScanner } from "expo-barcode-scanner";
 import { Camera, CameraType, PermissionResponse } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
@@ -38,10 +38,10 @@ const QRScan = (props: QRScanProps) => {
     <>
       <StatusBar hidden={true} />
       <Camera
-        barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-        }}
-        onBarCodeScanned={scanned ? undefined : handleQRScanned}
+        // barCodeScannerSettings={{
+        //   barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+        // }}
+        // onBarCodeScanned={scanned ? undefined : handleQRScanned}
         type={CameraType.back}
         ratio="16:9"
         style={[StyleSheet.absoluteFillObject]}
